@@ -1,18 +1,18 @@
 package com.EGEA1R.CarService.controller;
 
-import com.EGEA1R.CarService.service.FileService;
+import com.EGEA1R.CarService.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-public class FileController {
+public class ItemController {
 
-    private FileService fileService;
+    private ItemService itemsService;
 
     @Autowired
-    public void setFileService(FileService fileService){
-        this.fileService = fileService;
+    public void setItemsService(ItemService itemsService){
+        this.itemsService = itemsService;
     }
 }
