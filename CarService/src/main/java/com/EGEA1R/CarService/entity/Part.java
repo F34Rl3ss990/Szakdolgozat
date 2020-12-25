@@ -20,10 +20,9 @@ public class Part {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "part_id")
-    private Integer part_id;
+    private Long part_id;
 
     @NotNull
     @Column(name = "name")

@@ -1,36 +1,52 @@
-/*package com.EGEA1R.CarService.entity;
+package com.EGEA1R.CarService.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.Date;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "services")
+@Table(name = "document")
 @EntityListeners(AuditingEntityListener.class)
-public class Services {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
-    @Column(name = "services_id")
-    private Integer services_id;
+    @Column(name = "file_id")
+    private Long file_id;
 
     @NotNull
-    @Column(name = "service_type")
-    private String service_type;
+    @Column(name = "type")
+    private String type;
+
+    @NotNull
+    @Column(name = "name")
+    private String name;
+
+
+    @NotNull
+    @CreationTimestamp
+    @Column(name = "upload_time")
+    private Date upload_time;
+
+    @Lob
+    @NotNull
+    @Column(name = "data")
+    private byte[] data;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_services_service")
-    private Service service;
+    @JoinColumn(name = "fk_document_car")
+    private Car car;
+
 }
-*/

@@ -1,13 +1,32 @@
 package com.EGEA1R.CarService.controller.DTO;
 
+import com.EGEA1R.CarService.validation.annotation.ValidEmail;
+import lombok.Builder;
+import lombok.Data;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+@Data
+@Builder
 public class CredentialDTO {
 
-    private Integer credential_id;
+    @NotNull
+    @NotEmpty
+    private String firstName;
 
-    private String email;
+    @NotNull
+    @NotEmpty
+    private String lastName;
 
+    @NotNull
+    @NotEmpty
     private String password;
+    private String matchingPassword;
 
-    private Integer privilegium;
+    @NotNull
+    @NotEmpty
+    @ValidEmail
+    private String email;
 
 }

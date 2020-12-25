@@ -15,7 +15,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "employee")
+@Table(name = "employee",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "account_number")
+})
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
@@ -24,10 +27,9 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "employee_id")
-    private Integer employee_id;
+    private Long employee_id;
 
     @NotNull
     @Size(max = 60)

@@ -17,16 +17,18 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "finance")
+@Table(name = "finance",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "account_number")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class Finance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "finance_id")
-    private Integer finance_id;
+    private Long finance_id;
 
     @NotNull
     @CreationTimestamp
@@ -53,6 +55,7 @@ public class Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_finance_employee")
     private Employee employee;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_finance_order")

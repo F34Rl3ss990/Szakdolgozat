@@ -22,10 +22,9 @@ public class Service {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "service_id")
-    private Integer service_id;
+    private Long service_id;
 
     @NotNull
     @CreationTimestamp

@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.entity;
 
+import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +11,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -17,7 +19,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "user",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "e-mail")
+})
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
@@ -26,10 +31,9 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "user_id")
-    private Integer user_id;
+    private Long user_id;
 
     @NotNull
     @Pattern(regexp = "[a-zA-Z]")
@@ -44,7 +48,7 @@ public class User {
     private String last_name;
 
     @NotNull
-    @Email
+    @ValidEmail
     @Column(name = "e-mail")
     private String email;
 
@@ -68,5 +72,5 @@ public class User {
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )
-    private Set<Car> car;
+    private Set<Car> car = new HashSet<>();
 }

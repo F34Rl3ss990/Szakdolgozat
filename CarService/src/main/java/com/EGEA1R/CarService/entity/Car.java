@@ -19,19 +19,22 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "car")
+@Table(name = "car",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "engine_number"),
+        @UniqueConstraint(columnNames = "chassis_number")
+})
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Car {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "car_id", nullable = false)
-    private Integer car_id;
+    private Long car_id;
 
     @NotNull
     @Size(max = 30)

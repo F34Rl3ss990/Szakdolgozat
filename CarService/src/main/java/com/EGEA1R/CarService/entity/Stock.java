@@ -19,10 +19,9 @@ public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "stock_id")
-    private Integer stock_id;
+    private Long stock_id;
 
     @NotNull
     @Column(name = "name")

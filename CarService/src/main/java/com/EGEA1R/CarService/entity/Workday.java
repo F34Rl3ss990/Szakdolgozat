@@ -23,10 +23,9 @@ public class Workday {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "workday_id")
-    private Integer workday_id;
+    private Long workday_id;
 
     @NotNull
     @CreationTimestamp

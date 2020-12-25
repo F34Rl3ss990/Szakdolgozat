@@ -11,16 +11,19 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "supplier")
+@Table(name = "supplier",
+uniqueConstraints ={
+        @UniqueConstraint(columnNames = "account_number"),
+        @UniqueConstraint(columnNames = "e-mail")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "supplier_id")
-    private Integer supplier_id;
+    private Long supplier_id;
 
     @NotNull
     @Column(name = "name")

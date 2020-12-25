@@ -27,10 +27,9 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Positive
     @Column(name = "order_id")
-    private Integer order_id;
+    private Long order_id;
 
     @NotNull
     @Column(name = "order_date")
@@ -44,6 +43,6 @@ public class Order {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Supplier supplier;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "finance")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Finance finance;
 }
