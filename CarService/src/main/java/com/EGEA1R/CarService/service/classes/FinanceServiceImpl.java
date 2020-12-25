@@ -1,11 +1,12 @@
-package com.EGEA1R.CarService.service;
+package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.repository.FinanceRepository;
+import com.EGEA1R.CarService.service.interfaces.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FinanceServiceImpl implements FinanceService{
+public class FinanceServiceImpl implements FinanceService {
 
     private FinanceRepository financeRepository;
 

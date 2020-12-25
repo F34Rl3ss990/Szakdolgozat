@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.service;
+package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.entity.Document;
 import org.springframework.stereotype.Service;

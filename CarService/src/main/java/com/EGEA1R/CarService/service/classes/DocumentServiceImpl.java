@@ -1,7 +1,8 @@
-package com.EGEA1R.CarService.service;
+package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.entity.Document;
 import com.EGEA1R.CarService.repository.DocumentRepository;
+import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

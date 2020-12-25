@@ -3,28 +3,29 @@ package com.EGEA1R.CarService.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.EGEA1R.CarService.entity.File;
+import com.EGEA1R.CarService.entity.Document;
 import com.EGEA1R.CarService.message.ResponseFile;
 import com.EGEA1R.CarService.message.ResponseMessage;
-import com.EGEA1R.CarService.service.FileService;
+import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@RestController
+@Controller
 @Slf4j
-public class FileController {
+public class DocumentController {
 
-    private FileService fileService;
+    private DocumentService documentService;
 
     @Autowired
-    public void setFileService(FileService fileService){
-        this.fileService = fileService;
+    public void setDocumentService(DocumentService documentService){
+        this.documentService = documentService;
     }
 
 
@@ -32,7 +33,7 @@ public class FileController {
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
-            fileService.store(file);
+            documentService.store(file);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class FileController {
 
     @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getListFiles() {
-        List<ResponseFile> files = fileService.getAllFiles().map(file -> {
+        List<ResponseFile> files = documentService.getAllFiles().map(file -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files/")
@@ -54,18 +55,18 @@ public class FileController {
                     file.getName(),
                     fileDownloadUri,
                     file.getType(),
-                    file.getFile().length);
+                    file.getData().length);
         }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
     @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable Integer id) {
-        File file = fileService.getFile(id);
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        Document file = documentService.getFile(id);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                .body(file.getFile());
+                .body(file.getData());
     }
 }

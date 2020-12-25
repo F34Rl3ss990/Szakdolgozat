@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CredentialServiceImpl implements UserDetailsService {
+public class AuthCredentialServiceImpl implements UserDetailsService {
 
     private CredentialRepository credentialRepository;
 
@@ -24,7 +24,7 @@ public class CredentialServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Credential credential = credentialRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
 
-        return CredentialDetailsImpl.build(credential);
+        return AuthCredentialDetailsImpl.build(credential);
     }
 
 }

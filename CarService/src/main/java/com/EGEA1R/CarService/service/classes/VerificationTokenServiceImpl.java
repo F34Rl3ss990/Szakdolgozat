@@ -1,12 +1,17 @@
-package com.EGEA1R.CarService.service;
+package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.entity.Credential;
-import com.EGEA1R.CarService.entity.User;
 import com.EGEA1R.CarService.entity.VerificationToken;
 import com.EGEA1R.CarService.repository.CredentialRepository;
 import com.EGEA1R.CarService.repository.VerificationRepository;
+import com.EGEA1R.CarService.service.interfaces.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
@@ -46,12 +51,32 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         VerificationToken myToken = VerificationToken.builder()
                 .credential(credential)
                 .token(token)
+                .expiryDate(calculateExpiryDate())
                 .build();
         verificationRepository.save(myToken);
+    }
+
+    private Date calculateExpiryDate() {
+        final int  EXPIRATION = 60 * 24;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, EXPIRATION);
+        return new Date(cal.getTime().getTime());
     }
 
     @Override
     public void modifyPermissionOnVerificatedUser(Credential credential) {
         credentialRepository.save(credential);
     }
+
+    @Override
+    public VerificationToken generateNewVerificationToken(String existingToken){
+        VerificationToken verificationToken = verificationRepository.findByToken(existingToken);
+        String token = UUID.randomUUID().toString();
+        verificationToken.setToken(token);
+        verificationToken.setExpiryDate(calculateExpiryDate());
+        verificationRepository.save(verificationToken);
+        return verificationToken;
+    }
 }
+
