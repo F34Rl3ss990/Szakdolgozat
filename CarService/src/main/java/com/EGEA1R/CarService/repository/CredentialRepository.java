@@ -14,6 +14,6 @@ public interface CredentialRepository extends JpaRepository<Credential, Long> {
 
     Boolean existsByEmail(String email);
 
-    Optional<Credential>getCredentialByPasswordresetToken(String token);
+
 
 }

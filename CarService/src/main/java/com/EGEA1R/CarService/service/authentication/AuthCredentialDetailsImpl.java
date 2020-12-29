@@ -25,8 +25,6 @@ public class AuthCredentialDetailsImpl implements UserDetails {
 
     public static AuthCredentialDetailsImpl build(Credential credential){
         List<GrantedAuthority> authority = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(credential.getPermission())));
-       // List<GrantedAuthority> authority = new ArrayList<>();
-      //  authority.add(new SimpleGrantedAuthority(credential.getPermission()));
         return new AuthCredentialDetailsImpl(
                 credential.getCredential_id(),
                 credential.getEmail(),
@@ -78,4 +76,8 @@ public class AuthCredentialDetailsImpl implements UserDetails {
         return Objects.equals(credentialId, credential.credentialId);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(credentialId, emailAsIdentifier, password, authorities);
+    }
 }

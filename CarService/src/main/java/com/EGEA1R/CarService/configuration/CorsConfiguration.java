@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.configuration;
+/*package com.EGEA1R.CarService.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,3 +14,4 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "DELETE");
     }
 }
+*/

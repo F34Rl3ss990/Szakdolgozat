@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.EGEA1R.CarService.controller.DTO.PasswordDTO;
+import com.EGEA1R.CarService.controller.DTO.ChangePasswordDTO;
+import com.EGEA1R.CarService.controller.DTO.PasswordResetDTO;
 import com.EGEA1R.CarService.entity.Credential;
 import com.EGEA1R.CarService.entity.VerificationToken;
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
@@ -29,7 +30,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -122,13 +122,13 @@ public class CredentialController {
 
         VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
         if (verificationToken == null) {
-            return ResponseEntity.ok(new MessageResponse("Invalid token"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid token"));
         }
 
         Credential credential = verificationToken.getCredential();
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            return ResponseEntity.ok(new MessageResponse("redirect to bad user html, authentication token expired"));
+            return ResponseEntity.badRequest().body(new MessageResponse("redirect to bad user html, authentication token expired"));
         }
 
         credential.setPermission("ROLE_USER");
@@ -147,48 +147,67 @@ public class CredentialController {
         return ResponseEntity.ok(new MessageResponse("Verification token resent"));
     }
 
-    @PostMapping("/user/resetPassword")
+    @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
-            @RequestParam("email") String userEmail) {
-        Optional<Credential> credential = credentialService.getByEmail(userEmail);
+            @RequestParam String email) {
+        Optional<Credential> credential = credentialService.getByEmail(email);
         if (credential == null) {
          //   throw new UserNotFoundException();
         }
-        credential.ifPresent(credential1 -> {
+        if(credential.isPresent()) {
         String token = UUID.randomUUID().toString();
         String recipientAddress = credential.get().getEmail();
-        credentialService.createPasswordResetTokenForCredential(credential1, token);
+        credentialService.createPasswordResetTokenForCredential(credential, token);
         emailService.sendResetPasswordToken(recipientAddress, token);
-        });
         return ResponseEntity.ok(new MessageResponse("Password reset token sent"));
+        }else
+            return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
     }
 
-    @GetMapping("/user/changePassword")
+    @GetMapping("/changePassword")
     public ResponseEntity<?> showChangePasswordPage(
                                          @RequestParam("token") String token) {
         String result = passwordresetTokenService.validatePasswordResetToken(token);
         if(result != null) {
-            return ResponseEntity.ok(new MessageResponse("Invalid or expired password reset token"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired password reset token"));
         } else {
-            return ResponseEntity.ok(new MessageResponse("Redirect to somewhere"));
+            return ResponseEntity.ok(new MessageResponse("Redirect to savePassword page"));
         }
     }
 
-    @PostMapping("/user/savePassword")
-    public ResponseEntity<?> savePassword(@Valid PasswordDTO passwordDto) {
+    @PostMapping("/savePassword")
+    public ResponseEntity<?> savePassword(
+            @Valid @RequestBody PasswordResetDTO passwordResetDto) {
 
-        String result = passwordresetTokenService.validatePasswordResetToken(passwordDto.getToken());
+        String result = passwordresetTokenService.validatePasswordResetToken(passwordResetDto.getToken());
 
         if(result != null) {
-            return ResponseEntity.ok(new MessageResponse("Invalid or expired password reset token"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired password reset token"));
         }
 
-        Optional<Credential> credential = credentialService.getCredentialByToken(passwordDto.getToken());
+        Optional<Credential> credential = credentialService.getCredentialByToken(passwordResetDto.getToken());
         if(credential.isPresent()) {
-            credentialService.changeCredentialPassword(credential.get(), passwordDto.getPassword());
+            credentialService.changeCredentialPassword(credential.get(), passwordResetDto.getPassword());
             return ResponseEntity.ok(new MessageResponse("Password changed"));
         } else {
-            return ResponseEntity.ok(new MessageResponse("Invalid password"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid password"));
+        }
+    }
+
+    @PostMapping("/updatePassword")
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        Optional<Credential> credential = credentialService.getByEmail(
+                SecurityContextHolder.getContext().getAuthentication().getName());
+        if(credential.isPresent()) {
+            if (!credentialService.checkIfValidOldPassword(credential.get(), changePasswordDTO.getOldPassword())) {
+                // throw new InvalidOldPasswordException();
+            }
+            credentialService.changeUserPassword(credential.get(), changePasswordDTO.getPassword());
+            return ResponseEntity.ok(new MessageResponse("Password updated"));
+        }
+        else {
+            return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
         }
     }
 }

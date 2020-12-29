@@ -37,7 +37,6 @@ public class Credential {
     private String email;
 
     @NotNull
-    @Size(min = 8)
     @Column(name = "password")
     private String password;
 

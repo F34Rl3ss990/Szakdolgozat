@@ -50,9 +50,9 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public void createPasswordResetTokenForCredential(Credential credential, String token) {
+    public void createPasswordResetTokenForCredential(Optional<Credential> credential, String token) {
         PasswordresetToken myToken = PasswordresetToken.builder()
-                .credential(credential)
+                .credential(credential.get())
                 .token(token)
                 .expiryDate(calculateExpiryDate())
                 .build();
@@ -70,7 +70,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Optional<Credential> getCredentialByToken(String token) {
-        return credentialRepository.getCredentialByPasswordresetToken(token);
+        return Optional.of(passwordresetTokenRepository.findByToken(token).getCredential());
     }
 
     @Override
@@ -88,4 +88,16 @@ public class CredentialServiceImpl implements CredentialService {
         credentialRepository.save(credential);
         return credential;
     }
+
+    @Override
+    public void changeUserPassword(final Credential credential, final String password) {
+        credential.setPassword(passwordEncoder.encode(password));
+        credentialRepository.save(credential);
+    }
+
+    @Override
+    public boolean checkIfValidOldPassword(final Credential credential, final String oldPassword) {
+        return passwordEncoder.matches(oldPassword, credential.getPassword());
+    }
+
 }

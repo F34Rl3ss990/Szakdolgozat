@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.payload.request;
 
+import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 public class LoginRequest {
 
     @NotBlank
+    @ValidEmail
     private String email;
 
     @NotBlank

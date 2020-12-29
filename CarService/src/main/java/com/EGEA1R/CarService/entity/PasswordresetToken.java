@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,9 +25,11 @@ public class PasswordresetToken {
     private Long id;
 
     @Column(name = "token")
+    @NotNull
     private String token;
 
     @Column(name = "expiry_date")
+    @NotNull
     private Date expiryDate;
 
     @OneToOne(fetch = FetchType.EAGER)
