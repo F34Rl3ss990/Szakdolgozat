@@ -1,11 +1,8 @@
+
 package com.EGEA1R.CarService.configuration;
 
 import java.util.Properties;
 
-
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -69,6 +65,7 @@ public class EmailConfiguration {
         return templateEngine;
     }
 
+
     @Bean
     public ITemplateResolver thymeleafClassLoaderTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -79,17 +76,6 @@ public class EmailConfiguration {
         return templateResolver;
     }
 
-    @Bean
-    public FreeMarkerConfigurer freemarkerClassLoaderConfig() {
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
-        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), "/" + mailTemplatesPath);
-        configuration.setTemplateLoader(templateLoader);
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        freeMarkerConfigurer.setConfiguration(configuration);
-        return freeMarkerConfigurer;
-    }
-
-
     public ResourceBundleMessageSource emailMessageSource() {
         final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("mailMessages");
@@ -97,3 +83,4 @@ public class EmailConfiguration {
     }
 
 }
+

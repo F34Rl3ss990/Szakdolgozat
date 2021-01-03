@@ -1,8 +1,7 @@
 package com.EGEA1R.CarService.service.interfaces;
 
-import com.EGEA1R.CarService.entity.Credential;
-import com.EGEA1R.CarService.entity.User;
-import com.EGEA1R.CarService.entity.VerificationToken;
+import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.VerificationToken;
 import org.springframework.stereotype.Service;
 
 @Service

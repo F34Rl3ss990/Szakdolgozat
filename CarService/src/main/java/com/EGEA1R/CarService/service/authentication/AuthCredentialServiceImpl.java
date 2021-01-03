@@ -1,7 +1,7 @@
 package com.EGEA1R.CarService.service.authentication;
 
-import com.EGEA1R.CarService.entity.Credential;
-import com.EGEA1R.CarService.repository.CredentialRepository;
+import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

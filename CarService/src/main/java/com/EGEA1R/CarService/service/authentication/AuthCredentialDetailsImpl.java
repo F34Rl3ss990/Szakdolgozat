@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.service.authentication;
 
-import com.EGEA1R.CarService.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

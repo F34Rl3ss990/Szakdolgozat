@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.validation;
 
-import com.EGEA1R.CarService.payload.request.SignupRequest;
+import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
 
 public class PasswordMatchesSignupValidator extends PasswordMatchesValidator<SignupRequest> {
     @Override

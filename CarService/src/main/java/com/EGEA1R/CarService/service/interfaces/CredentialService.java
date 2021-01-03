@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.service.interfaces;
 
-import com.EGEA1R.CarService.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.Credential;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

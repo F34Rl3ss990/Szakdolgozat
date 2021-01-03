@@ -1,7 +1,7 @@
 package com.EGEA1R.CarService.validation;
 
 
-import com.EGEA1R.CarService.controller.DTO.PasswordResetDTO;
+import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
 
 
 

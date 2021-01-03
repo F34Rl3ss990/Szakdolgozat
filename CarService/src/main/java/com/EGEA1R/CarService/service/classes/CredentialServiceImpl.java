@@ -1,9 +1,9 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.entity.Credential;
-import com.EGEA1R.CarService.entity.PasswordresetToken;
-import com.EGEA1R.CarService.repository.CredentialRepository;
-import com.EGEA1R.CarService.repository.PasswordresetTokenRepository;
+import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.PasswordresetToken;
+import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
+import com.EGEA1R.CarService.persistance.repository.PasswordresetTokenRepository;
 import com.EGEA1R.CarService.service.interfaces.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

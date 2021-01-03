@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.repository.WorkdayRepository;
+import com.EGEA1R.CarService.persistance.repository.WorkdayRepository;
 import com.EGEA1R.CarService.service.interfaces.WorkdayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

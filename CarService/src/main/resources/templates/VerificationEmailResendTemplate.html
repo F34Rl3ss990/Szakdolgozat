@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <style>
+        .valami {
+            margin:0;
+            line-height: inherit;
+            border-collapse: collapse;
+            vertical-align: top;
+            padding: 30px;
+            background-color: white;
+            text-align: left;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            border-spacing: 0;
+        }
+
+        .containerr{
+            margin: 0;
+            text-align: center;
+            position: relative;
+            padding: 0;
+            line-height: inherit;
+            min-width: 320px;
+            background-color: #ededed;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+
+    </style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width-device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="containerr">
+    <table style="text-align: center; max-width:600px; align-self: center; margin:0; display:inline-table">
+        <tbody>
+        <tr>
+            <td><img src='cid:unnamed'></td>
+        </tr>
+        <tr>
+            <td class="valami">
+                <p style="font-size: 30px; margin-top:0px">Regisztrációs e-mail</p>
+                <p>Ezt a levelet azért kaptad, mert regisztráltál az oldalunkon(CarService), de elfelejtetted aktiválni időben a felhasználói fiókodat.</p>
+                <p>Amennyiben nem te kezdeményezted a regisztrációt, úgy hagyd figyelmen kívül ezt az üzenetet!</p>
+                <p>Az aktiváláshoz szükséges link: <a th:href="${'http://localhost:8080/api/auth/resendRegistrationToken?token=' + token}">Aktiválás</a></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+</body>
+</html>

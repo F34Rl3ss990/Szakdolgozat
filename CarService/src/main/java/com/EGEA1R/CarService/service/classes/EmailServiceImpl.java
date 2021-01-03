@@ -16,7 +16,6 @@ import org.thymeleaf.context.Context;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.util.Map;
 
 @Component
 public class EmailServiceImpl implements EmailService {
@@ -36,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
         this.thymeleafTemplateEngine = thymeleafTemplateEngine;
     }
 
-    @Value("classpath:/mail-logo.png")
+    @Value("classpath:/unnamed.png")
     Resource resourceFile;
 
     private void sendSimpleMessage(String to, String subject, String text) {
@@ -52,36 +51,6 @@ public class EmailServiceImpl implements EmailService {
     }
     }
 
-    @Override
-    public void sendResetPasswordToken(String recipientAddress, String token){
-        String subject = "Password reset token mail";
-        String confirmationUrl =  "\r\n" + "http://localhost:8080/apu/auth/resendRegistrationToken?token=" + token;
-        String message = "A jelszó aktivációjához szükséges linket itt találod: ";
-        String text = message + confirmationUrl;
-        sendSimpleMessage(recipientAddress, subject, text);
-    }
-
-    @Override
-    public void resendVerificationToken(String recipientAddress, String token){
-        String subject = "Vericifation mail resent";
-        String confirmationUrl =  "\r\n" + "http://localhost:8080/apu/auth/resendRegistrationToken?token=" + token;
-        String message = "A fiók aktivációjához szükséges linket itt találod: ";
-        String text = message + confirmationUrl;
-        sendSimpleMessage(recipientAddress, subject, text);
-    }
-
-    @Override
-    public void sendVerificationToken(String recipientAddress, String token){
-        String subject = "Verification email sent";
-        String confirmationUrl
-                = "http://localhost:8080/apu/auth/regitrationConfirm?token=" + token;
-        String message = ("Sikeresen regisztráltál a carservice.hu weboldalra\n"+
-                "A fiók aktiválásához szükséges linket itt találod:");
-        String text = message + "\r\n" + "http://localhost:8080" + confirmationUrl;
-        sendSimpleMessage(recipientAddress, subject, text);
-    }
-
-    @Override
     public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) throws MessagingException {
         try {
             MimeMessage message = emailSender.createMimeMessage();
@@ -100,26 +69,47 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    private void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
+    private void sendHtmlMessage(String subject, String to, String htmlBody) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setFrom("noreply@carservice.com");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-     //   helper.addInline("attachment.png", resourceFile);
+        helper.addInline("unnamed", resourceFile);
         emailSender.send(message);
     }
 
-    @Override
-    public void sendMessageUsingThymeleafTemplate(
-            String to, String subject, Map<String, Object> templateModel)
+
+    private void sendMessageUsingThymeleafTemplate(
+            String to, String token, String subject, String html)
             throws MessagingException {
 
         Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(templateModel);
-        String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+        thymeleafContext.setVariable("token",  token);
+        String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
 
-        sendHtmlMessage(to, subject, htmlBody);
+        sendHtmlMessage(subject, to, htmlBody);
+    }
+
+    @Override
+    public void sendVerificationToken(String to, String token) throws MessagingException {
+        String subject = "Verification email";
+        String html = "VerificationEmailTemplate.html";
+        sendMessageUsingThymeleafTemplate(to, token, subject, html);
+    }
+
+    @Override
+    public void resendVerificationToken(String to, String token) throws MessagingException {
+        String subject = "Vericifation mail resent";
+        String html = "PasswordResetTemplate.html";
+        sendMessageUsingThymeleafTemplate(to, token, subject, html);
+    }
+
+    @Override
+    public void sendResetPasswordToken(String to, String token) throws MessagingException {
+        String subject = "Password reset token mail";
+        String html = "VerificationEmailResendTemplate.html";
+        sendMessageUsingThymeleafTemplate(to, token, subject, html);
     }
 }

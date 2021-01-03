@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.events;
 
-import com.EGEA1R.CarService.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.Credential;
 import lombok.*;
 import org.springframework.context.ApplicationEvent;
 
