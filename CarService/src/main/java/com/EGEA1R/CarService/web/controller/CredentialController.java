@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.controller;
+package com.EGEA1R.CarService.web.controller;
 
 import java.util.Calendar;
 import java.util.List;
@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
-import com.EGEA1R.CarService.controller.DTO.ChangePasswordDTO;
-import com.EGEA1R.CarService.controller.DTO.PasswordResetDTO;
+import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
+import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.VerificationToken;
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
-import com.EGEA1R.CarService.payload.request.LoginRequest;
-import com.EGEA1R.CarService.payload.request.SignupRequest;
-import com.EGEA1R.CarService.payload.response.JwtResponse;
-import com.EGEA1R.CarService.payload.response.MessageResponse;
+import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
+import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
+import com.EGEA1R.CarService.web.DTO.payload.response.JwtResponse;
+import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.security.jwt.JwtUtils;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.CredentialService;

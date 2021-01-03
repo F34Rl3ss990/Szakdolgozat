@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.controller;
+package com.EGEA1R.CarService.web.controller;
 
 import com.EGEA1R.CarService.service.interfaces.ItemService;
 import lombok.extern.slf4j.Slf4j;

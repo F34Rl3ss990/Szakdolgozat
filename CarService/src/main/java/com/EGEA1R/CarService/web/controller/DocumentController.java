@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.controller;
+package com.EGEA1R.CarService.web.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
