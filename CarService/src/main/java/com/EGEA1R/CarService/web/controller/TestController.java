@@ -14,19 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/test")
 public class TestController {
 
-    private JwtTokenCheckService jwtTokenCheckService;
 
-    @Autowired
-    public void setJwtTokenCheckService(JwtTokenCheckService jwtTokenCheckService){
-        this.jwtTokenCheckService = jwtTokenCheckService;
-    }
-
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request){
-        jwtTokenCheckService.saveBlockedToken(request);
-
-        return "logged out";
-    }
 
 
     @GetMapping("/all")

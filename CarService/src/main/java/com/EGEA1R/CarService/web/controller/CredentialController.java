@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.EGEA1R.CarService.security.EncrypterHelper;
@@ -14,6 +15,7 @@ import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.VerificationToken;
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
+import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.VerifyCodeRequest;
@@ -23,6 +25,7 @@ import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +58,8 @@ public class CredentialController {
     private PasswordresetTokenService passwordresetTokenService;
 
     private OTPService otpService;
+
+    private JwtTokenCheckService jwtTokenCheckService;
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager){
@@ -96,6 +101,23 @@ public class CredentialController {
         this.otpService = otpService;
     }
 
+    @Autowired
+    public void setJwtTokenCheckService(JwtTokenCheckService jwtTokenCheckService){
+        this.jwtTokenCheckService = jwtTokenCheckService;
+    }
+
+    @PreAuthorize("hasRole('ROLE_BOSS')")
+    @PostMapping(value = "/addAdmin")
+    public ResponseEntity<?> registerAdmin(@Valid @RequestBody AddAdminRequest addAdminRequest){
+        if (credentialService.credentialExistByEmail(addAdminRequest.getEmail()))
+        {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+        }
+        credentialService.addNewAdmin(addAdminRequest);
+        return ResponseEntity.ok(new MessageResponse("Admin registered successfully!"));
+    }
+
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -129,19 +151,8 @@ public class CredentialController {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 credentialService.verify(verifyCodeRequest.getEmail(), verifyCodeRequest.getCode());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
-        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        jwt = EncrypterHelper.encrypt(jwt);
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                credentialDetails.getCredentialId(),
-                credentialDetails.getUsername(),
-                roles));
+        return getResponseEntity(authentication);
     }
-
-
-
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
@@ -174,6 +185,8 @@ public class CredentialController {
         verificationTokenService.modifyPermissionOnVerificatedUser(credential);
         return ResponseEntity.ok(new MessageResponse("Successfully verificated"));
     }
+
+
 
     @GetMapping("/resendRegistrationToken")
     public ResponseEntity<?> resendRegistrationToken(
@@ -231,8 +244,8 @@ public class CredentialController {
     }
 
     @PostMapping("/updatePassword")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
         Credential credential = credentialService.getByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
         if(credential!= null) {
@@ -240,11 +253,33 @@ public class CredentialController {
                 // throw new InvalidOldPasswordException();
             }
             credentialService.changeUserPassword(credential, changePasswordDTO.getPassword());
-            return ResponseEntity.ok(new MessageResponse("Password updated"));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordDTO.getPassword()));
+            jwtTokenCheckService.saveBlockedToken(request);
+            return getResponseEntity(authentication);
         }
         else {
             return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        jwtTokenCheckService.saveBlockedToken(request);
+        return ResponseEntity.ok(new MessageResponse("Logged out"));
+    }
+
+    @NotNull
+    private ResponseEntity<?> getResponseEntity(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
+        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        jwt = EncrypterHelper.encrypt(jwt);
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                credentialDetails.getCredentialId(),
+                credentialDetails.getUsername(),
+                roles));
     }
 }
 

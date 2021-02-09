@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Optional;
@@ -26,4 +27,6 @@ public interface CredentialService {
     String getMfa(String email);
 
     UsernamePasswordAuthenticationToken verify(String email, String code);
+
+    Credential addNewAdmin(AddAdminRequest addAdminRequest);
 }

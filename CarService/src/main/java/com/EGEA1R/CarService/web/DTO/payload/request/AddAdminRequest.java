@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @Builder
 @PasswordMatches
-public class SignupRequest {
+public class AddAdminRequest {
 
     @NotBlank
     @Size(max = 255)
@@ -26,4 +26,9 @@ public class SignupRequest {
 
     @NotBlank
     private String matchingPassword;
+
+    @NotBlank
+    private String mfa;
+
+    private String secretImageUri;
 }

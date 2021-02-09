@@ -47,6 +47,11 @@ public class Credential {
     @Column(name = "permission", columnDefinition = "VARCHAR(100) default 'ROLE_DISABLED'")
     private String permission;
 
+    @Pattern(regexp = "^{11}[0-9]")
+    @Size(max = 11)
+    @Column(name = "phone_number")
+    private Integer phone_number;
+
     @Column(name = "multifactorauth", columnDefinition = "VARCHAR(45) default 'NULL'")
     private String mfa;
 /*

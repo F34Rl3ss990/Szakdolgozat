@@ -17,6 +17,7 @@ import com.EGEA1R.CarService.service.interfaces.CredentialService;
 import com.EGEA1R.CarService.service.interfaces.JwtTokenCheckService;
 import com.EGEA1R.CarService.service.interfaces.OTPService;
 import com.EGEA1R.CarService.service.interfaces.TotpManager;
+import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,21 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         return null;
     }
 
+    @Override
+    public Credential addNewAdmin(AddAdminRequest addAdminRequest) {
+        Credential credential = Credential.builder()
+                .email(addAdminRequest.getEmail())
+                .password(passwordEncoder.encode(addAdminRequest.getPassword()))
+                .mfa(addAdminRequest.getMfa())
+                .permission("ROLE_ADMIN")
+                .build();
+        if(addAdminRequest.getMfa().equals("phone")){
+            credential.setSecret(totpManager.generateSecret());
+        }
+        credentialRepository.save(credential);
+        return credential;
+    }
+
 
     @Override
     public void createPasswordResetTokenForCredential(Credential credential, String token) {
@@ -213,8 +229,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .jwtToken(jwt)
                 .build();
         tokenBlockRepository.save(tokenBlock);
-        Optional<TokenBlock> tokenBlock1 = tokenBlockRepository.findByUserId(id);
-        System.out.println(tokenBlock1.get().getJwtToken());
     }
 
     @Override
