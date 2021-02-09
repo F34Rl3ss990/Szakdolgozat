@@ -35,7 +35,7 @@ public class Car {
 
     @NotNull
     @Size(max = 30)
-    @Pattern(regexp ="[a-zA-Z]")
+    @Pattern(regexp = "^[a-zA-Z]+$")
     @Column(name = "brand")
     private String brand;
 
@@ -66,7 +66,7 @@ public class Car {
     @Column(name = "chassis_number")
     private String chassis_number;
 
-    @Max(999999)
+    @Max(9999999)
     @PositiveOrZero
     @Column(name = "mileage")
     private Integer mileage;

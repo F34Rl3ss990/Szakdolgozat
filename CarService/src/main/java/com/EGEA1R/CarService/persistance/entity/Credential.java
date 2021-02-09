@@ -42,7 +42,7 @@ public class Credential {
     @Column(name = "permission", columnDefinition = "VARCHAR(100) default 'ROLE_DISABLED'")
     private String permission;
 /*
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "credential")
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "credential")
     private User user;*/
 
 }

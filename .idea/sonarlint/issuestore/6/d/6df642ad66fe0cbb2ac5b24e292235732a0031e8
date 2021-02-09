@@ -1,0 +1,8 @@
+
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(µú¦Œûÿÿÿÿ
+T
+java:S36557"9Call "credential.isPresent()" before accessing the value.(õì¡ëüÿÿÿÿ
+w
+java:S14880"bImmediately return this expression instead of assigning it to the temporary variable "credential".(ÃÇÄ
+7
+java:S1116;"Remove this empty statement.(Åñ­õþÿÿÿÿ

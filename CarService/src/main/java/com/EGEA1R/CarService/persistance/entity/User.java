@@ -68,7 +68,7 @@ public class User {
     @JsonIgnore
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )

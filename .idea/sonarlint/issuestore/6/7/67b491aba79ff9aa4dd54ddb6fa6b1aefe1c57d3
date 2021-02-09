@@ -1,0 +1,7 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÒôÅÉ
+e	java:S116""QRename this field "car_id" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(³¯ØK
+p	java:S1162"VRename this field "engine_type" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Žæì‰úÿÿÿÿ
+x	java:S1169"^Rename this field "year_of_manufacture" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(åüøÇûÿÿÿÿ
+r	java:S116>"XRename this field "engine_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(£•¶Ôýÿÿÿÿ
+s	java:S116C"YRename this field "chassis_number" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šè‹„øÿÿÿÿ

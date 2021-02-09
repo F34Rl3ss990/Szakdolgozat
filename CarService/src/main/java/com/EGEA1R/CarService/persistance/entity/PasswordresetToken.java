@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "passwordreset")
-public class PasswordresetToken {
+public class PasswordResetToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

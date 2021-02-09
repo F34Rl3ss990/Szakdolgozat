@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
 import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
 import com.EGEA1R.CarService.persistance.entity.Credential;
@@ -18,7 +19,7 @@ import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.JwtResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
-import com.EGEA1R.CarService.security.jwt.JwtUtils;
+import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.CredentialService;
 import com.EGEA1R.CarService.service.interfaces.EmailService;
@@ -45,7 +46,7 @@ public class CredentialController {
 
     private CredentialService credentialService;
 
-    private JwtUtils jwtUtils;
+    private JwtUtilsImpl jwtUtils;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -54,6 +55,8 @@ public class CredentialController {
     private EmailService emailService;
 
     private PasswordresetTokenService passwordresetTokenService;
+
+    private EncrypterHelper encrypterHelper;
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager){
@@ -66,7 +69,7 @@ public class CredentialController {
     }
 
     @Autowired
-    public void setJwtUtils(JwtUtils jwtUtils){
+    public void setJwtUtils(JwtUtilsImpl jwtUtils){
         this.jwtUtils = jwtUtils;
     }
 
@@ -92,11 +95,10 @@ public class CredentialController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
-
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
+        jwt = EncrypterHelper.encrypt(jwt);
         AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
         List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 

@@ -2,9 +2,7 @@ package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.VerificationToken;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface VerificationTokenService {
 
     Credential getCredential(String verificationToken);

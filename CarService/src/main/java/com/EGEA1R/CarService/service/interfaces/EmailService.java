@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import javax.mail.MessagingException;
-import java.util.Map;
 
 public interface EmailService {
    // void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) throws MessagingException;
