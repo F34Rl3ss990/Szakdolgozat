@@ -10,6 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -17,7 +18,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 
-@Component
+@Service
 public class EmailServiceImpl implements EmailService {
 
 
@@ -38,7 +39,8 @@ public class EmailServiceImpl implements EmailService {
     @Value("classpath:/unnamed.png")
     Resource resourceFile;
 
-    private void sendSimpleMessage(String to, String subject, String text) {
+    @Override
+    public void sendSimpleMessage(String to, String subject, String text) {
        try{
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@carservice.com");

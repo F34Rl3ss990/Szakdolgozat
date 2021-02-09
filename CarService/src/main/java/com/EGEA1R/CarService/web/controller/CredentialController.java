@@ -1,15 +1,14 @@
 package com.EGEA1R.CarService.web.controller;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import com.EGEA1R.CarService.security.EncrypterHelper;
+import com.EGEA1R.CarService.service.classes.OTPServiceImpl;
+import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
 import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
 import com.EGEA1R.CarService.persistance.entity.Credential;
@@ -17,14 +16,13 @@ import com.EGEA1R.CarService.persistance.entity.VerificationToken;
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
 import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
+import com.EGEA1R.CarService.web.DTO.payload.request.VerifyCodeRequest;
+import com.EGEA1R.CarService.web.DTO.payload.response.JwtAuthenticationResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.JwtResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
-import com.EGEA1R.CarService.service.interfaces.CredentialService;
-import com.EGEA1R.CarService.service.interfaces.EmailService;
-import com.EGEA1R.CarService.service.interfaces.PasswordresetTokenService;
-import com.EGEA1R.CarService.service.interfaces.VerificationTokenService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +54,7 @@ public class CredentialController {
 
     private PasswordresetTokenService passwordresetTokenService;
 
-    private EncrypterHelper encrypterHelper;
+    private OTPService otpService;
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager){
@@ -93,20 +91,57 @@ public class CredentialController {
         this.passwordresetTokenService = passwordresetTokenService;
     }
 
+    @Autowired
+    public void setOtpService(OTPService otpService){
+        this.otpService = otpService;
+    }
+
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        jwt = EncrypterHelper.encrypt(jwt);
         AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
         List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        for (String role : roles) {
+            if (role.equals("ROLE_ADMIN")) {
+                String email = authentication.getName();
+                if (credentialService.getMfa(email).equals("email")) {
+                    int otp = otpService.generateOTP(email);
+                    String messeage = "Your otp number is: " + otp;
+                    emailService.sendSimpleMessage(email, "OTP -SpringBoot", messeage);
+                    return ResponseEntity.ok(new JwtAuthenticationResponse("", "email"));
+                } else if(credentialService.getMfa(email).equals("phone")){
+                    return ResponseEntity.ok(new JwtAuthenticationResponse("", "phone"));
+                }
+            }
+        }
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        jwt = EncrypterHelper.encrypt(jwt);
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 credentialDetails.getCredentialId(),
                 credentialDetails.getUsername(),
                 roles));
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyOTP(@Valid @RequestBody VerifyCodeRequest verifyCodeRequest){
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                credentialService.verify(verifyCodeRequest.getEmail(), verifyCodeRequest.getCode());
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
+        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        jwt = EncrypterHelper.encrypt(jwt);
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                credentialDetails.getCredentialId(),
+                credentialDetails.getUsername(),
+                roles));
+    }
+
+
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
@@ -154,13 +189,10 @@ public class CredentialController {
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
             @RequestParam String email) throws MessagingException {
-        Optional<Credential> credential = credentialService.getByEmail(email);
-        if (credential == null) {
-         //   throw new UserNotFoundException();
-        }
-        if(credential.isPresent()) {
+        Credential credential = credentialService.getByEmail(email);
+        if(credential!=null) {
         String token = UUID.randomUUID().toString();
-        String recipientAddress = credential.get().getEmail();
+        String recipientAddress = credential.getEmail();
         credentialService.createPasswordResetTokenForCredential(credential, token);
         emailService.sendResetPasswordToken(recipientAddress, token);
         return ResponseEntity.ok(new MessageResponse("Password reset token sent"));
@@ -201,13 +233,13 @@ public class CredentialController {
     @PostMapping("/updatePassword")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
-        Optional<Credential> credential = credentialService.getByEmail(
+        Credential credential = credentialService.getByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
-        if(credential.isPresent()) {
-            if (!credentialService.checkIfValidOldPassword(credential.get(), changePasswordDTO.getOldPassword())) {
+        if(credential!= null) {
+            if (!credentialService.checkIfValidOldPassword(credential, changePasswordDTO.getOldPassword())) {
                 // throw new InvalidOldPasswordException();
             }
-            credentialService.changeUserPassword(credential.get(), changePasswordDTO.getPassword());
+            credentialService.changeUserPassword(credential, changePasswordDTO.getPassword());
             return ResponseEntity.ok(new MessageResponse("Password updated"));
         }
         else {

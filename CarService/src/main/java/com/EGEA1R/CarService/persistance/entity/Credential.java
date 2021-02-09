@@ -3,6 +3,7 @@ package com.EGEA1R.CarService.persistance.entity;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,12 +38,19 @@ public class Credential {
 
     @NotNull
     @Column(name = "password")
+    @JsonIgnore
     private String password;
+
+    @Column(name = "secret")
+    private String secret;
 
     @Column(name = "permission", columnDefinition = "VARCHAR(100) default 'ROLE_DISABLED'")
     private String permission;
+
+    @Column(name = "multifactorauth", columnDefinition = "VARCHAR(45) default 'NULL'")
+    private String mfa;
 /*
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "credential")
-    private User user;*/
-
+    private User user;
+*/
 }

@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Optional;
 
@@ -8,9 +9,9 @@ public interface CredentialService {
 
     Boolean credentialExistByEmail(String email);
 
-    Optional<Credential> getByEmail(String email);
+    Credential getByEmail(String email);
 
-    void createPasswordResetTokenForCredential(Optional<Credential> credential, String token);
+    void createPasswordResetTokenForCredential(Credential credential, String token);
 
     Optional<Credential> getCredentialByToken(String token);
 
@@ -21,4 +22,8 @@ public interface CredentialService {
     void changeUserPassword(final Credential credential, final String password);
 
     boolean checkIfValidOldPassword(final Credential credential, final String oldPassword);
+
+    String getMfa(String email);
+
+    UsernamePasswordAuthenticationToken verify(String email, String code);
 }

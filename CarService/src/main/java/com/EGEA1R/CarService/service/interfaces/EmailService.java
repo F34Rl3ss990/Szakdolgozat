@@ -11,4 +11,5 @@ public interface EmailService {
 
     void sendVerificationToken(String recipientAddress, String token) throws MessagingException;
 
+    void sendSimpleMessage(String to, String subject, String text);
 }
