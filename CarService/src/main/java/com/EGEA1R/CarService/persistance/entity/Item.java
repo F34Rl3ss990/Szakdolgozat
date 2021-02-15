@@ -19,7 +19,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "item_id")
-    private Long item_id;
+    private Long itemId;
 
     @NotNull
     @Column(name = "name")
@@ -27,13 +27,13 @@ public class Item {
 
     @NotNull
     @PositiveOrZero
-    @Pattern(regexp = "[0-9]")
+    @Pattern(regexp = "^[0-9]+$")
     @Column(name = "amount")
     private Integer amount;
 
     @NotNull
     @PositiveOrZero
-    @Pattern(regexp = "[0-9]")
+    @Pattern(regexp = "^[0-9]+$")
     @Column(name = "cost")
     private Integer cost;
 

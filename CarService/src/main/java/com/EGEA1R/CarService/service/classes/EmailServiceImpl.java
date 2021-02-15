@@ -104,14 +104,14 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void resendVerificationToken(String to, String token) throws MessagingException {
         String subject = "Vericifation mail resent";
-        String html = "PasswordResetTemplate.html";
+        String html = "VerificationEmailResendTemplate.html";
         sendMessageUsingThymeleafTemplate(to, token, subject, html);
     }
 
     @Override
     public void sendResetPasswordToken(String to, String token) throws MessagingException {
         String subject = "Password reset token mail";
-        String html = "VerificationEmailResendTemplate.html";
+        String html = "PasswordResetTemplate.html";
         sendMessageUsingThymeleafTemplate(to, token, subject, html);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -21,7 +22,7 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "stock_id")
-    private Long stock_id;
+    private Long stockId;
 
     @NotNull
     @Column(name = "name")
@@ -29,6 +30,7 @@ public class Stock {
 
     @NotNull
     @PositiveOrZero
+    @Pattern(regexp = "^[0-9]+$")
     @Column(name = "amount")
     private Integer amount;
 

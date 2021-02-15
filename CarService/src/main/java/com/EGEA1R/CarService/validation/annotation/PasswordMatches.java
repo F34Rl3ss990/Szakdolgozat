@@ -1,9 +1,6 @@
 package com.EGEA1R.CarService.validation.annotation;
 
-import com.EGEA1R.CarService.validation.PasswordMatchesChangePasswordValidator;
-import com.EGEA1R.CarService.validation.PasswordMatchesPasswordresetValidator;
-import com.EGEA1R.CarService.validation.PasswordMatchesSignupValidator;
-import com.EGEA1R.CarService.validation.PasswordMatchesValidator;
+import com.EGEA1R.CarService.validation.*;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
@@ -18,7 +15,7 @@ import javax.validation.Payload;
 
 @Target({ TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = {PasswordMatchesSignupValidator.class, PasswordMatchesPasswordresetValidator.class, PasswordMatchesChangePasswordValidator.class})
+@Constraint(validatedBy = {PasswordMatchesSignupValidator.class, PasswordMatchesPasswordresetValidator.class, PasswordMatchesChangePasswordValidator.class, PasswordMatchesAddAdminRequest.class})
 @Documented
 public @interface PasswordMatches {
 

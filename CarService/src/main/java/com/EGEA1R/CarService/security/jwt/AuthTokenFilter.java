@@ -40,8 +40,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
             jwt = EncrypterHelper.decrypt(jwt);
-            if(jwt != null && jwtUtils.validateJwtToken(jwt) && !jwtUtils.checkIfNotBlocked(jwt)
-             ){
+            if(jwt != null && jwtUtils.validateJwtToken(jwt) && !jwtUtils.checkIfNotBlocked(jwt)){
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
                 jwtUtils.setJwtExpirationMs(jwt);
                 UserDetails userDetails = credentialService.loadUserByUsername(email);

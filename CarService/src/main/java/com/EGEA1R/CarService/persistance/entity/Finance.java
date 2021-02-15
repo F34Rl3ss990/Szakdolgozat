@@ -28,7 +28,7 @@ public class Finance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "finance_id")
-    private Long finance_id;
+    private Long financeId;
 
     @NotNull
     @CreationTimestamp
@@ -36,7 +36,7 @@ public class Finance {
     private Date payday;
 
     @NotNull
-    @Pattern(regexp = "[-][0-9]")
+    @Pattern(regexp = "^[-][0-9]+$")
     @Column(name = "amount")
     private Integer amount;
 
@@ -44,12 +44,12 @@ public class Finance {
     @Size(max = 80)
     @Pattern(regexp = "[\\sa-zA-Z]")
     @Column(name = "account_name")
-    private String account_name;
+    private String accountName;
 
     @Size(max = 26)
-    @Pattern(regexp = "^{8}[0-9][-]{8}[0-9][-]{8}[0-9]$")
+    @Pattern(regexp = "^[0-9]{8}[-][0-9]{8}[-][0-9]{8}$")
     @Column(name = "account_number")
-    private String account_number;
+    private String accountNumber;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)

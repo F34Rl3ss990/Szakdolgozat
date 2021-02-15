@@ -6,8 +6,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +26,21 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "service_id")
-    private Long service_id;
+    private Long serviceId;
+
+    @NotNull
+    @FutureOrPresent
+    @Column(name = "service_date")
+    private Date serviceDate;
 
     @NotNull
     @CreationTimestamp
-    @Column(name = "service_date")
-    private Date service_date;
+    @Column(name = "reservation_date")
+    private Date reservationDate;
+
+    @Size(max = 1000)
+    @Column(name = "comment")
+    private String comment;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)

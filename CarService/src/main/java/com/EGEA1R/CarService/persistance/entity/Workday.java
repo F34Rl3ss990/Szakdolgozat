@@ -25,18 +25,18 @@ public class Workday {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "workday_id")
-    private Long workday_id;
+    private Long workdayId;
 
     @NotNull
-    @CreationTimestamp
+   // @CreationTimestamp
     @Column(name = "workday_date")
-    private Date workday_date;
+    private Date workdayDate;
 
     @NotNull
     @Size(max = 30)
-    @Pattern(regexp = "[a-zA-Z]")
+    //@Pattern(regexp = "^[a-zA-Z]+$")
     @Column(name = "is_worked")
-    private String is_worked;
+    private String isWorked;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)

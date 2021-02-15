@@ -23,7 +23,7 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "file_id")
-    private Long file_id;
+    private Long fileId;
 
     @NotNull
     @Column(name = "type")
@@ -37,7 +37,7 @@ public class Document {
     @NotNull
     @CreationTimestamp
     @Column(name = "upload_time")
-    private Date upload_time;
+    private Date uploadTime;
 
     @Lob
     @NotNull

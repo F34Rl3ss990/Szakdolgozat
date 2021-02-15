@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Date;
@@ -28,11 +29,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "order_id")
-    private Long order_id;
+    private Long orderId;
 
     @NotNull
+    @PastOrPresent
     @Column(name = "order_date")
-    private Date order_date;
+    private Date orderDate;
 
     @NotNull
     @PositiveOrZero

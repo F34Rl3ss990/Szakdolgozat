@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,8 @@ public class PasswordResetToken {
     @NotNull
     private Date expiryDate;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "fk_passwordreset_credential_id")
     private Credential credential;
 

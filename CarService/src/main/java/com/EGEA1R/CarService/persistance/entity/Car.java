@@ -16,11 +16,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "car",
-uniqueConstraints = {
-        @UniqueConstraint(columnNames = "engine_number"),
-        @UniqueConstraint(columnNames = "chassis_number")
-})
+@Table(name = "car")
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
@@ -31,7 +27,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "car_id", nullable = false)
-    private Long car_id;
+    private Long carId;
 
     @NotNull
     @Size(max = 30)
@@ -47,29 +43,32 @@ public class Car {
     @NotNull
     @Size(max = 30)
     @Column(name = "engine_type")
-    private String engine_type;
+    private String engineType;
 
     @NotNull
-    @Min(1900)
-    @PastOrPresent
-    @Positive
+    @Size(max = 10)
     @Column(name = "year_of_manufacture")
-    private Integer year_of_manufacture;
+    private String yearOfManufacture;
 
     @Size(max = 30)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     @Column(name = "engine_number")
-    private String engine_number;
+    private String engineNumber;
 
     @Size(max = 17)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     @Column(name = "chassis_number")
-    private String chassis_number;
+    private String chassisNumber;
 
     @Max(9999999)
     @PositiveOrZero
     @Column(name = "mileage")
     private Integer mileage;
+
+
+    @Size(max = 10)
+    @Column(name = "license_plate_number")
+    private String licensePlateNumber;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)

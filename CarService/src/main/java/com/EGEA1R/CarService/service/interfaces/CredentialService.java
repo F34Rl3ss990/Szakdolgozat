@@ -2,6 +2,7 @@ package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Optional;
@@ -18,9 +19,7 @@ public interface CredentialService {
 
     Credential createNewCredential(String email, String password);
 
-    void changeCredentialPassword(Credential credential1, String newPassword);
-
-    void changeUserPassword(final Credential credential, final String password);
+    void changePassword(final Credential credential, final String password);
 
     boolean checkIfValidOldPassword(final Credential credential, final String oldPassword);
 
@@ -29,4 +28,10 @@ public interface CredentialService {
     UsernamePasswordAuthenticationToken verify(String email, String code);
 
     Credential addNewAdmin(AddAdminRequest addAdminRequest);
+
+    void disableAccountByUser(Long credentialId);
+
+    void disableAccountByAdmin(Long userId);
+
+    Page<Credential> getAdminCredentialPage(int page, int size);
 }

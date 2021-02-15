@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.EGEA1R.CarService.security.EncrypterHelper;
+import com.EGEA1R.CarService.security.jwt.AuthEntryPointJwt;
 import com.EGEA1R.CarService.service.classes.OTPServiceImpl;
 import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
@@ -26,6 +27,8 @@ import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class CredentialController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CredentialController.class);
 
     private AuthenticationManager authenticationManager;
 
@@ -117,7 +121,6 @@ public class CredentialController {
         return ResponseEntity.ok(new MessageResponse("Admin registered successfully!"));
     }
 
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -127,14 +130,20 @@ public class CredentialController {
         for (String role : roles) {
             if (role.equals("ROLE_ADMIN")) {
                 String email = authentication.getName();
-                if (credentialService.getMfa(email).equals("email")) {
-                    int otp = otpService.generateOTP(email);
-                    String messeage = "Your otp number is: " + otp;
-                    emailService.sendSimpleMessage(email, "OTP -SpringBoot", messeage);
-                    return ResponseEntity.ok(new JwtAuthenticationResponse("", "email"));
-                } else if(credentialService.getMfa(email).equals("phone")){
-                    return ResponseEntity.ok(new JwtAuthenticationResponse("", "phone"));
-                }
+                try {
+                    if (credentialService.getMfa(email).equals("email")) {
+                        int otp = otpService.generateOTP(email);
+                        String messeage = "Your otp number is: " + otp;
+                        emailService.sendSimpleMessage(email, "OTP -SpringBoot", messeage);
+                        return ResponseEntity.ok(new JwtAuthenticationResponse("", "email"));
+                    } else if (credentialService.getMfa(email).equals("phone")) {
+                        return ResponseEntity.ok(new JwtAuthenticationResponse("", "phone"));
+                    }
+                }catch(NullPointerException n){
+                    logger.error("Cannot set user authentication: {}", n);
+
+            }
+
             }
         }
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -178,6 +187,11 @@ public class CredentialController {
         Credential credential = verificationToken.getCredential();
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            try {
+                resendRegistrationToken(token);
+            } catch(MessagingException e){
+                logger.error("Cannot send mail: {}", e);
+            }
             return ResponseEntity.badRequest().body(new MessageResponse("redirect to bad user html, authentication token expired"));
         }
 
@@ -187,10 +201,7 @@ public class CredentialController {
     }
 
 
-
-    @GetMapping("/resendRegistrationToken")
-    public ResponseEntity<?> resendRegistrationToken(
-             @RequestParam("token") String existingToken) throws MessagingException {
+    private ResponseEntity<?> resendRegistrationToken(String existingToken) throws MessagingException {
         VerificationToken newToken = verificationTokenService.generateNewVerificationToken(existingToken);
 
         Credential credential = verificationTokenService.getCredential(newToken.getToken());
@@ -236,7 +247,7 @@ public class CredentialController {
 
         Optional<Credential> credential = credentialService.getCredentialByToken(passwordResetDto.getToken());
         if(credential.isPresent()) {
-            credentialService.changeCredentialPassword(credential.get(), passwordResetDto.getPassword());
+            credentialService.changePassword(credential.get(), passwordResetDto.getPassword());
             return ResponseEntity.ok(new MessageResponse("Password changed"));
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid password"));
@@ -252,7 +263,7 @@ public class CredentialController {
             if (!credentialService.checkIfValidOldPassword(credential, changePasswordDTO.getOldPassword())) {
                 // throw new InvalidOldPasswordException();
             }
-            credentialService.changeUserPassword(credential, changePasswordDTO.getPassword());
+            credentialService.changePassword(credential, changePasswordDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordDTO.getPassword()));
             jwtTokenCheckService.saveBlockedToken(request);
             return getResponseEntity(authentication);

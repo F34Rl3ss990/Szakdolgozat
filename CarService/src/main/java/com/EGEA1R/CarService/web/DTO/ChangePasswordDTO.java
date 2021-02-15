@@ -12,8 +12,6 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 @PasswordMatches
 public class ChangePasswordDTO {
 

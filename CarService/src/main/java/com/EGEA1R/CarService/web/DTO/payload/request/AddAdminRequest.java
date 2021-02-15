@@ -30,5 +30,4 @@ public class AddAdminRequest {
     @NotBlank
     private String mfa;
 
-    private String secretImageUri;
 }

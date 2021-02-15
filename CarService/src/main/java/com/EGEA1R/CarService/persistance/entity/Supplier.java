@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,26 +24,26 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "supplier_id")
-    private Long supplier_id;
+    private Long supplierId;
 
     @NotNull
     @Column(name = "name")
     private String name;
 
-    @Pattern(regexp = "^{8}[0-9][-]{8}[0-9][-]{8}[0-9]$")
+    @Pattern(regexp = "^[0-9]{8}[-][0-9]{8}[-][0-9]{8}$")
     @Column(name = "account_number")
-    private String account_number;
+    private String accountNumber;
 
     @NotNull
-    @Email
+    @ValidEmail
     @Column(name = "e-mail")
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^{11}[0-9]")
+    @Pattern(regexp = "^[0-9]{11}$")
     @Size(max = 11)
     @Column(name = "phone_number")
-    private Integer phone_number;
+    private Integer phoneNumber;
 
     @NotNull
     @Column(name = "address")

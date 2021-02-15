@@ -3,6 +3,7 @@ package com.EGEA1R.CarService.persistance.entity;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 
+import com.EGEA1R.CarService.validation.annotation.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Data
@@ -28,7 +31,7 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "credential_id")
-    private Long credential_id;
+    private Long credentialId;
 
     @NotNull
     @ValidEmail
@@ -39,23 +42,39 @@ public class Credential {
     @NotNull
     @Column(name = "password")
     @JsonIgnore
+    @ValidPassword
     private String password;
 
     @Column(name = "secret")
+    @JsonIgnore
     private String secret;
 
     @Column(name = "permission", columnDefinition = "VARCHAR(100) default 'ROLE_DISABLED'")
     private String permission;
 
-    @Pattern(regexp = "^{11}[0-9]")
-    @Size(max = 11)
-    @Column(name = "phone_number")
-    private Integer phone_number;
 
-    @Column(name = "multifactorauth", columnDefinition = "VARCHAR(45) default 'NULL'")
+    @Column(name = "multifactor_auth", columnDefinition = "VARCHAR(45) default 'NULL'")
     private String mfa;
-/*
-    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "credential")
+
+
+    @OneToOne(cascade = CascadeType.REMOVE,
+     fetch = FetchType.LAZY, mappedBy = "credential")
+    @JsonIgnore
     private User user;
-*/
+
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            mappedBy = "credential")
+    private Set<PasswordResetToken> passwordResetToken = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            mappedBy = "credential")
+    private Set<VerificationToken> verificationToken  = new HashSet<>();
+
 }
