@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.web.DTO;
+package com.EGEA1R.CarService.web.DTO.payload.request;
 
 import com.EGEA1R.CarService.validation.annotation.PasswordMatches;
 import com.EGEA1R.CarService.validation.annotation.ValidPassword;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @PasswordMatches
-public class PasswordResetDTO {
+public class PasswordResetRequest {
 
     @NotBlank
     @ValidPassword

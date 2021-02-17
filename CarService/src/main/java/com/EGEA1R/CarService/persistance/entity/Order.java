@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -34,7 +35,7 @@ public class Order {
     @NotNull
     @PastOrPresent
     @Column(name = "order_date")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @NotNull
     @PositiveOrZero

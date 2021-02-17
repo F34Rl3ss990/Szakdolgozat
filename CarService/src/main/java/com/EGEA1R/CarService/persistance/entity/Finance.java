@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -33,7 +34,7 @@ public class Finance {
     @NotNull
     @CreationTimestamp
     @Column(name = "payday")
-    private Date payday;
+    private LocalDate payday;
 
     @NotNull
     @Pattern(regexp = "^[-][0-9]+$")

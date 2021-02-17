@@ -1,10 +1,10 @@
 package com.EGEA1R.CarService.validation;
 
-import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
+import com.EGEA1R.CarService.web.DTO.payload.request.ChangePasswordRequest;
 
-public class PasswordMatchesChangePasswordValidator extends PasswordMatchesValidator<ChangePasswordDTO> {
+public class PasswordMatchesChangePasswordValidator extends PasswordMatchesValidator<ChangePasswordRequest> {
     @Override
-    protected boolean validation(ChangePasswordDTO value) {
+    protected boolean validation(ChangePasswordRequest value) {
         return value.getPassword().equals(value.getMatchingPassword());
     }
 }

@@ -42,6 +42,7 @@ public class CarDTO {
 
     @Max(9999999)
     @PositiveOrZero
+    @NotNull
     private Integer mileage;
 
     @Size(max = 10)

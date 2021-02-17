@@ -8,11 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.EGEA1R.CarService.security.EncrypterHelper;
-import com.EGEA1R.CarService.security.jwt.AuthEntryPointJwt;
-import com.EGEA1R.CarService.service.classes.OTPServiceImpl;
 import com.EGEA1R.CarService.service.interfaces.*;
-import com.EGEA1R.CarService.web.DTO.ChangePasswordDTO;
-import com.EGEA1R.CarService.web.DTO.PasswordResetDTO;
+import com.EGEA1R.CarService.web.DTO.payload.request.ChangePasswordRequest;
+import com.EGEA1R.CarService.web.DTO.payload.request.PasswordResetRequest;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.VerificationToken;
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
@@ -25,7 +23,6 @@ import com.EGEA1R.CarService.web.DTO.payload.response.JwtResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -237,17 +234,17 @@ public class CredentialController {
 
     @PostMapping("/savePassword")
     public ResponseEntity<?> savePassword(
-            @Valid @RequestBody PasswordResetDTO passwordResetDto) {
+            @Valid @RequestBody PasswordResetRequest passwordResetRequest) {
 
-        String result = passwordresetTokenService.validatePasswordResetToken(passwordResetDto.getToken());
+        String result = passwordresetTokenService.validatePasswordResetToken(passwordResetRequest.getToken());
 
         if(result != null) {
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired password reset token"));
         }
 
-        Optional<Credential> credential = credentialService.getCredentialByToken(passwordResetDto.getToken());
+        Optional<Credential> credential = credentialService.getCredentialByToken(passwordResetRequest.getToken());
         if(credential.isPresent()) {
-            credentialService.changePassword(credential.get(), passwordResetDto.getPassword());
+            credentialService.changePassword(credential.get(), passwordResetRequest.getPassword());
             return ResponseEntity.ok(new MessageResponse("Password changed"));
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse("Invalid password"));
@@ -256,15 +253,15 @@ public class CredentialController {
 
     @PostMapping("/updatePassword")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
+    public ResponseEntity<?> changeUserPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest, HttpServletRequest request) {
         Credential credential = credentialService.getByEmail(
                 SecurityContextHolder.getContext().getAuthentication().getName());
         if(credential!= null) {
-            if (!credentialService.checkIfValidOldPassword(credential, changePasswordDTO.getOldPassword())) {
+            if (!credentialService.checkIfValidOldPassword(credential, changePasswordRequest.getOldPassword())) {
                 // throw new InvalidOldPasswordException();
             }
-            credentialService.changePassword(credential, changePasswordDTO.getPassword());
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordDTO.getPassword()));
+            credentialService.changePassword(credential, changePasswordRequest.getPassword());
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordRequest.getPassword()));
             jwtTokenCheckService.saveBlockedToken(request);
             return getResponseEntity(authentication);
         }

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -30,7 +31,7 @@ public class Workday {
     @NotNull
    // @CreationTimestamp
     @Column(name = "workday_date")
-    private Date workdayDate;
+    private LocalDate workdayDate;
 
     @NotNull
     @Size(max = 30)

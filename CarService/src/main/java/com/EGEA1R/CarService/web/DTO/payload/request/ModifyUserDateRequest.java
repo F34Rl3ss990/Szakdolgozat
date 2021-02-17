@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.web.DTO;
+package com.EGEA1R.CarService.web.DTO.payload.request;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModifyUserDataDTO {
+public class ModifyUserDateRequest {
 
     @NotNull
     @ValidEmail

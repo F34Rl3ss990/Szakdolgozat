@@ -5,48 +5,52 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAndCarAndServiceDTO {
+public class UnauthorizedUserReservationDTO {
 
     @Size(max = 30)
     @Pattern(regexp = "^[a-zA-Z]+$")
-    @Column(name = "brand")
     private String brand;
 
     @Size(max = 30)
-    @Column(name = "type")
+    @NotNull
     private String type;
 
     @Size(max = 30)
-    @Column(name = "engine_type")
+    @NotNull
     private String engineType;
 
-    @Min(1900)
-    @PastOrPresent
-    @Positive
-    @Column(name = "year_of_manufacture")
-    private Integer yearOfManufacture;
+    @NotNull
+    private String yearOfManufacture;
 
     @Size(max = 30)
     @Pattern(regexp = "[A-Za-z0-9]")
-    @Column(name = "engine_number")
     private String engineNumber;
 
     @Size(max = 17)
     @Pattern(regexp = "[A-Za-z0-9]")
-    @Column(name = "chassis_number")
     private String chassisNumber;
+
+    @Size(max = 10)
+    @NotNull
+    private String licensePlateNumber;
+
+    private Boolean foreignCountryPlate;
 
     @Max(9999999)
     @PositiveOrZero
-    @Column(name = "mileage")
+    @NotNull
     private Integer mileage;
 
     @Pattern(regexp = "[a-zA-Z]")
@@ -64,13 +68,6 @@ public class UserAndCarAndServiceDTO {
     @Size(max = 11)
     private Integer phoneNumber;
 
-    @Size(max = 1000)
-    private String comment;
-
-    @Size(max = 10)
-    private String licensePlateNumber;
-
-    private boolean foreignCountryPlate;
 
     @NotNull
     private String name;
@@ -103,6 +100,15 @@ public class UserAndCarAndServiceDTO {
 
     @ValidEmail
     private String billingEmail;
+
+    @Size(max = 1000)
+    private String comment;
+
+    @NotNull
+    @FutureOrPresent
+    private LocalDate reservedDate;
+
+    private List<ReservedServiceList> service = new ArrayList<>();
 }
 
 

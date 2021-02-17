@@ -3,14 +3,13 @@ package com.EGEA1R.CarService.service.classes;
 import com.EGEA1R.CarService.exception.BadRequestException;
 import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.BillingInformation;
-import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.UserService;
-import com.EGEA1R.CarService.web.DTO.ModifyUserDataDTO;
-import com.EGEA1R.CarService.web.DTO.UserAndCarAndServiceDTO;
+import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,41 +39,46 @@ public class UserServiceImpl implements UserService {
         this.credentialRepository = credentialRepository;
     }
 
-    public void saveUser(UserAndCarAndServiceDTO userAndCarAndServiceDTO, Long credentialId){
+    @Override
+    public void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId){
         Credential credential = getCredential(credentialId);
         BillingInformation billingInformation = new BillingInformation();
-        setBillingInformation(userAndCarAndServiceDTO);
+        setBillingInformation(unauthorizedUserReservationDTO);
         User user = new User();
-        addUser(userAndCarAndServiceDTO, user, billingInformation);
+        addUser(unauthorizedUserReservationDTO, user, billingInformation);
         user.setCredential(credential);
         userRepository.save(user);
     }
 
-    public void saveUnauthorizedUser(UserAndCarAndServiceDTO userAndCarAndServiceDTO){
+    @Override
+    public User saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         BillingInformation billingInformation = new BillingInformation();
-        setBillingInformation(userAndCarAndServiceDTO);
+        setBillingInformation(unauthorizedUserReservationDTO);
         User user = new User();
-        addUser(userAndCarAndServiceDTO, user, billingInformation);
+        addUser(unauthorizedUserReservationDTO, user, billingInformation);
         userRepository.save(user);
+        return user;
     }
 
-
-    public void modifyUser(ModifyUserDataDTO modifyUserDataDTO, Long userId, Long credentialId){
+    @Override
+    public void modifyUser(ModifyUserDateRequest modifyUserDateRequest, Long userId, Long credentialId){
         Credential credential = getCredential(credentialId);
         User user = getUser(userId);
         BillingInformation billingInformation = user.getBillingInformation();
-        user.setPhoneNumber(modifyUserDataDTO.getPhoneNumber());
-        user.setEmail(modifyUserDataDTO.getEmail());
-        user.setBillingInformation(modifyBillingInformation(billingInformation, modifyUserDataDTO));
-        credential.setEmail(modifyUserDataDTO.getEmail());
+        user.setPhoneNumber(modifyUserDateRequest.getPhoneNumber());
+        user.setEmail(modifyUserDateRequest.getEmail());
+        user.setBillingInformation(modifyBillingInformation(billingInformation, modifyUserDateRequest));
+        credential.setEmail(modifyUserDateRequest.getEmail());
         credentialRepository.save(credential);
         userRepository.save(user);
     }
 
+    @Override
     public User getUserDetails(Long credentialId){
         return getUser(credentialId);
     }
 
+    @Override
     public Page<User> getAllUserPage(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "lastName"));
         Page<User> pageResult = userRepository.findAll(pageRequest);
@@ -83,12 +87,6 @@ public class UserServiceImpl implements UserService {
                 .collect(toList());
         return new PageImpl<>(users, pageRequest, pageResult.getTotalElements());
     }
-
-    public void getUsersAndCarWithServicesToday(){
-
-    }
-
-    public void getUsersAndCarWithServicesInTheFuture(){}
 
     private Credential getCredential(Long credentialId){
         return credentialRepository
@@ -102,68 +100,68 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("User with this id not found: %s", Long.toString(userId))));
     }
 
-    private BillingInformation setBillingInformation(UserAndCarAndServiceDTO userAndCarAndServiceDTO){
+    private BillingInformation setBillingInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         BillingInformation billingInformation = new BillingInformation();
-        billingInformation.setName(userAndCarAndServiceDTO.getName());
-        billingInformation.setPhoneNumber(userAndCarAndServiceDTO.getBillingPhoneNumber());
-        billingInformation.setCountry(userAndCarAndServiceDTO.getCountry());
-        billingInformation.setZipCode(userAndCarAndServiceDTO.getZipCode());
-        billingInformation.setTown(userAndCarAndServiceDTO.getTown());
-        billingInformation.setStreet(userAndCarAndServiceDTO.getStreet());
-        billingInformation.setOtherAddressType(userAndCarAndServiceDTO.getOtherAddressType());
-        billingInformation.setEmail(userAndCarAndServiceDTO.getBillingEmail());
-        if(!userAndCarAndServiceDTO.getTaxNumber().isEmpty() && !userAndCarAndServiceDTO.getEuTax()){
-            if(Pattern.matches("^[0-9]{8}[-][0-9][-][0-9]{2}$", userAndCarAndServiceDTO.getTaxNumber())){
-                billingInformation.setTaxNumber(userAndCarAndServiceDTO.getTaxNumber());
+        billingInformation.setName(unauthorizedUserReservationDTO.getName());
+        billingInformation.setPhoneNumber(unauthorizedUserReservationDTO.getBillingPhoneNumber());
+        billingInformation.setCountry(unauthorizedUserReservationDTO.getCountry());
+        billingInformation.setZipCode(unauthorizedUserReservationDTO.getZipCode());
+        billingInformation.setTown(unauthorizedUserReservationDTO.getTown());
+        billingInformation.setStreet(unauthorizedUserReservationDTO.getStreet());
+        billingInformation.setOtherAddressType(unauthorizedUserReservationDTO.getOtherAddressType());
+        billingInformation.setEmail(unauthorizedUserReservationDTO.getBillingEmail());
+        if(!unauthorizedUserReservationDTO.getTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getEuTax()){
+            if(Pattern.matches("^[0-9]{8}[-][0-9][-][0-9]{2}$", unauthorizedUserReservationDTO.getTaxNumber())){
+                billingInformation.setTaxNumber(unauthorizedUserReservationDTO.getTaxNumber());
             }else
                 throw new BadRequestException("Tax number is incorrect");
         } else{
-            billingInformation.setTaxNumber(userAndCarAndServiceDTO.getTaxNumber());
+            billingInformation.setTaxNumber(unauthorizedUserReservationDTO.getTaxNumber());
         }
         return billingInformation;
     }
 
-    private BillingInformation modifyBillingInformation(BillingInformation billingInform, ModifyUserDataDTO modifyUserDataDTO){
-        if(!modifyUserDataDTO.getName().isEmpty()){
-            billingInform.setName(modifyUserDataDTO.getName());
+    private BillingInformation modifyBillingInformation(BillingInformation billingInform, ModifyUserDateRequest modifyUserDateRequest){
+        if(!modifyUserDateRequest.getName().isEmpty()){
+            billingInform.setName(modifyUserDateRequest.getName());
         }
-        if(!modifyUserDataDTO.getCountry().isEmpty()){
-            billingInform.setCountry(modifyUserDataDTO.getCountry());
+        if(!modifyUserDateRequest.getCountry().isEmpty()){
+            billingInform.setCountry(modifyUserDateRequest.getCountry());
         }
-        if(!modifyUserDataDTO.getZipCode().toString().isEmpty()){
-            billingInform.setZipCode(modifyUserDataDTO.getZipCode());
+        if(!modifyUserDateRequest.getZipCode().toString().isEmpty()){
+            billingInform.setZipCode(modifyUserDateRequest.getZipCode());
         }
-        if(!modifyUserDataDTO.getTown().isEmpty()){
-            billingInform.setTown(modifyUserDataDTO.getTown());
+        if(!modifyUserDateRequest.getTown().isEmpty()){
+            billingInform.setTown(modifyUserDateRequest.getTown());
         }
-        if(!modifyUserDataDTO.getStreet().isEmpty()){
-            billingInform.setStreet(modifyUserDataDTO.getStreet());
+        if(!modifyUserDateRequest.getStreet().isEmpty()){
+            billingInform.setStreet(modifyUserDateRequest.getStreet());
         }
-        if(!modifyUserDataDTO.getOtherAddressType().isEmpty()){
-            billingInform.setOtherAddressType(modifyUserDataDTO.getOtherAddressType());
+        if(!modifyUserDateRequest.getOtherAddressType().isEmpty()){
+            billingInform.setOtherAddressType(modifyUserDateRequest.getOtherAddressType());
         }
-        if(!modifyUserDataDTO.getPhoneNumber().toString().isEmpty()){
-            billingInform.setPhoneNumber(modifyUserDataDTO.getPhoneNumber());
+        if(!modifyUserDateRequest.getPhoneNumber().toString().isEmpty()){
+            billingInform.setPhoneNumber(modifyUserDateRequest.getPhoneNumber());
         }
-        if(!modifyUserDataDTO.getTaxNumber().isEmpty() && !modifyUserDataDTO.getEuTax()){
-            if(Pattern.matches("^[0-9]{8}[-][0-9][-][0-9]{2}$", modifyUserDataDTO.getTaxNumber())){
-                billingInform.setTaxNumber(modifyUserDataDTO.getTaxNumber());
+        if(!modifyUserDateRequest.getTaxNumber().isEmpty() && !modifyUserDateRequest.getEuTax()){
+            if(Pattern.matches("^[0-9]{8}[-][0-9][-][0-9]{2}$", modifyUserDateRequest.getTaxNumber())){
+                billingInform.setTaxNumber(modifyUserDateRequest.getTaxNumber());
             }else
                 throw new BadRequestException("Tax number is incorrect");
         } else{
-            billingInform.setTaxNumber(modifyUserDataDTO.getTaxNumber());
+            billingInform.setTaxNumber(modifyUserDateRequest.getTaxNumber());
         }
-        if(!modifyUserDataDTO.getEmail().isEmpty()){
-            billingInform.setEmail(modifyUserDataDTO.getBillingEmail());
+        if(!modifyUserDateRequest.getEmail().isEmpty()){
+            billingInform.setEmail(modifyUserDateRequest.getBillingEmail());
         }
         return billingInform;
     }
 
-    private User addUser(UserAndCarAndServiceDTO userAndCarAndServiceDTO, User user, BillingInformation billingInformation){
+    private User addUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, User user, BillingInformation billingInformation){
         user.setLastName(user.getLastName());
         user.setFirstName(user.getFirstName());
         user.setPhoneNumber(user.getPhoneNumber());
-        user.setEmail(userAndCarAndServiceDTO.getEmail());
+        user.setEmail(unauthorizedUserReservationDTO.getEmail());
         user.setBillingInformation(billingInformation);
         return user;
     }

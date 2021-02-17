@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,19 +17,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceDTO {
+public class ServiceReservationDTO {
 
     @NotNull
     private Long carId;
 
     private String comment;
 
-    @CreationTimestamp
-    private Date serviceDate;
-
     @NotNull
     @FutureOrPresent
-    private Date reservedDate;
+    private LocalDate reservedDate;
 
-    private List<ServiceList> service = new ArrayList<>();
+    private List<ReservedServiceList> service = new ArrayList<>();
 }

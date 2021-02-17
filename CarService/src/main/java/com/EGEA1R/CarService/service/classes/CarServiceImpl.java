@@ -10,6 +10,7 @@ import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.CarService;
 import com.EGEA1R.CarService.web.DTO.CarDTO;
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,14 +50,23 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void addCar(CarDTO carDTO, Long credentialId){
+    public void addCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId){
         Credential credential = credentialRepository
                 .findById(credentialId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Credential not found %s", Long.toString(credentialId))));
-        Car car = convertCarDTOToCar(carDTO, credential.getUser().getUserId());
+        Car car = convertDTOtoCar(unauthorizedUserReservationDTO);
+        User user = userRepository.findByCredential(credential);
+        car.setUser(user);
         carRepository.save(car);
     }
 
+    @Override
+    public Car addCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, User user){
+        Car car = convertDTOtoCar(unauthorizedUserReservationDTO);
+        car.setUser(user);
+        carRepository.save(car);
+        return car;
+    }
 
     @Override
     public void modifyCar(CarDTO carDTO){
@@ -85,6 +95,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Page<Car> getAllCarPageByUser(int page, int size, Long id){
         PageRequest pageRequest = PageRequest.of(page, size,  Sort.by(Sort.Direction.ASC, "brand"));
+       // Page<Car> pageResult2 = carRepository.findAllByUser_UserId(id, pageRequest);
         Page<Car> pageResult = carRepository.findAll(pageRequest);
         Predicate<Car> contain = (Car item) -> item.getUser().getUserId() == id;
         List<Car> cars = pageResult
@@ -103,27 +114,24 @@ public class CarServiceImpl implements CarService {
         return carRepository.findById(id);
     }
 
-    private Car convertCarDTOToCar(CarDTO carDTO, Long credentialId){
-        User user = userRepository
-                .findById(credentialId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("id %s", Long.toString(credentialId))));
+    private Car convertDTOtoCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         Car car = new Car();
-        String licensePlate = checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber());
+        String licensePlate = checkLicensePlate(unauthorizedUserReservationDTO.getForeignCountryPlate(), unauthorizedUserReservationDTO.getLicensePlateNumber());
         car.setLicensePlateNumber(licensePlate);
-        car.setBrand(carDTO.getBrand());
-        car.setType(carDTO.getType());
-        car.setEngineType(carDTO.getEngineType());
-        car.setYearOfManufacture(carDTO.getYearOfManufacture());
-        car.setMileage(carDTO.getMileage());
-        car.setUser(user);
-        if(!carDTO.getChassisNumber().isEmpty()){
-            car.setChassisNumber(carDTO.getChassisNumber());
+        car.setBrand(unauthorizedUserReservationDTO.getBrand());
+        car.setType(unauthorizedUserReservationDTO.getType());
+        car.setEngineType(unauthorizedUserReservationDTO.getEngineType());
+        car.setYearOfManufacture(unauthorizedUserReservationDTO.getYearOfManufacture());
+        car.setMileage(unauthorizedUserReservationDTO.getMileage());
+        if(!unauthorizedUserReservationDTO.getChassisNumber().isEmpty()){
+            car.setChassisNumber(unauthorizedUserReservationDTO.getChassisNumber());
         }
-        if (!carDTO.getEngineNumber().isEmpty()){
+        if (!unauthorizedUserReservationDTO.getEngineNumber().isEmpty()){
             car.setEngineNumber(car.getEngineNumber());
         }
         return car;
     }
+
 
     private String checkLicensePlate(Boolean foreignPlate, String licensePlate){
         if(!foreignPlate && (Pattern.matches("^[a-zA-Z]{3}[-][0-9]{3}$", licensePlate)) ||

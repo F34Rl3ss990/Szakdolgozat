@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -37,7 +38,7 @@ public class Document {
     @NotNull
     @CreationTimestamp
     @Column(name = "upload_time")
-    private Date uploadTime;
+    private LocalDate uploadTime;
 
     @Lob
     @NotNull

@@ -10,6 +10,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "service")
+@Table(name = "service_reservation")
 @EntityListeners(AuditingEntityListener.class)
-public class Service {
+public class ServiceReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +31,13 @@ public class Service {
 
     @NotNull
     @FutureOrPresent
-    @Column(name = "service_date")
-    private Date serviceDate;
+    @Column(name = "reserved_date")
+    private LocalDate reservedDate;
 
     @NotNull
     @CreationTimestamp
-    @Column(name = "reservation_date")
-    private Date reservationDate;
+    @Column(name = "date_of_the_reservation")
+    private LocalDate dateOfTheReservation;
 
     @Size(max = 1000)
     @Column(name = "comment")
@@ -48,7 +49,7 @@ public class Service {
     private Car car;
 
     @ElementCollection
-    @CollectionTable(name = "services",
+    @CollectionTable(name = "reserved_services",
     joinColumns = @JoinColumn(name = "fk_services_service")
     )
     private List<String> services;

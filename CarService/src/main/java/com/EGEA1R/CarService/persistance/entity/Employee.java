@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -52,7 +53,7 @@ public class Employee {
     @NotNull
     @PastOrPresent
     @Column(name = "date_of_join")
-    private Date dateOfJoin;
+    private LocalDate dateOfJoin;
 
     @NotNull
     @Positive
