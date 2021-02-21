@@ -6,7 +6,7 @@ import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.CarRepository;
-import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.CarService;
 import com.EGEA1R.CarService.web.DTO.CarDTO;

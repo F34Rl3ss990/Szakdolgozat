@@ -28,5 +28,5 @@ public class ServiceReservationDTO {
     @FutureOrPresent
     private LocalDate reservedDate;
 
-    private List<ReservedServiceList> service = new ArrayList<>();
+    private List<ReservedServiceList> reservedServices = new ArrayList<>();
 }

@@ -57,18 +57,18 @@ public class JwtUtilsImpl implements JwtUtils, JwtUtilId{
     }
 
     @Override
-    public boolean checkIfNotBlocked(String authToken){
+    public Boolean checkIfNotBlocked(String authToken){
         String email = getEmailFromJwtToken(authToken);
         Optional<TokenBlock> tokenBlock = jwtTokenCheckService.findTokenBlock(email);
-        if(tokenBlock.isPresent()){
-            return tokenBlock.get().getJwtToken().equals(authToken);
+        if(tokenBlock.isPresent()) {
+            return !tokenBlock.get().getJwtToken().equals(authToken);
         }else{
-            return true;
+            return false;
         }
     }
 
     @Override
-    public boolean validateJwtToken(String authToken) {
+    public Boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;

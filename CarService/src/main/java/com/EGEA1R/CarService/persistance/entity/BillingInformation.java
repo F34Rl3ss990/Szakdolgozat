@@ -19,19 +19,24 @@ import javax.validation.constraints.Size;
 public class BillingInformation {
 
 
+    @NotNull
     private String name;
 
     @NotNull
     @Pattern(regexp = "^[0-9]{11}$")
     @Size(max = 11)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
+    @NotNull
     private String country;
 
+    @NotNull
     private Integer zipCode;
 
+    @NotNull
     private String town;
 
+    @NotNull
     private String street;
 
     private String otherAddressType;

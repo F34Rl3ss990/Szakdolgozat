@@ -8,7 +8,7 @@ public interface JwtUtils extends JwtUtilId{
 
     void setJwtExpirationMs(String token);
 
-    boolean checkIfNotBlocked(String authToken);
+    Boolean checkIfNotBlocked(String authToken);
 
-    boolean validateJwtToken(String authToken);
+    Boolean validateJwtToken(String authToken);
 }

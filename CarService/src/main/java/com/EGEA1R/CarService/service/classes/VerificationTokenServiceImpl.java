@@ -1,22 +1,39 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.VerificationToken;
-import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
-import com.EGEA1R.CarService.persistance.repository.VerificationRepository;
+import com.EGEA1R.CarService.persistance.entity.PasswordReset;
+import com.EGEA1R.CarService.persistance.entity.Verification;
+import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.VerificationRepository;
+import com.EGEA1R.CarService.service.interfaces.EmailService;
 import com.EGEA1R.CarService.service.interfaces.VerificationTokenService;
+import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.security.auth.login.CredentialNotFoundException;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
 
+
     private VerificationRepository verificationRepository;
 
     private CredentialRepository credentialRepository;
+
+    private EmailService emailService;
+
+    @Autowired
+    public void  setEmailService(EmailService emailService){
+        this.emailService = emailService;
+    }
 
     @Autowired
     public void setVerificationRepository(VerificationRepository verificationRepository){
@@ -29,29 +46,24 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public VerificationToken getVerificationToken(String VerificationToken) {
-        return verificationRepository.findByToken(VerificationToken);
+    public Verification getFkAndExpDateByToken(String verificationToken) {
+        return verificationRepository.getFkAndExpDateByToken(verificationToken)
+                .orElseThrow(()-> new ResourceNotFoundException(String.format("Credential not found by token: %s", verificationToken)));
     }
 
-    @Override
-    public Credential getCredential(String verificationToken) {
-        Credential credential = verificationRepository.findByToken(verificationToken).getCredential();
-        return credential;
+
+    private String getCredentialEmailById(Long id) {
+      return verificationRepository.getCredentialEmailByVerificationId(id);
     }
 
-    @Override
-    public VerificationToken findByUser(Credential credential){
-        return verificationRepository.findByCredential(credential);
-    }
-
+    @Transactional
     @Override
     public void createVerificationToken(Credential credential, String token) {
-        VerificationToken myToken = VerificationToken.builder()
-                .credential(credential)
+        Verification myToken = Verification.builder()
                 .token(token)
                 .expiryDate(calculateExpiryDate())
                 .build();
-        verificationRepository.save(myToken);
+        verificationRepository.saveVerificationToken(myToken, credential.getCredentialId());
     }
 
     private Date calculateExpiryDate() {
@@ -63,18 +75,19 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void modifyPermissionOnVerificatedUser(Credential credential) {
-        credentialRepository.save(credential);
+    public void modifyPermissionOnVerifiedUser(Long credentialId) {
+        credentialRepository.setPermissionOnVerifiedUser(credentialId);
     }
 
     @Override
-    public VerificationToken generateNewVerificationToken(String existingToken){
-        VerificationToken verificationToken = verificationRepository.findByToken(existingToken);
+    public void generateNewTokenAndSendItViaEmail(String existingToken) throws MessagingException {
+        Verification verification = verificationRepository.findByToken(existingToken)
+                .orElseThrow(()-> new ResourceNotFoundException(String.format("Verification not found by token: %s", existingToken)));
         String token = UUID.randomUUID().toString();
-        verificationToken.setToken(token);
-        verificationToken.setExpiryDate(calculateExpiryDate());
-        verificationRepository.save(verificationToken);
-        return verificationToken;
+        verification.setToken(token);
+        verification.setExpiryDate(calculateExpiryDate());
+        verificationRepository.setNewTokenAndExpDateOnObj(verification);
+        emailService.resendVerificationToken(getCredentialEmailById(verification.getVerificationId()), verification.getToken());
     }
 }
 

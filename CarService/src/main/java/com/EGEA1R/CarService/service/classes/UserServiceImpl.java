@@ -5,7 +5,7 @@ import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.BillingInformation;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.User;
-import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
@@ -62,14 +62,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyUser(ModifyUserDateRequest modifyUserDateRequest, Long userId, Long credentialId){
-        Credential credential = getCredential(credentialId);
         User user = getUser(userId);
         BillingInformation billingInformation = user.getBillingInformation();
         user.setPhoneNumber(modifyUserDateRequest.getPhoneNumber());
         user.setEmail(modifyUserDateRequest.getEmail());
         user.setBillingInformation(modifyBillingInformation(billingInformation, modifyUserDateRequest));
-        credential.setEmail(modifyUserDateRequest.getEmail());
-        credentialRepository.save(credential);
+        credentialRepository.changeEmail(modifyUserDateRequest.getEmail(), credentialId);
         userRepository.save(user);
     }
 

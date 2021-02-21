@@ -26,7 +26,7 @@ public class ServiceReservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "service_id")
+    @Column(name = "service_reservation_id")
     private Long serviceId;
 
     @NotNull
@@ -43,15 +43,13 @@ public class ServiceReservation {
     @Column(name = "comment")
     private String comment;
 
+    @Size(max = 1000)
+    @Column(name = "reserved_services")
+    private String reservedServices;
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_service_car")
+    @JoinColumn(name = "fk_service_reservation_car")
     private Car car;
-
-    @ElementCollection
-    @CollectionTable(name = "reserved_services",
-    joinColumns = @JoinColumn(name = "fk_services_service")
-    )
-    private List<String> services;
 
 }

@@ -61,12 +61,12 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
         if(!serviceReservationDTO.getComment().isEmpty()) {
             serviceReservation.setComment(serviceReservationDTO.getComment());
         }
-        for(ReservedServiceList item : serviceReservationDTO.getService()){
+        for(ReservedServiceList item : serviceReservationDTO.getReservedServices()){
             if(item.getChecked()) {
                 services.add(item.getServiceType());
             }
         }
-        serviceReservation.setServices(services);
+        serviceReservation.setReservedServices(services.toString());
         serviceReservation.setCar(car);
         serviceReservationRepository.save(serviceReservation);
     }
@@ -83,7 +83,7 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
                 services.add(item.getServiceType());
             }
         }
-        serviceReservation.setServices(services);
+        serviceReservation.setReservedServices(services.toString());
         serviceReservation.setCar(car);
         serviceReservationRepository.save(serviceReservation);
     }

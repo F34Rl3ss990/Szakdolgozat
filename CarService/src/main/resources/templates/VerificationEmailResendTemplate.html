@@ -48,7 +48,7 @@
                 <p style="font-size: 30px; margin-top:0px">Regisztrációs e-mail</p>
                 <p>Ezt a levelet azért kaptad, mert regisztráltál az oldalunkon(CarService), de elfelejtetted aktiválni időben a felhasználói fiókodat.</p>
                 <p>Amennyiben nem te kezdeményezted a regisztrációt, úgy hagyd figyelmen kívül ezt az üzenetet!</p>
-                <p>Az aktiváláshoz szükséges link: <a th:href="${'http://localhost:8080/api/auth/resendRegistrationToken?token=' + token}">Aktiválás</a></p>
+                <p>Az aktiváláshoz szükséges link: <a th:href="${'http://localhost:8080/api/auth/registrationConfirm?token=' + token}">Aktiválás</a></p>
             </td>
         </tr>
         </tbody>

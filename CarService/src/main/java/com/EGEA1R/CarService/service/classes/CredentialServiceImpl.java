@@ -1,24 +1,23 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
 import com.EGEA1R.CarService.exception.BadRequestException;
 import com.EGEA1R.CarService.exception.InternalServerException;
 import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
-import com.EGEA1R.CarService.persistance.repository.CredentialRepository;
-import com.EGEA1R.CarService.persistance.repository.PasswordResetTokenRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.PasswordResetRepository;
 import com.EGEA1R.CarService.persistance.repository.TokenBlockRepository;
 import com.EGEA1R.CarService.persistance.repository.UserRepository;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.security.jwt.JwtUtilId;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
-import com.EGEA1R.CarService.service.interfaces.CredentialService;
-import com.EGEA1R.CarService.service.interfaces.JwtTokenCheckService;
-import com.EGEA1R.CarService.service.interfaces.OTPService;
-import com.EGEA1R.CarService.service.interfaces.TotpManager;
+import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +45,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
 
     private CredentialRepository credentialRepository;
 
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    private PasswordResetRepository passwordResetRepository;
 
     private PasswordEncoder passwordEncoder;
 
@@ -60,6 +59,10 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
 
     private UserRepository userRepository;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    private EmailService emailService;
+
     @Autowired
     public void setJwtUtilId(JwtUtilId jwtUtilId){
         this.jwtUtilId = jwtUtilId;
@@ -71,8 +74,8 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Autowired
-    public void setPasswordResetTokenRepository(PasswordResetTokenRepository passwordResetTokenRepository) {
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
+    public void setPasswordResetTokenRepository(PasswordResetRepository passwordResetRepository) {
+        this.passwordResetRepository = passwordResetRepository;
     }
 
     @Autowired
@@ -100,6 +103,16 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         this.userRepository = userRepository;
     }
 
+    @Autowired
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher){
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    @Autowired
+    public void setEmailService(EmailService emailService){
+        this.emailService = emailService;
+    }
+
     @Override
     public Boolean credentialExistByEmail(String email) {
         return credentialRepository.existsByEmail(email);
@@ -108,14 +121,36 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     @Override
     public Credential getByEmail(String email) {
         return  credentialRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException( String.format("username %s", email)));
-
+                .getByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException( String.format("User not found with email: %s", email)));
     }
 
     @Override
-    public String getMfa(String email){
-        return getByEmail(email).getMfa();
+    public Credential getPasswordAndIdByEmail(String email) {
+        return  credentialRepository
+                .getPasswordAndIdByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException( String.format("User not found with email: %s", email)));
+    }
+
+    @Override
+    public String authenticationChoose(List<String> roles, String email){
+        for(String role : roles){
+            if(role.equals("ROLE_ADMIN") || role.equals("ROLE_BOSS")){
+                try{
+                    String authType = credentialRepository.getMultiFactorAuth(email);
+                    if(authType.equals("email")){
+                        int otp = otpService.generateOTP(email);
+                        String message = "Your otp number is: " + otp;
+                        emailService.sendSimpleMessage(email, "OTP - SpringBoot - CarService", message);
+                        return "email";
+                    } else if (authType.equals("phone"))
+                        return "phone";
+                }catch (NullPointerException n) {
+                    logger.error("Cannot get authentication type from user: " + n);
+                }
+            }
+        }
+        return "";
     }
 
     @Override
@@ -129,54 +164,43 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         if(addAdminRequest.getMfa().equals("phone")){
             credential.setSecret(totpManager.generateSecret());
         }
-        credentialRepository.save(credential);
+        credentialRepository.saveAdmin(credential);
         return credential;
     }
 
-
     @Override
-    public void createPasswordResetTokenForCredential(Credential credential, String token) {
-        PasswordResetToken myToken = PasswordResetToken.builder()
-                .credential(credential)
-                .token(token)
-                .expiryDate(calculateExpiryDate())
-                .build();
-                passwordResetTokenRepository.save(myToken);
+    public Long getCredentialIdByToken(String passwordResetToken) {
+        return passwordResetRepository.getCredentialIdByPasswordResetToken(passwordResetToken)
+                .orElseThrow(()-> new ResourceNotFoundException(String.format("Credential not found by token: %s", passwordResetToken)));
     }
 
-    private Date calculateExpiryDate() {
-        final int EXPIRATION = 60 * 24;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, EXPIRATION);
-        return new Date(cal.getTime().getTime());
-    }
-
-
+    @Transactional
     @Override
-    public Optional<Credential> getCredentialByToken(String token) {
-        return Optional.of(passwordResetTokenRepository.findByToken(token).getCredential());
-    }
-
-    @Override
-    public Credential createNewCredential(String email, String password) {
+    public void createNewCredential(String email, String password, String path) {
         Credential credential = Credential.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .build();
-        credentialRepository.save(credential);
-        return credential;
+        Long id = credentialRepository.saveUser(credential);
+        credential.setCredentialId(id);
+        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(credential, path));
     }
 
     @Override
-    public void changePassword(final Credential credential, final String password) {
-        credential.setPassword(passwordEncoder.encode(password));
-        credentialRepository.save(credential);
+    public void changePassword(final Long credentialId, final String password) {
+        credentialRepository.changePassword(credentialId, passwordEncoder.encode(password));
     }
 
     @Override
-    public boolean checkIfValidOldPassword(final Credential credential, final String oldPassword) {
-        return passwordEncoder.matches(oldPassword, credential.getPassword());
+    public boolean checkIfValidOldPassword(final String password, final String oldPassword) {
+        return passwordEncoder.matches(oldPassword, password);
+    }
+
+    @Transactional
+    @Override
+    public void changePasswordAndBlockToken(HttpServletRequest request, Long credentialId, String password){
+        changePassword(credentialId, password);
+        saveBlockedToken(request);
     }
 
     @Override
@@ -185,7 +209,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         jwt = EncrypterHelper.decrypt(jwt);
         String email = jwtUtilId.getEmailFromJwtToken(jwt);
         Long id = getByEmail(email).getCredentialId();
-
         TokenBlock tokenBlock = TokenBlock.builder()
                 .userId(id)
                 .jwtToken(jwt)
@@ -208,21 +231,35 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         return null;
     }
 
-
     @Override
-    public UsernamePasswordAuthenticationToken verify(String email, String code) {
-        Credential credential = credentialRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException( String.format("username %s", email)));
-        String mfaType = credential.getMfa();
-        if(mfaType.equals("phone")) {
-            phoneVerify(code, credential);
-        }else if(mfaType.equals("email")){
-            emaiLVerify(code, email, credential);
-        }
-        throw new BadRequestException(String.format("Incorrect user:  %s", email));
+    public String getPermissionById(Long verificationFkId){
+        return credentialRepository.getPermissionById(verificationFkId);
     }
 
+
+    @Override
+    public Credential verify(String email, String code) {
+        Credential credential = credentialRepository
+                .findByEmailForMFA(email)
+                .orElseThrow(() -> new ResourceNotFoundException( String.format("username %s", email)));
+        String mfaType = credential.getMfa();
+        Boolean verify = false;
+        try {
+            if (mfaType.equals("phone")) {
+                verify = phoneVerify(code, credential);
+            } else if (mfaType.equals("email")) {
+                verify = emailVerify(code, email);
+            }
+        }catch(RuntimeException e){
+            logger.error("Authentication was not successful" + e);
+        }
+        if(verify){
+            return credential;
+        } else{
+            throw new BadRequestException("Authentication was not successful");
+        }
+    }
+/*
     @Override
     public void disableAccountByUser(Long credentialId){
         Credential credential = getCredential(credentialId);
@@ -247,7 +284,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .filter(contain)
                 .collect(toList());
         return new PageImpl<>(credentials, pageRequest, pageResult.getTotalElements());
-    }
+    }*/
 
     private User getUser(Long userId){
         return userRepository
@@ -261,43 +298,30 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Profile with this id not found: %s", Long.toString(credentialId))));
     }
 
-    private UsernamePasswordAuthenticationToken phoneVerify(String code, Credential credential){
+    private Boolean phoneVerify(String code, Credential credential){
         if (!totpManager.verifyCode(code, credential.getSecret())) {
             throw new BadRequestException("Code is incorrect");
         }
-        return Optional.of(credential)
-                .map(AuthCredentialDetailsImpl::build)
-                .map(userDetails -> new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()))
-                .orElseThrow(() ->
-                        new InternalServerException("unable to generate access token"));
+        return true;
     }
 
-    private UsernamePasswordAuthenticationToken emaiLVerify(String code, String email, Credential credential){
+    private Boolean emailVerify(String code, String email){
         int otpNum = Integer.parseInt(code);
         if(otpNum >= 0){
             int serverOtp = otpService.getOtp(email);
             if(serverOtp > 0){
                 if(otpNum == serverOtp){
                     otpService.clearOTP(email);
-                    return Optional.of(credential)
-                            .map(AuthCredentialDetailsImpl::build)
-                            .map(userDetails -> new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities()))
-                            .orElseThrow(() ->
-                                    new InternalServerException("unable to generate access token"));
+                    return  true;
                 }
                 else {
-                    return null;
-                    //exception
+                    return false;
                 }
             }else {
-                return null;
-                //exception
+                return false;
             }
         }else {
-            return null;
-            //exception
+            return false;
         }
     }
 }

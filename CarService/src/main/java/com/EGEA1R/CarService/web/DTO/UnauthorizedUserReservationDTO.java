@@ -66,7 +66,7 @@ public class UnauthorizedUserReservationDTO {
 
     @Pattern(regexp = "^{11}[0-9]")
     @Size(max = 11)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
 
     @NotNull
@@ -75,7 +75,7 @@ public class UnauthorizedUserReservationDTO {
     @NotNull
     @Pattern(regexp = "^[0-9]{11}$")
     @Size(max = 11)
-    private Integer billingPhoneNumber;
+    private String billingPhoneNumber;
 
     @NotNull
     @Pattern(regexp = "^[a-zA-Z/s]+$")

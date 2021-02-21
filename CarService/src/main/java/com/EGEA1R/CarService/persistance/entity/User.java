@@ -46,14 +46,14 @@ public class User {
 
     @NotNull
     @ValidEmail
-    @Column(name = "e-mail")
+    @Column(name = "e_mail")
     private String email;
 
     @NotNull
     @Pattern(regexp = "^[0-9]{11}$")
     @Size(max = 11)
     @Column(name = "phone_number")
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @OneToOne
     @JoinColumn(name = "fk_user_credential")

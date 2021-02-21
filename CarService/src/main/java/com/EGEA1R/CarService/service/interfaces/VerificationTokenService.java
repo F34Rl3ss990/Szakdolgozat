@@ -1,19 +1,17 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.VerificationToken;
+import com.EGEA1R.CarService.persistance.entity.Verification;
+
+import javax.mail.MessagingException;
 
 public interface VerificationTokenService {
 
-    Credential getCredential(String verificationToken);
+    Verification getFkAndExpDateByToken(String verificationToken);
 
-    VerificationToken getVerificationToken(String VerificationToken);
-
-    VerificationToken findByUser(Credential credential);
-
-    void modifyPermissionOnVerificatedUser(Credential credential);
+    void modifyPermissionOnVerifiedUser(Long credentialId);
 
     void createVerificationToken(Credential credential, String token);
 
-    VerificationToken generateNewVerificationToken(String existingToken);
+    void generateNewTokenAndSendItViaEmail(String existingToken) throws MessagingException;
 }

@@ -23,14 +23,14 @@ public class ModifyUserDateRequest {
     @NotNull
     @Pattern(regexp = "^{11}[0-9]")
     @Size(max = 11)
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     private String name;
 
     @NotNull
     @Pattern(regexp = "^[0-9]{11}$")
     @Size(max = 11)
-    private Integer billingPhoneNumber;
+    private String billingPhoneNumber;
 
     @Pattern(regexp = "^[a-zA-Z/s]+$")
     private String country;

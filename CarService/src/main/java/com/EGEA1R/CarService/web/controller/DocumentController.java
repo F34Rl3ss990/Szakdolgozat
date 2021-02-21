@@ -48,7 +48,7 @@ public class DocumentController {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("/files/")
-                    .path(String.valueOf(file.getFile_id()))
+                    .path(String.valueOf(file.getFileId()))
                     .toUriString();
 
             return new ResponseFile(
