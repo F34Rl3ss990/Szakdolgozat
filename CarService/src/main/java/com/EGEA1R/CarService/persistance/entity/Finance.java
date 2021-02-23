@@ -28,7 +28,7 @@ public class Finance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "finance_id")
+    @Column(name = "finance_id", insertable = false, updatable = false)
     private Long financeId;
 
     @NotNull

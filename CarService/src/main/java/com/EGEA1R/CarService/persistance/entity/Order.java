@@ -29,7 +29,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "order_id")
+    @Column(name = "order_id", insertable = false, updatable = false)
     private Long orderId;
 
     @NotNull

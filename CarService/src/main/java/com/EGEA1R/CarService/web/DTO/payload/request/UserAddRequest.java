@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.web.DTO.payload.request;
 
 import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
-import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.AllArgsConstructor;
@@ -17,10 +16,11 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModifyUserDateRequest {
+public class UserAddRequest {
 
-    @NotNull
-    private Long userId;
+    private String firstName;
+
+    private String lastName;
 
     @NotNull
     @ValidPhoneNumber
@@ -33,12 +33,12 @@ public class ModifyUserDateRequest {
     @ValidPhoneNumber
     private String billingPhoneNumber;
 
-    @ValidAccentLetters
+    @ValidAccentAndWhitespace
     private String billingCountry;
 
     private Integer billingZipCode;
 
-    @ValidAccentAndWhitespace
+    @Pattern(regexp = "^[a-zA-Z/s]+$")
     private String billingTown;
 
     private String billingStreet;

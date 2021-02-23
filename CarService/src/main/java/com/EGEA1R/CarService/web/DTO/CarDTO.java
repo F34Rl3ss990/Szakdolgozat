@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.web.DTO;
 
+import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +15,13 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class CarDTO {
 
+    private Long fkCarUserId;
+
     private Long carId;
 
     @NotNull
     @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z]+$")
+    @ValidAccentAndWhitespace
     private String brand;
 
     @NotNull
@@ -33,11 +36,11 @@ public class CarDTO {
     private String yearOfManufacture;
 
     @Size(max = 30)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String engineNumber;
 
     @Size(max = 17)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String chassisNumber;
 
     @Max(9999999)

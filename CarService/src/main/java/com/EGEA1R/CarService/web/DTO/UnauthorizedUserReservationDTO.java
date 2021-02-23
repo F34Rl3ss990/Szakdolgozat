@@ -1,6 +1,9 @@
 package com.EGEA1R.CarService.web.DTO;
 
+import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
+import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
+import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +22,10 @@ import java.util.List;
 @AllArgsConstructor
 public class UnauthorizedUserReservationDTO {
 
+
     @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z]+$")
+    @ValidAccentAndWhitespace
+    @NotNull
     private String brand;
 
     @Size(max = 30)
@@ -35,68 +40,66 @@ public class UnauthorizedUserReservationDTO {
     private String yearOfManufacture;
 
     @Size(max = 30)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String engineNumber;
 
     @Size(max = 17)
-    @Pattern(regexp = "[A-Za-z0-9]")
+    @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String chassisNumber;
 
     @Size(max = 10)
-    @NotNull
     private String licensePlateNumber;
 
     private Boolean foreignCountryPlate;
 
     @Max(9999999)
     @PositiveOrZero
-    @NotNull
     private Integer mileage;
 
-    @Pattern(regexp = "[a-zA-Z]")
+    @ValidAccentLetters
     @Size(max = 60)
+    @NotNull
     private String firstName;
 
-    @Pattern(regexp = "[a-zA-Z]")
+    @ValidAccentLetters
     @Size(max = 40)
+    @NotNull
     private String lastName;
 
     @ValidEmail
+    @NotNull
     private String email;
 
-    @Pattern(regexp = "^{11}[0-9]")
-    @Size(max = 11)
+    @ValidPhoneNumber
+    @NotNull
     private String phoneNumber;
 
+    @NotNull
+    private String billingName;
 
     @NotNull
-    private String name;
-
-    @NotNull
-    @Pattern(regexp = "^[0-9]{11}$")
-    @Size(max = 11)
+    @ValidPhoneNumber
     private String billingPhoneNumber;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z/s]+$")
-    private String country;
+    @ValidAccentAndWhitespace
+    private String billingCountry;
 
     @NotNull
-    private Integer zipCode;
+    private Integer billingZipCode;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z/s]+$")
-    private String town;
+    @ValidAccentAndWhitespace
+    private String billingTown;
 
     @NotNull
-    private String street;
+    private String billingStreet;
 
-    @NotNull
-    private String otherAddressType;
+    private String billingOtherAddressType;
 
-    private String taxNumber;
+    private String billingTaxNumber;
 
-    private Boolean euTax;
+    private Boolean billingEuTax;
 
     @ValidEmail
     private String billingEmail;
@@ -105,7 +108,6 @@ public class UnauthorizedUserReservationDTO {
     private String comment;
 
     @NotNull
-    @FutureOrPresent
     private LocalDate reservedDate;
 
     private List<ReservedServiceList> service = new ArrayList<>();

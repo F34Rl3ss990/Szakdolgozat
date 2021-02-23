@@ -25,7 +25,7 @@ public class Workday {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "workday_id")
+    @Column(name = "workday_id", insertable = false, updatable = false)
     private Long workdayId;
 
     @NotNull

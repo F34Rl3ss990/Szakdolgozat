@@ -23,7 +23,7 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "file_id")
+    @Column(name = "file_id", insertable = false, updatable = false)
     private Long fileId;
 
     @NotNull

@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.persistance.entity;
 
 
+import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 
 import com.EGEA1R.CarService.validation.annotation.ValidPassword;
@@ -24,7 +25,7 @@ import java.util.Set;
 uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @SqlResultSetMapping(
         name="FindByEmailMapping",
@@ -62,7 +63,7 @@ uniqueConstraints = {
         }
 )
 @SqlResultSetMapping(
-        name="GetByEmail",
+        name="GetEmailAndId",
         classes = {
                 @ConstructorResult(
                         targetClass = com.EGEA1R.CarService.persistance.entity.Credential.class,
@@ -102,6 +103,21 @@ uniqueConstraints = {
                 )
         }
 )
+@SqlResultSetMapping(
+        name="GetDetailsOfAdmins",
+        classes = {
+                @ConstructorResult(
+                        targetClass = com.EGEA1R.CarService.persistance.entity.Credential.class,
+                        columns = {
+                                @ColumnResult(name="credential_id", type = Long.class),
+                                @ColumnResult(name="email", type = String.class),
+                                @ColumnResult(name="first_name", type = String.class),
+                                @ColumnResult(name="last_name", type = String.class)
+                        }
+                )
+        }
+)
+
 public class Credential implements Serializable {
 
     @Id
@@ -132,6 +148,16 @@ public class Credential implements Serializable {
 
     @Column(name = "multifactor_auth", columnDefinition = "VARCHAR(45) default 'NULL'")
     private String mfa;
+
+    @Size(max = 60)
+    @ValidAccentLetters
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Size(max = 60)
+    @ValidAccentLetters
+    @Column(name = "last_name")
+    private String lastName;
 
 
     @OneToOne(cascade = CascadeType.REMOVE,

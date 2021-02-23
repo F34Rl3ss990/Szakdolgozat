@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.persistance.entity;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
+import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,29 +21,28 @@ public class BillingInformation {
 
 
     @NotNull
-    private String name;
+    private String billingName;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{11}$")
-    @Size(max = 11)
-    private String phoneNumber;
+    @ValidPhoneNumber
+    private String billingPhoneNumber;
 
     @NotNull
-    private String country;
+    private String billingCountry;
 
     @NotNull
-    private Integer zipCode;
+    private Integer billingZipCode;
 
     @NotNull
-    private String town;
+    private String billingTown;
 
     @NotNull
-    private String street;
+    private String billingStreet;
 
-    private String otherAddressType;
+    private String billingOtherAddressType;
 
-    private String taxNumber;
+    private String billingTaxNumber;
 
     @ValidEmail
-    private String email;
+    private String billingEmail;
 }

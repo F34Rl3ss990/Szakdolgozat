@@ -63,7 +63,7 @@ public class JwtUtilsImpl implements JwtUtils, JwtUtilId{
         if(tokenBlock.isPresent()) {
             return !tokenBlock.get().getJwtToken().equals(authToken);
         }else{
-            return false;
+            return true;
         }
     }
 

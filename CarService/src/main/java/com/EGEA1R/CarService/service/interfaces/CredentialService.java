@@ -3,6 +3,7 @@ package com.EGEA1R.CarService.service.interfaces;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.TokenBlock;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -27,13 +28,13 @@ public interface CredentialService {
     Credential verify(String email, String code);
 
     Credential addNewAdmin(AddAdminRequest addAdminRequest);
-/*
+
     void disableAccountByUser(Long credentialId);
 
     void disableAccountByAdmin(Long userId);
 
-    Page<Credential> getAdminCredentialPage(int page, int size);
-*/
+    PagedListHolder<Credential> getAdminCredentialPage(int page, int size);
+
     void changePassword(final Long credentialId, final String password);
 
     Credential getPasswordAndIdByEmail(String email);

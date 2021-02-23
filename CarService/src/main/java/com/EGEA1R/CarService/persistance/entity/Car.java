@@ -1,14 +1,17 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Builder
@@ -17,21 +20,33 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "car")
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
+/*@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)*/
+@SqlResultSetMapping(
+        name="GetCars",
+        entities = {
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.Car.class)
+        }
+)
+@SqlResultSetMapping(
+        name="GetCarByCarId",
+        entities = {
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.Car.class)
+        }
+)
 public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "car_id", nullable = false)
+    @Column(name = "car_id", insertable = false, updatable = false)
     private Long carId;
 
     @NotNull
     @Size(max = 30)
-    @Pattern(regexp = "^[a-zA-Z]+$")
+    @ValidAccentAndWhitespace
     @Column(name = "brand")
     private String brand;
 
@@ -46,7 +61,6 @@ public class Car {
     private String engineType;
 
     @NotNull
-    @Size(max = 10)
     @Column(name = "year_of_manufacture")
     private String yearOfManufacture;
 
@@ -60,16 +74,23 @@ public class Car {
     @Column(name = "chassis_number")
     private String chassisNumber;
 
-    @Max(9999999)
-    @PositiveOrZero
-    @Column(name = "mileage")
-    private Integer mileage;
-
 
     @Size(max = 10)
     @Column(name = "license_plate_number")
     private String licensePlateNumber;
 
+    @Column(name = "fk_car_user", updatable = false, insertable = false)
+    private Long fkCarUserId;
+
+    @ElementCollection
+    @CollectionTable(name = "car_mileage", joinColumns = @JoinColumn(name = "fk_car_mileage_car"))
+    @AttributeOverrides({
+            @AttributeOverride(name = "mileage", column = @Column(name = "mileage")),
+            @AttributeOverride(name = "dateOfSet", column = @Column(name = "date_of_set"))
+    })
+    private List<CarMileage> carMileages = new ArrayList<>();
+
+    @JsonIgnore
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_car_user")

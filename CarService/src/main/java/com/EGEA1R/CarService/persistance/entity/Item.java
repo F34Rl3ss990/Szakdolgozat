@@ -18,7 +18,7 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "item_id")
+    @Column(name = "item_id", insertable = false, updatable = false)
     private Long itemId;
 
     @NotNull

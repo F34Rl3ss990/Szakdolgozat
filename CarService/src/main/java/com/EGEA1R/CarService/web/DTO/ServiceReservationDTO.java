@@ -20,7 +20,7 @@ import java.util.List;
 public class ServiceReservationDTO {
 
     @NotNull
-    private Long carId;
+    private Long fkServiceReservationCarId;
 
     private String comment;
 
@@ -28,5 +28,5 @@ public class ServiceReservationDTO {
     @FutureOrPresent
     private LocalDate reservedDate;
 
-    private List<ReservedServiceList> reservedServices = new ArrayList<>();
+    private List<ReservedServiceList> reservedService = new ArrayList<>();
 }

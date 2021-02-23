@@ -2,41 +2,29 @@ package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
 import com.EGEA1R.CarService.exception.BadRequestException;
-import com.EGEA1R.CarService.exception.InternalServerException;
 import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.interfaces.PasswordResetRepository;
 import com.EGEA1R.CarService.persistance.repository.TokenBlockRepository;
-import com.EGEA1R.CarService.persistance.repository.UserRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.security.jwt.JwtUtilId;
-import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class CredentialServiceImpl implements CredentialService, JwtTokenCheckService {
@@ -56,8 +44,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     private TotpManager totpManager;
 
     private OTPService otpService;
-
-    private UserRepository userRepository;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -96,11 +82,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     @Autowired
     public void setOtpService(OTPService otpService) {
         this.otpService = otpService;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository){
-        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -259,43 +240,24 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
             throw new BadRequestException("Authentication was not successful");
         }
     }
-/*
+////////
     @Override
     public void disableAccountByUser(Long credentialId){
-        Credential credential = getCredential(credentialId);
-        credential.setPermission("ROLE_DISABLED");
-        credentialRepository.save(credential);
+        credentialRepository.disableAccountByUser(credentialId);
     }
 
     @Override
     public void disableAccountByAdmin(Long userId){
-        User user = getUser(userId);
-        Credential credential = user.getCredential();
-        credential.setPermission("ROLE_DISABLED");
-        credentialRepository.save(credential);
+        credentialRepository.disableUserAccountByAdmin(userId);
     }
 
-    public Page<Credential> getAdminCredentialPage(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "email"));
-        Page<Credential> pageResult = credentialRepository.findAll(pageRequest);
-        Predicate<Credential> contain = (Credential item) -> item.getPermission().equals("ROLE_ADMIN");
-        List<Credential> credentials = pageResult
-                .stream()
-                .filter(contain)
-                .collect(toList());
-        return new PageImpl<>(credentials, pageRequest, pageResult.getTotalElements());
-    }*/
-
-    private User getUser(Long userId){
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with this id not found: %s", Long.toString(userId))));
-    }
-
-    private Credential getCredential(Long credentialId){
-        return credentialRepository
-                .findById(credentialId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Profile with this id not found: %s", Long.toString(credentialId))));
+    @Override
+    public PagedListHolder<Credential> getAdminCredentialPage(int page, int size) {
+        List<Credential> admins = credentialRepository.getAllAdmin();
+        PagedListHolder<Credential> pageHolder = new PagedListHolder<>(admins);
+        pageHolder.setPage(page);
+        pageHolder.setPageSize(size);
+        return pageHolder;
     }
 
     private Boolean phoneVerify(String code, Credential credential){

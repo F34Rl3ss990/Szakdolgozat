@@ -45,7 +45,7 @@ public class Verification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "verification_id")
+    @Column(name = "verification_id", insertable = false, updatable = false)
     private Long verificationId;
 
     @Column(name = "token")

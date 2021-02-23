@@ -11,19 +11,15 @@ import java.util.Optional;
 
 public interface CarService {
 
-    Car addCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, User user);
-
-    void addCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId);
+    void addCar(CarDTO carDTO);
 
     void modifyCar(CarDTO carDTO);
 
     void deleteCar(Long id);
 
-    Page<Car> getAllCarPage(int page, int size);
+//    Page<Car> getAllCarPage(int page, int size);
 
-    Page<Car> getAllCarPageByUser(int page, int size, Long id);
+    List<Car> getAllCarListByUser(Long userId);
 
-    List<Car> getAllCarListByUser(Long id);
-
-    Optional<Car> getCarById(Long id);
+    Car getCarById(Long id);
 }

@@ -29,7 +29,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "employee_id")
+    @Column(name = "employee_id", insertable = false, updatable = false)
     private Long employeeId;
 
     @NotNull

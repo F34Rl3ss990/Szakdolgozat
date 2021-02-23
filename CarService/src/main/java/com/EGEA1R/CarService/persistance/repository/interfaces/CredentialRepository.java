@@ -9,10 +9,6 @@ import java.util.Optional;
 
 public interface CredentialRepository {
 
-
-   // @Procedure("CREDENTIAL_FIND_BY_ID")
-    //Optional<Credential> StoredFindById(Long credentialId);
-
     Optional<Credential> findByEmail(String email);
 
     Optional<Credential> findByEmailForMFA(String email);
@@ -38,5 +34,11 @@ public interface CredentialRepository {
     Optional<Credential> getPasswordAndIdByEmail(String email);
 
     String getPermissionById(Long verificationFkId);
+
+    void disableUserAccountByAdmin(Long userid);
+
+    void disableAccountByUser(Long credentialId);
+
+    List<Credential> getAllAdmin();
 
 }

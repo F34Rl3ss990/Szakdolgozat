@@ -22,7 +22,7 @@ public class Part {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "part_id")
+    @Column(name = "part_id", insertable = false, updatable = false)
     private Long partId;
 
     @NotNull

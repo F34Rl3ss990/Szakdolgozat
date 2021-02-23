@@ -1,9 +1,16 @@
 package com.EGEA1R.CarService.web.controller;
 
 import com.EGEA1R.CarService.service.interfaces.ServiceReservationService;
+import com.EGEA1R.CarService.service.interfaces.UserService;
+import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @Slf4j
@@ -11,8 +18,46 @@ public class ServiceReservationController {
 
     private ServiceReservationService serviceReservationService;
 
+    private UserService userService;
+
     @Autowired
     public void setServiceService(ServiceReservationService serviceReservationService){
         this.serviceReservationService = serviceReservationService;
     }
+
+    @Autowired
+    public void setUserService(UserService userService){
+        this.userService = userService;
+    }
+
+    @PostMapping("/serviceReservationUnauthorized")
+    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
+        userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
+        return ResponseEntity.ok("Successfully reserved!");
+    }
+
+    @PostMapping("/reserveService")
+    // @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> reserveService(ServiceReservationDTO serviceReservationDTO){
+        serviceReservationService.saveService(serviceReservationDTO);
+        return ResponseEntity.ok("Successfully reserved!");
+    }
+
+    @GetMapping("/getServicesByUser")
+    // @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getServicesByUser(@RequestParam(name = "page", defaultValue = "0") int page,
+                                               @RequestParam(name = "size", defaultValue = "10") int size,
+                                               @RequestBody Long userId){
+        return ResponseEntity.ok(serviceReservationService.getServicesByUserOrderByDate(page, size, userId));
+    }
+
+    @GetMapping("/getServicesByUser")
+   // @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getEveryServiceToday(@RequestParam(name = "page", defaultValue = "0") int page,
+                                               @RequestParam(name = "size", defaultValue = "10") int size){
+        return ResponseEntity.ok(serviceReservationService.getServicesTodayOrderByDate(page, size));
+    }
+
+
+
 }

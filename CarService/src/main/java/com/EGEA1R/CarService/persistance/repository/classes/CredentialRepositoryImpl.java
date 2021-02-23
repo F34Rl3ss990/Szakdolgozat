@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import org.springframework.stereotype.Repository;
 
@@ -60,11 +61,10 @@ public class CredentialRepositoryImpl implements CredentialRepository {
     @Override
     public Optional<Credential> findById (Long credentialId){
         try{
-            StoredProcedureQuery query = em.createStoredProcedureQuery("CREDENTIAL_FIND_BY_ID");
+            StoredProcedureQuery query = em.createStoredProcedureQuery("CREDENTIAL_FIND_BY_ID", "ExistByEmailMapping");
                     query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
                     query.setParameter(1, credentialId);
             query.execute();
-
             return Optional.of((Credential) query.getResultList());
         } catch(NoResultException e){
             return Optional.empty();
@@ -136,7 +136,7 @@ public class CredentialRepositoryImpl implements CredentialRepository {
         try {
             Query query = em.createNativeQuery("SELECT email, credential_id" +
                     " from credential" +
-                    " where email = ?", "GetByEmail")
+                    " where email = ?", "GetEmailAndId")
                     .setParameter(1, email);
             return Optional.of((Credential) query.getSingleResult());
         }catch(NoResultException n){
@@ -175,5 +175,31 @@ public class CredentialRepositoryImpl implements CredentialRepository {
                 " where credential_id = ?")
                 .setParameter(1, verificationFkId);
         return (String) query.getSingleResult();
+    }
+
+    @Transactional
+    @Override
+    public void disableUserAccountByAdmin(Long userid) {
+        em.createNativeQuery("update credential" +
+                " inner join user u" +
+                " on credential.credential_id = u.fk_user_credential" +
+                " set permission = 'ROLE_BANNED'" +
+                " where user_id = ?")
+                .setParameter(1, userid)
+                .executeUpdate();
+    }
+
+    @Transactional
+    @Override
+    public void disableAccountByUser(Long credentialId) {
+        em.createNativeQuery("update credential set permission = 'ROLE_SELFDISABLE' where credential_id = ?")
+                .setParameter(1, credentialId)
+                .executeUpdate();
+    }
+
+    @Override
+    public List<Credential> getAllAdmin() {
+        Query query = em.createNativeQuery("SELECT credential_id, email, first_name, last_name from credential where permission = 'ROLE_ADMIN' ");
+        return (List<Credential>) query.getResultList();
     }
 }

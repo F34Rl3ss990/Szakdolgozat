@@ -16,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "passwordreset")
 @SqlResultSetMapping(
         name="GetExpDateByToken",
         classes = {
@@ -27,13 +28,12 @@ import java.util.Date;
                 )
         }
 )
-@Table(name = "passwordreset")
 public class PasswordReset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "passwordreset_id")
+    @Column(name = "passwordreset_id", insertable = false, updatable = false)
     private Long passwordResetId;
 
     @Column(name = "token")

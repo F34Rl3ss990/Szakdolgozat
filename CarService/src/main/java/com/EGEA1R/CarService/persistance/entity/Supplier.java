@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.persistance.entity;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
+import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -12,18 +13,14 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "supplier",
-uniqueConstraints ={
-        @UniqueConstraint(columnNames = "account_number"),
-        @UniqueConstraint(columnNames = "e-mail")
-})
+@Table(name = "supplier")
 @EntityListeners(AuditingEntityListener.class)
 public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "supplier_id")
+    @Column(name = "supplier_id", insertable = false, updatable = false)
     private Long supplierId;
 
     @NotNull
@@ -40,8 +37,7 @@ public class Supplier {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{11}$")
-    @Size(max = 11)
+    @ValidPhoneNumber
     @Column(name = "phone_number")
     private Integer phoneNumber;
 

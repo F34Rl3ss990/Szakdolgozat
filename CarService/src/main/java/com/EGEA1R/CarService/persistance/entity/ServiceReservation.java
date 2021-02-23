@@ -21,12 +21,43 @@ import java.util.List;
 @Entity
 @Table(name = "service_reservation")
 @EntityListeners(AuditingEntityListener.class)
+@SqlResultSetMapping(
+        name="GetServicesByUser",
+        entities = {
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.ServiceReservation.class,
+                fields = {
+                        @FieldResult(name = "reservedDate", column = "reserved_date"),
+                }),
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.Car.class,
+                fields = {
+                        @FieldResult(name = "brand", column = "brand"),
+                        @FieldResult(name = "type", column = "type")
+                })
+        }
+)
+@SqlResultSetMapping(
+        name="GetServicesByToday",
+        entities = {
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.Car.class,
+                        fields = {
+                                @FieldResult(name = "brand", column = "brand"),
+                                @FieldResult(name = "type", column = "type"),
+                                @FieldResult(name = "engineType", column = "engine_type"),
+                                @FieldResult(name = "yearOfManufacture", column = "year_of_manufacture")
+                        }),
+                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.User.class,
+                        fields = {
+                                @FieldResult(name = "firstName", column = "first_name"),
+                                @FieldResult(name = "lastName", column = "last_name")
+                        })
+        }
+)
 public class ServiceReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "service_reservation_id")
+    @Column(name = "service_reservation_id", insertable = false, updatable = false)
     private Long serviceId;
 
     @NotNull
@@ -35,8 +66,7 @@ public class ServiceReservation {
     private LocalDate reservedDate;
 
     @NotNull
-    @CreationTimestamp
-    @Column(name = "date_of_the_reservation")
+    @Column(name = "date_of_the_reservation", insertable = false, updatable = false)
     private LocalDate dateOfTheReservation;
 
     @Size(max = 1000)
@@ -46,6 +76,9 @@ public class ServiceReservation {
     @Size(max = 1000)
     @Column(name = "reserved_services")
     private String reservedServices;
+
+    @Column(name = "fk_service_reservation_car", insertable = false, updatable = false)
+    private Long fkServiceReservationCarId;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
