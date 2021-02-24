@@ -54,11 +54,11 @@ public class UserRepositoryImpl implements UserRepository {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SAVE_UNAUTHORIZED_USER");
                 query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(3,String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(3, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(4, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(5, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(6, Integer.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(7, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(6, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(7, Integer.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(8, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(9, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(10, String.class, ParameterMode.IN);
@@ -70,34 +70,36 @@ public class UserRepositoryImpl implements UserRepository {
                 query.registerStoredProcedureParameter(16, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(17, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(18, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(19, Integer.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(20, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(21, Date.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(22, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(19, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(20, Integer.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(21, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(22, Date.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(23, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(24, String.class, ParameterMode.IN);
                 query.setParameter(1, user.getFirstName());
                 query.setParameter(2, user.getLastName());
                 query.setParameter(3, user.getEmail());
                 query.setParameter(4, user.getPhoneNumber().toString());
-                query.setParameter(5, user.getBillingInformation().getBillingPhoneNumber().toString());
-                query.setParameter(6, user.getBillingInformation().getBillingZipCode());
-                query.setParameter(7, user.getBillingInformation().getBillingTown());
-                query.setParameter(8, user.getBillingInformation().getBillingCountry());
-                query.setParameter(9, user.getBillingInformation().getBillingStreet());
-                query.setParameter(10, user.getBillingInformation().getBillingOtherAddressType());
-                query.setParameter(11, user.getBillingInformation().getBillingTaxNumber());
-                query.setParameter(12, user.getBillingInformation().getBillingEmail());
-                query.setParameter(13, car.getBrand());
-                query.setParameter(14, car.getType());
-                query.setParameter(15, car.getEngineType());
-                query.setParameter(16, car.getYearOfManufacture());
-                query.setParameter(17, car.getEngineNumber());
-                query.setParameter(18, car.getChassisNumber());
-                query.setParameter(19, car.getCarMileages().get(0).getMileage());
-                query.setParameter(20, car.getLicensePlateNumber());
-                query.setParameter(21, serviceReservation.getReservedDate());
-                query.setParameter(22, serviceReservation.getComment());
-                query.setParameter(23, services);
+                query.setParameter(5, user.getBillingInformation().getBillingName());
+                query.setParameter(6, user.getBillingInformation().getBillingPhoneNumber().toString());
+                query.setParameter(7, user.getBillingInformation().getBillingZipCode());
+                query.setParameter(8, user.getBillingInformation().getBillingTown());
+                query.setParameter(9, user.getBillingInformation().getBillingCountry());
+                query.setParameter(10, user.getBillingInformation().getBillingStreet());
+                query.setParameter(11, user.getBillingInformation().getBillingOtherAddressType());
+                query.setParameter(12, user.getBillingInformation().getBillingTaxNumber());
+                query.setParameter(13, user.getBillingInformation().getBillingEmail());
+                query.setParameter(14, car.getBrand());
+                query.setParameter(15, car.getType());
+                query.setParameter(16, car.getEngineType());
+                query.setParameter(17, car.getYearOfManufacture());
+                query.setParameter(18, car.getEngineNumber());
+                query.setParameter(19, car.getChassisNumber());
+                query.setParameter(20, car.getCarMileages().get(0).getMileage());
+                query.setParameter(21, car.getLicensePlateNumber());
+                query.setParameter(22, serviceReservation.getReservedDate());
+                query.setParameter(23, serviceReservation.getComment());
+                query.setParameter(24, services);
                 query.executeUpdate();
     }
 
@@ -139,6 +141,18 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getAllUser() {
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_ALL_USER", "GetUserByPermission");
         return (List<User>) query.getResultList();
+    }
+
+    @Override
+    public Optional<User> findUserByCarId(Long carId) {
+        try {
+            StoredProcedureQuery query = em.createStoredProcedureQuery("GET_USER_DETAILS_BY_FK_CAR_ID", "GetUserDetailsByFkCarId");
+            query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+            query.setParameter(1, carId);
+            return Optional.of((User) query.getSingleResult());
+        }catch (NoResultException n){
+            return Optional.empty();
+        }
     }
 
 }

@@ -50,6 +50,21 @@ import java.util.Set;
                 )
         }
 )
+@SqlResultSetMapping(
+        name = "GetUserDetailsByFkCarId",
+        classes = {
+                @ConstructorResult(
+                        targetClass = com.EGEA1R.CarService.persistance.entity.User.class,
+                        columns = {
+                                @ColumnResult(name = "last_name", type = String.class),
+                                @ColumnResult(name = "first_name", type = String.class),
+                                @ColumnResult(name = "e_mail", type = String.class),
+                                @ColumnResult(name = "phone_number", type = String.class)
+                        }
+                )
+        }
+)
+
 public class User {
 
     @Id
@@ -118,6 +133,13 @@ public class User {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public User(String lastName, String firstName, String email, String phoneNumber){
+        this.lastName = lastName;
+        this.firstName = firstName;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }

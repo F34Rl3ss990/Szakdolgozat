@@ -4,6 +4,7 @@ import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceReservationRepository;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;

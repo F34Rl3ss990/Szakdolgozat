@@ -4,6 +4,7 @@ import com.EGEA1R.CarService.exception.BadRequestException;
 import com.EGEA1R.CarService.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
+import com.EGEA1R.CarService.service.interfaces.EmailService;
 import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.ReservedServiceList;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
@@ -14,12 +15,12 @@ import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private ModelMapper modelMapper;
+
+    private EmailService emailService;
 
     private final String regexp = "^[0-9]{8}[-][0-9][-][0-9]{2}$";
     private final String taxNumError = "Tax number is incorrect";
@@ -43,6 +46,11 @@ public class UserServiceImpl implements UserService {
         this.modelMapper = modelMapper;
     }
 
+    @Autowired
+    public void setEmailService(EmailService emailService){
+        this.emailService = emailService;
+    }
+
     @Override
     public void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email){
         if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getBillingEuTax()){
@@ -55,10 +63,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-        ///////
+    @Transactional
     @Override
-    public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-            String services = servicesListToString(unauthorizedUserReservationDTO.getService());
+    public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException {
+            String services = servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
             if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getBillingEuTax()){
                 if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){
                     if(CarServiceImpl.checkLicensePlate(unauthorizedUserReservationDTO.getForeignCountryPlate(),
@@ -66,9 +74,15 @@ public class UserServiceImpl implements UserService {
                         userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
                                 mapDTOtoCar(unauthorizedUserReservationDTO),
                                 mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
+                        emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
                     }
                 }else
                     throw new BadRequestException(taxNumError);
+            } else{
+                userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
+                        mapDTOtoCar(unauthorizedUserReservationDTO),
+                        mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
+                emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
             }
     }
 
@@ -86,10 +100,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserDetails(Long credentialId){
+    public User getUserDetailsByCredentialId(Long credentialId){
         return userRepository
                 .findUserByCredentialId(credentialId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("User with this id not found: %s", Long.toString(credentialId))));
+    }
+
+    @Override
+    public User getUserDetailsByCarId(Long carId){
+        return userRepository
+                .findUserByCarId(carId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with this id not found: %s", Long.toString(carId))));
     }
 
     @Override
@@ -108,7 +129,10 @@ public class UserServiceImpl implements UserService {
                 servicesList.add(item.getServiceType());
             }
         }
-        return servicesList.toString();
+        return servicesList.stream()
+                .map(service -> String.valueOf(service))
+                .collect(Collectors.joining(","));
+
     }
 
     private User mapDTOtoUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){

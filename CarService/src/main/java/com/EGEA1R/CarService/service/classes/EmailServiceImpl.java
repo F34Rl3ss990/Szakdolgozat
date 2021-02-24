@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.service.interfaces.EmailService;
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -9,14 +10,17 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -57,7 +61,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("noreply@carservice.com");
+            helper.setFrom(new InternetAddress("carservice9900@gmail.com", "Car service"));
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text);
@@ -66,52 +70,104 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment("Invoice", file);
 
             emailSender.send(message);
-        } catch (MessagingException e){
+        } catch (MessagingException | UnsupportedEncodingException e){
             e.printStackTrace();
         }
     }
 
-    private void sendHtmlMessage(String subject, String to, String htmlBody) throws MessagingException {
+    private void sendHtmlMessage(String subject, String to, String htmlBody) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("noreply@carservice.com");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
         helper.addInline("unnamed", resourceFile);
+        message.setFrom(new InternetAddress("carservice9900@gmail.com", "Car service"));
         emailSender.send(message);
     }
 
 
     private void sendMessageUsingThymeleafTemplate(
-            String to, String token, String subject, String html)
+            String to, String token, String subject, String html, Context thymeleafContext)
             throws MessagingException {
-
-        Context thymeleafContext = new Context();
-        thymeleafContext.setVariable("token",  token);
         String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
+        try {
+    sendHtmlMessage(subject, to, htmlBody);
+        } catch(UnsupportedEncodingException e){
 
-        sendHtmlMessage(subject, to, htmlBody);
+        }
     }
+
+    private void sendMessageUsingThymeleafTemplate(
+            String to, String subject, String html, Context thymeleafContext)
+            throws MessagingException {
+        String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
+        try {
+            sendHtmlMessage(subject, to, htmlBody);
+        } catch(UnsupportedEncodingException e){
+
+        }
+    }
+
+
 
     @Override
     public void sendVerificationToken(String to, String token) throws MessagingException {
         String subject = "Verification email";
         String html = "VerificationEmailTemplate.html";
-        sendMessageUsingThymeleafTemplate(to, token, subject, html);
+        Context thymeleafContext = new Context();
+        tokenContext(thymeleafContext, token);
+        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
     }
 
     @Override
     public void resendVerificationToken(String to, String token) throws MessagingException {
-        String subject = "Vericifation mail resent";
+        String subject = "Verification mail resent";
         String html = "VerificationEmailResendTemplate.html";
-        sendMessageUsingThymeleafTemplate(to, token, subject, html);
+        Context thymeleafContext = new Context();
+        tokenContext(thymeleafContext, token);
+        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
     }
 
     @Override
     public void sendResetPasswordToken(String to, String token) throws MessagingException {
         String subject = "Password reset token mail";
         String html = "PasswordResetTemplate.html";
-        sendMessageUsingThymeleafTemplate(to, token, subject, html);
+        Context thymeleafContext = new Context();
+        tokenContext(thymeleafContext, token);
+        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
+    }
+
+    @Override
+    public void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException{
+        String subject ="Reserved service information";
+        String html ="ReservedService.html";
+        Context thymeleafContext = new Context();
+        serviceContext(thymeleafContext, unauthorizedUserReservationDTO);
+        sendMessageUsingThymeleafTemplate(unauthorizedUserReservationDTO.getEmail(), subject, html, thymeleafContext);
+    }
+
+    private void tokenContext(Context thymeleafContext, String token){
+        thymeleafContext.setVariable("token", token);
+    }
+
+    private void serviceContext(Context context, UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
+        String services = UserServiceImpl.servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        context.setVariable("lastName", unauthorizedUserReservationDTO.getLastName());
+        context.setVariable("firstName", unauthorizedUserReservationDTO.getFirstName());
+        context.setVariable("email", unauthorizedUserReservationDTO.getEmail());
+        context.setVariable("phoneNumber", unauthorizedUserReservationDTO.getPhoneNumber());
+        context.setVariable("brand", unauthorizedUserReservationDTO.getBrand());
+        context.setVariable("type", unauthorizedUserReservationDTO.getType());
+        context.setVariable("engineType", unauthorizedUserReservationDTO.getEngineType());
+        context.setVariable("yearOfManufacture", unauthorizedUserReservationDTO.getYearOfManufacture());
+        context.setVariable("engineNumber", unauthorizedUserReservationDTO.getEngineNumber());
+        context.setVariable("chassisNumber", unauthorizedUserReservationDTO.getChassisNumber());
+        context.setVariable("mileage", unauthorizedUserReservationDTO.getMileage());
+        context.setVariable("licensePlate", unauthorizedUserReservationDTO.getLicensePlateNumber());
+        context.setVariable("reservedDate", sdf.format(unauthorizedUserReservationDTO.getReservedDate()));
+        context.setVariable("reservedServices", services);
+        context.setVariable("comment", unauthorizedUserReservationDTO.getComment());
     }
 }

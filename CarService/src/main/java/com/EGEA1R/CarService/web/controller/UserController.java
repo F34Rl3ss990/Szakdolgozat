@@ -1,13 +1,10 @@
 package com.EGEA1R.CarService.web.controller;
 
-import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +33,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getUserInformation(){
         AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(userService.getUserDetails(credentialDetails.getCredentialId()));
+        return ResponseEntity.ok(userService.getUserDetailsByCredentialId(credentialDetails.getCredentialId()));
     }
 
     @PostMapping("/addUser")

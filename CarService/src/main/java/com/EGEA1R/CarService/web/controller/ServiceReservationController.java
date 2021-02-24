@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
-@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/test/serviceReservation")
 public class ServiceReservationController {
 
     private ServiceReservationService serviceReservationService;
@@ -31,14 +33,14 @@ public class ServiceReservationController {
     }
 
     @PostMapping("/serviceReservationUnauthorized")
-    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
+    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException {
         userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
 
     @PostMapping("/reserveService")
     // @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> reserveService(ServiceReservationDTO serviceReservationDTO){
+    public ResponseEntity<?> reserveService(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException {
         serviceReservationService.saveService(serviceReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
@@ -51,7 +53,7 @@ public class ServiceReservationController {
         return ResponseEntity.ok(serviceReservationService.getServicesByUserOrderByDate(page, size, userId));
     }
 
-    @GetMapping("/getServicesByUser")
+    @GetMapping("/getServicesToday")
    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getEveryServiceToday(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size){

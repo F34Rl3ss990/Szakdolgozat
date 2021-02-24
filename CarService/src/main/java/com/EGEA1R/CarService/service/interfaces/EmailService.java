@@ -1,5 +1,7 @@
 package com.EGEA1R.CarService.service.interfaces;
 
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
+
 import javax.mail.MessagingException;
 
 public interface EmailService {
@@ -12,4 +14,6 @@ public interface EmailService {
     void sendVerificationToken(String recipientAddress, String token) throws MessagingException;
 
     void sendSimpleMessage(String to, String subject, String text);
+
+    void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO)  throws MessagingException;
 }

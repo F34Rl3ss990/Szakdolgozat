@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <style>
+        .valami {
+            margin:0;
+            line-height: inherit;
+            border-collapse: collapse;
+            vertical-align: top;
+            padding: 30px;
+            background-color: white;
+            text-align: left;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            border-spacing: 0;
+        }
+
+        .containerr{
+            margin: 0;
+            text-align: center;
+            position: relative;
+            padding: 0;
+            line-height: inherit;
+            min-width: 320px;
+            background-color: #ededed;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        p{
+            margin:0px;
+        }
+    </style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width-device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="containerr" style="word-break: normal">
+    <table style="text-align: center; max-width:700px; align-self: center; margin:0; display:inline-table;">
+        <tbody>
+        <tr>
+            <td><img src='cid:unnamed'></td>
+        </tr>
+        <tr>
+            <td class="valami">
+                <p>Kedves <span th:text="${lastName}"></span> <span th:text="${firstName}"></span></p>
+                <p>Köszönjük, hogy minket választottál!</p>
+                <br>
+                <p>Az általad foglalt szolgáltatások adatati a következőek:</p>
+                <table style="width: 100%; text-align: center; border: 1px solid black">
+                    <tbody>
+                    <tr>
+                        <th style="border: 1px solid black">Last name</th>
+                        <th style="border: 1px solid black">First name</th>
+                        <th style="border: 1px solid black">Email</th>
+                        <th style="border: 1px solid black">Phone number</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${lastName}" style="border: 1px solid black"></td>
+                        <td th:text="${firstName}" style="border: 1px solid black"></td>
+                        <td th:text="${email}" style="border: 1px solid black"></td>
+                        <td th:text="${phoneNumber}" style="border: 1px solid black"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            <br>
+                <table style="text-align: center; border: 1px solid black">
+                    <tbody>
+                    <tr>
+                        <th style="border: 1px solid black">Brand</th>
+                        <th style="border: 1px solid black">Type</th>
+                        <th style="border: 1px solid black">Engine type</th>
+                        <th style="border: 1px solid black">Year of manufacture</th>
+                        <th style="border: 1px solid black">Engine number</th>
+                        <th style="border: 1px solid black">Chassis number</th>
+                        <th style="border: 1px solid black">Mileage</th>
+                        <th style="border: 1px solid black">License plate</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${brand}" style="border: 1px solid black"></td>
+                        <td th:text="${type}" style="border: 1px solid black"></td>
+                        <td th:text="${engineType}" style="border: 1px solid black"></td>
+                        <td th:text="${yearOfManufacture}" style="border: 1px solid black"></td>
+                        <td th:text="${engineNumber}" style="border: 1px solid black"></td>
+                        <td th:text="${chassisNumber}" style="border: 1px solid black"></td>
+                        <td th:text="${mileage}" style="border: 1px solid black"></td>
+                        <td th:text="${licensePlate}" style="border: 1px solid black"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            <br>
+            <p>Reserved date: <span th:text="${reservedDate}"></span></p>
+            <p>Reserved services: <span th:text="${reservedServices}"></span></p>
+            <p>Comment: <span th:text="${comment}"></span></p>
+            <br>
+            <p>Bármilyen kérdésed van keress minket az alábbi elérhetőségeken:</p>
+                <p>Telefonszám: </p>
+                <p>Email: </p>
+            <br>
+            <p>CarService csapata</p>
+            <p>http://localhost:8080/</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+</body>
+</html>

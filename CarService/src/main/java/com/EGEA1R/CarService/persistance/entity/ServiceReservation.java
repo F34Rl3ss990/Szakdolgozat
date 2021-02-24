@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,16 +24,15 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @SqlResultSetMapping(
         name="GetServicesByUser",
-        entities = {
-                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.ServiceReservation.class,
-                fields = {
-                        @FieldResult(name = "reservedDate", column = "reserved_date"),
-                }),
-                @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.Car.class,
-                fields = {
-                        @FieldResult(name = "brand", column = "brand"),
-                        @FieldResult(name = "type", column = "type")
-                })
+        classes = {
+                @ConstructorResult(
+                        targetClass = com.EGEA1R.CarService.persistance.entity.ServiceReservation.class,
+                        columns = {
+                                @ColumnResult(name = "reserved_date", type = Date.class),
+                                @ColumnResult(name = "brand", type = String.class),
+                                @ColumnResult(name = "type", type = String.class)
+                        }
+                )
         }
 )
 @SqlResultSetMapping(
@@ -63,7 +63,7 @@ public class ServiceReservation {
     @NotNull
     @FutureOrPresent
     @Column(name = "reserved_date")
-    private LocalDate reservedDate;
+    private Date reservedDate;
 
     @NotNull
     @Column(name = "date_of_the_reservation", insertable = false, updatable = false)
@@ -85,4 +85,11 @@ public class ServiceReservation {
     @JoinColumn(name = "fk_service_reservation_car")
     private Car car;
 
+    public ServiceReservation(Date reservedDate, String brand, String type){
+        this.reservedDate = reservedDate;
+        this.car = Car.builder()
+                .brand(brand)
+                .type(type)
+                .build();
+    }
 }

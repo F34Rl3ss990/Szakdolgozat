@@ -24,4 +24,6 @@ public interface UserRepository {
     Optional<User> findUserByCredentialId(Long credentialId);
 
     List<User> getAllUser();
+
+    Optional<User> findUserByCarId(Long carId);
 }

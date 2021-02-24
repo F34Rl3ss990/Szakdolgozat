@@ -6,15 +6,19 @@ import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 
+import javax.mail.MessagingException;
+
 public interface UserService {
 
     void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email);
 
-    void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO);
+    void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException;
 
     void modifyUser(ModifyUserDateRequest modifyUserDateRequest);
 
-    User getUserDetails(Long credentialId);
+    User getUserDetailsByCredentialId(Long credentialId);
 
     PagedListHolder<User> getAllUserPage(int page, int size);
+
+    User getUserDetailsByCarId(Long carId);
 }

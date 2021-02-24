@@ -108,9 +108,9 @@ public class UnauthorizedUserReservationDTO {
     private String comment;
 
     @NotNull
-    private LocalDate reservedDate;
+    private Date reservedDate;
 
-    private List<ReservedServiceList> service = new ArrayList<>();
+    private List<ReservedServiceList> reservedServices = new ArrayList<>();
 }
 
 

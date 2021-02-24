@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
@@ -23,6 +24,11 @@ public class CarServiceApplication {
 	@Bean
 	public MethodValidationPostProcessor methodValidationPostProcessor() {
 		return new MethodValidationPostProcessor();
+	}
+
+	@Bean
+	public Java8TimeDialect java8TimeDialect() {
+		return new Java8TimeDialect();
 	}
 
 }
