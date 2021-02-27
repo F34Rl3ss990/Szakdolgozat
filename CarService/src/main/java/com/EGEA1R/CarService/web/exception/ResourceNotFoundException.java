@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.exception;
+package com.EGEA1R.CarService.web.exception;
 
 
 import org.springframework.http.HttpStatus;

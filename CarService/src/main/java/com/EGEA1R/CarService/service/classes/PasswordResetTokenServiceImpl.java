@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.exception.ResourceNotFoundException;
+import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.PasswordReset;
 import com.EGEA1R.CarService.persistance.repository.interfaces.PasswordResetRepository;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,8 +58,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
 
     @Transactional
     @Override
-    public void createPasswordResetTokenForCredentialAndSendIt(Credential credential){
-        try {
+    public void createPasswordResetTokenForCredentialAndSendIt(Credential credential) throws UnsupportedEncodingException, MessagingException {
             String token = UUID.randomUUID().toString();
             String recipientAddress = credential.getEmail();
             PasswordReset tokenObj = PasswordReset.builder()
@@ -67,10 +67,6 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                     .build();
             passwordResetRepository.savePasswordResetToken(tokenObj, credential.getCredentialId());
             emailService.sendResetPasswordToken(recipientAddress, token);
-        }catch (MessagingException e)
-        {
-            logger.error("Cannot send password reset token to this email: " + credential.getEmail() +". Error: " + e);
-        }
     }
     private Date calculateExpiryDate() {
         final int EXPIRATION = 60 * 24;

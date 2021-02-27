@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,7 +16,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-@ComponentScan(basePackages = { "com.EGEA1R.CarSErvice.spring.mail" })
+@ComponentScan(basePackages = { "com.EGEA1R.CarService.spring.mail" })
 @PropertySource(value={"classpath:application.properties"})
 public class EmailConfiguration {
     @Value("${spring.mail.host}")

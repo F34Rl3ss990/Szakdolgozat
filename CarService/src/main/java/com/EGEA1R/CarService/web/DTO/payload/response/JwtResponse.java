@@ -14,9 +14,9 @@ public class JwtResponse {
     private String tokenType = "Bearer";
     private Long id;
     private String email;
-    private List<String> roles;
+    private String roles;
 
-    public JwtResponse(String accessToken, Long id, String email, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String email, String roles) {
         this.id = id;
         this.email = email;
         this.roles = roles;

@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/modifyUser")
-    @PreAuthorize("hasRole('USER')")
+  //  @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> modifyUserData(@Valid @RequestBody ModifyUserDateRequest modifyUserDateRequest){
         userService.modifyUser(modifyUserDateRequest);
         return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));

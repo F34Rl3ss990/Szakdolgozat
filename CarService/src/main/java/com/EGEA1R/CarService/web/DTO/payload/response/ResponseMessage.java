@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.message;
+package com.EGEA1R.CarService.web.DTO.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

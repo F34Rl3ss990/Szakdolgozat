@@ -1,22 +1,18 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.exception.ResourceNotFoundException;
+import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.PasswordReset;
 import com.EGEA1R.CarService.persistance.entity.Verification;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.interfaces.VerificationRepository;
 import com.EGEA1R.CarService.service.interfaces.EmailService;
 import com.EGEA1R.CarService.service.interfaces.VerificationTokenService;
-import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.security.auth.login.CredentialNotFoundException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -80,7 +76,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    public void generateNewTokenAndSendItViaEmail(String existingToken) throws MessagingException {
+    public void generateNewTokenAndSendItViaEmail(String existingToken) throws MessagingException, UnsupportedEncodingException {
         Verification verification = verificationRepository.findByToken(existingToken)
                 .orElseThrow(()-> new ResourceNotFoundException(String.format("Verification not found by token: %s", existingToken)));
         String token = UUID.randomUUID().toString();

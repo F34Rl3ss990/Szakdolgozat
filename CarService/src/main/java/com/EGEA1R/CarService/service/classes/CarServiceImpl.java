@@ -1,32 +1,19 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.exception.BadRequestException;
-import com.EGEA1R.CarService.exception.ResourceNotFoundException;
+import com.EGEA1R.CarService.web.exception.BadRequestException;
+import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.CarMileage;
-import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CarRepository;
-import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
-import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.CarService;
 import com.EGEA1R.CarService.web.DTO.CarDTO;
-import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -84,7 +71,7 @@ public class CarServiceImpl implements CarService {
         }else if(foreignPlate){
             return true;
         } else{
-            throw new BadRequestException("Code is incorrect");
+            throw new BadRequestException(String.format("LicensePlate is incorrect: %s", licensePlate));
         }
     }
 

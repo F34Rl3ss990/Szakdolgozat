@@ -37,24 +37,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
             String jwt = parseJwt(request);
             jwt = EncrypterHelper.decrypt(jwt);
-            if(jwt != null && jwtUtils.validateJwtToken(jwt) && jwtUtils.checkIfNotBlocked(jwt)){
-                String email = jwtUtils.getEmailFromJwtToken(jwt);
-                jwtUtils.setJwtExpirationMs(jwt);
-                UserDetails userDetails = credentialService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                if (jwt != null && jwtUtils.validateJwtToken(jwt) && jwtUtils.checkIfNotBlocked(jwt)) {
+                    String email = jwtUtils.getEmailFromJwtToken(jwt);
+                    jwtUtils.setJwtExpirationMs(jwt);
+                    UserDetails userDetails = credentialService.loadUserByUsername(email);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            }
-        catch (Exception e){
-            logger.error("Cannot set user authentication: {}", e);
-        }
-
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
         filterChain.doFilter(request, response);
     }
 

@@ -1,13 +1,13 @@
 package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
-import com.EGEA1R.CarService.exception.BadRequestException;
-import com.EGEA1R.CarService.exception.ResourceNotFoundException;
+import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
+import com.EGEA1R.CarService.web.exception.BadRequestException;
+import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.interfaces.PasswordResetRepository;
 import com.EGEA1R.CarService.persistance.repository.TokenBlockRepository;
-import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.security.jwt.JwtUtilId;
 import com.EGEA1R.CarService.service.interfaces.*;
@@ -17,12 +17,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,24 +116,18 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Override
-    public String authenticationChoose(List<String> roles, String email){
-        for(String role : roles){
-            if(role.equals("ROLE_ADMIN") || role.equals("ROLE_BOSS")){
-                try{
-                    String authType = credentialRepository.getMultiFactorAuth(email);
-                    if(authType.equals("email")){
-                        int otp = otpService.generateOTP(email);
-                        String message = "Your otp number is: " + otp;
-                        emailService.sendSimpleMessage(email, "OTP - SpringBoot - CarService", message);
-                        return "email";
-                    } else if (authType.equals("phone"))
-                        return "phone";
-                }catch (NullPointerException n) {
-                    logger.error("Cannot get authentication type from user: " + n);
-                }
+    public ResponseEntity<?> authenticationChoose(String email, LoginRequest loginRequest) throws NullPointerException {
+            String authType = credentialRepository.getMultiFactorAuth(email);
+            if(authType.equals("email")){
+                int otp = otpService.generateOTP(email);
+                String message = "Your otp number is: " + otp;
+                emailService.sendSimpleMessage(email, "OTP - SpringBoot - CarService", message);
+                return ResponseEntity.ok(loginRequest);
+            } else if (authType.equals("phone"))
+                return ResponseEntity.ok(loginRequest);
+        else{
+            throw new BadRequestException("Multifactor authentication type does not exist!");
             }
-        }
-        return "";
     }
 
     @Override
@@ -225,22 +221,18 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .orElseThrow(() -> new ResourceNotFoundException( String.format("username %s", email)));
         String mfaType = credential.getMfa();
         Boolean verify = false;
-        try {
             if (mfaType.equals("phone")) {
                 verify = phoneVerify(code, credential);
             } else if (mfaType.equals("email")) {
                 verify = emailVerify(code, email);
             }
-        }catch(RuntimeException e){
-            logger.error("Authentication was not successful" + e);
-        }
         if(verify){
             return credential;
         } else{
             throw new BadRequestException("Authentication was not successful");
         }
     }
-////////
+//////////////
     @Override
     public void disableAccountByUser(Long credentialId){
         credentialRepository.disableAccountByUser(credentialId);
@@ -277,13 +269,13 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                     return  true;
                 }
                 else {
-                    return false;
+                    throw new BadRequestException("Invalid OTP nubmer!");
                 }
             }else {
-                return false;
+                throw new BadRequestException("OTP number expired!");
             }
         }else {
-            return false;
+            throw new  BadRequestException("Invalid OTP number!");
         }
     }
 }

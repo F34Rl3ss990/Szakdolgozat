@@ -21,10 +21,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+<<<<<<< Updated upstream
 @Table(name = "credential",
 uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
+=======
+@Table(name = "credential")
+>>>>>>> Stashed changes
 //@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @SqlResultSetMapping(

@@ -2,6 +2,7 @@ package com.EGEA1R.CarService.configuration;
 
 import com.EGEA1R.CarService.security.jwt.AuthEntryPointJwt;
 import com.EGEA1R.CarService.security.jwt.AuthTokenFilter;
+import com.EGEA1R.CarService.security.jwt.CustomAccessDeniedHandler;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private AuthCredentialServiceImpl credentialService;
 
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
 
     @Autowired
     public void setCredentialService(AuthCredentialServiceImpl credentialService){
@@ -38,6 +41,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setUnauthorizedHandler(AuthEntryPointJwt unauthorizedHandler){
         this.unauthorizedHandler = unauthorizedHandler;
+    }
+
+    @Autowired
+    public void setAccessDeniedHandler(CustomAccessDeniedHandler accessDeniedHandler){
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
 
@@ -64,12 +72,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll()
-                .anyRequest().authenticated();
+        http
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .accessDeniedHandler(accessDeniedHandler)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**")
+                .permitAll()
+                .antMatchers("/api/test/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

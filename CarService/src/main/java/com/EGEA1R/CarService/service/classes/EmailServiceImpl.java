@@ -45,20 +45,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
-       try{
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@carservice.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
         emailSender.send(message);
-    } catch (MailException exception) {
-        exception.printStackTrace();
-    }
     }
 
-    public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) throws MessagingException {
-        try {
+    public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) throws MessagingException, UnsupportedEncodingException {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(new InternetAddress("carservice9900@gmail.com", "Car service"));
@@ -70,9 +65,6 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment("Invoice", file);
 
             emailSender.send(message);
-        } catch (MessagingException | UnsupportedEncodingException e){
-            e.printStackTrace();
-        }
     }
 
     private void sendHtmlMessage(String subject, String to, String htmlBody) throws MessagingException, UnsupportedEncodingException {
@@ -89,13 +81,9 @@ public class EmailServiceImpl implements EmailService {
 
     private void sendMessageUsingThymeleafTemplate(
             String to, String token, String subject, String html, Context thymeleafContext)
-            throws MessagingException {
+            throws MessagingException, UnsupportedEncodingException {
         String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
-        try {
-    sendHtmlMessage(subject, to, htmlBody);
-        } catch(UnsupportedEncodingException e){
-
-        }
+        sendHtmlMessage(subject, to, htmlBody);
     }
 
     private void sendMessageUsingThymeleafTemplate(
@@ -112,7 +100,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Override
-    public void sendVerificationToken(String to, String token) throws MessagingException {
+    public void sendVerificationToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Verification email";
         String html = "VerificationEmailTemplate.html";
         Context thymeleafContext = new Context();
@@ -121,7 +109,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void resendVerificationToken(String to, String token) throws MessagingException {
+    public void resendVerificationToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Verification mail resent";
         String html = "VerificationEmailResendTemplate.html";
         Context thymeleafContext = new Context();
@@ -130,7 +118,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendResetPasswordToken(String to, String token) throws MessagingException {
+    public void sendResetPasswordToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Password reset token mail";
         String html = "PasswordResetTemplate.html";
         Context thymeleafContext = new Context();

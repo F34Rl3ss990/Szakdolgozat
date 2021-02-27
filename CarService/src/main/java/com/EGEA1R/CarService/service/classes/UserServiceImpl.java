@@ -1,7 +1,7 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.exception.BadRequestException;
-import com.EGEA1R.CarService.exception.ResourceNotFoundException;
+import com.EGEA1R.CarService.web.exception.BadRequestException;
+import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.EmailService;

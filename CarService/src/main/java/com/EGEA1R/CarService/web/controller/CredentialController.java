@@ -1,42 +1,36 @@
 package com.EGEA1R.CarService.web.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import com.EGEA1R.CarService.exception.BadRequestException;
+import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.web.DTO.payload.request.ChangePasswordRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.PasswordResetRequest;
 import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.Verification;
-import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.SignupRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.VerifyCodeRequest;
-import com.EGEA1R.CarService.web.DTO.payload.response.JwtAuthenticationResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.JwtResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.security.jwt.JwtUtilsImpl;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,11 +50,7 @@ public class CredentialController {
 
     private VerificationTokenService verificationTokenService;
 
-    private EmailService emailService;
-
     private PasswordResetTokenService passwordresetTokenService;
-
-    private OTPService otpService;
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager){
@@ -83,25 +73,16 @@ public class CredentialController {
     }
 
     @Autowired
-    public void  setEmailService(EmailService emailService){
-        this.emailService = emailService;
-    }
-
-    @Autowired
     public void setPasswordResetTokenService(PasswordResetTokenService passwordResetTokenService){
         this.passwordresetTokenService = passwordResetTokenService;
-    }
-
-    @Autowired
-    public void setOtpService(OTPService otpService){
-        this.otpService = otpService;
     }
 
 
     @PreAuthorize("hasRole('ROLE_BOSS')")
     @PostMapping(value = "/addAdmin")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody AddAdminRequest addAdminRequest){
-        if (credentialService.credentialExistByEmail(addAdminRequest.getEmail()))
+        Boolean exist = credentialService.credentialExistByEmail(addAdminRequest.getEmail());
+        if (Boolean.TRUE.equals(exist))
         {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
@@ -111,46 +92,28 @@ public class CredentialController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
-        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        String authType = credentialService.authenticationChoose(roles, authentication.getName());
-        if(authType.equals("email"))
-             return ResponseEntity.ok(loginRequest);
-        else if (authType.equals("phone"))
-             return ResponseEntity.ok(loginRequest);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        jwt = EncrypterHelper.encrypt(jwt);
+        AuthCredentialDetailsImpl credentialDetails = setAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
+        String role = credentialDetails.getAuthorities().toString();
+            if(role.equals("ROLE_ADMIN") || role.equals("ROLE_BOSS")){
+                return credentialService.authenticationChoose(credentialDetails.getUsername(), loginRequest);
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                credentialDetails.getCredentialId(),
-                credentialDetails.getUsername(),
-                roles));
+        }
+        return responseLoginInformation(credentialDetails);
     }
 
     @PostMapping("/verify")
     public ResponseEntity<?> verifyOTP(@Valid @RequestBody VerifyCodeRequest verifyCodeRequest){
-        Credential credential =
-                credentialService.verify(verifyCodeRequest.getEmail(), verifyCodeRequest.getCode());
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(verifyCodeRequest.getEmail(), verifyCodeRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
-        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        jwt = EncrypterHelper.encrypt(jwt);
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                credentialDetails.getCredentialId(),
-                credentialDetails.getUsername(),
-                roles));
+        credentialService.verify(verifyCodeRequest.getEmail(), verifyCodeRequest.getCode());
+        AuthCredentialDetailsImpl credentialDetails = setAuthentication(verifyCodeRequest.getEmail(), verifyCodeRequest.getPassword());
+        return responseLoginInformation(credentialDetails);
     }
 
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
         String path = "/api/auth/signup";
-        if (credentialService.credentialExistByEmail(signupRequest.getEmail()))
+        Boolean exist = credentialService.credentialExistByEmail(signupRequest.getEmail());
+        if (Boolean.TRUE.equals(exist))
         {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
@@ -159,40 +122,28 @@ public class CredentialController {
     }
 
     @GetMapping("/registrationConfirm")
-    public ResponseEntity<?> confirmRegistration(@RequestParam("token") String verificationToken) {
+    public ResponseEntity<?> confirmRegistration(@RequestParam("token") String verificationToken) throws UnsupportedEncodingException, MessagingException {
 
         Verification verification = verificationTokenService.getFkAndExpDateByToken(verificationToken);
-        if (verification == null) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid token"));
-        }
         String permission = credentialService.getPermissionById(verification.getFkVerificationId());
         if(!permission.equals("ROLE_DISABLED")){
             return ResponseEntity.badRequest().body(new MessageResponse("This account is already verified or banned"));
         }
         Calendar cal = Calendar.getInstance();
         if ((verification.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            try {
                 verificationTokenService.generateNewTokenAndSendItViaEmail(verificationToken);
                 return ResponseEntity.ok(new MessageResponse("Verification token resent"));
-            } catch(MessagingException e){
-                logger.error("Cannot send mail: {}", e);
-            }
-            return ResponseEntity.badRequest().body(new MessageResponse("redirect to bad user html, authentication token expired"));
         }
-
         verificationTokenService.modifyPermissionOnVerifiedUser(verification.getFkVerificationId());
         return ResponseEntity.ok(new MessageResponse("Successfully verified"));
     }
 
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
-            @RequestParam String email){
+            @RequestParam String email) throws UnsupportedEncodingException, MessagingException {
         Credential credential = credentialService.getByEmail(email);
-        if(credential!=null) {
         passwordresetTokenService.createPasswordResetTokenForCredentialAndSendIt(credential);
         return ResponseEntity.ok(new MessageResponse("Password reset token sent"));
-        }else
-            return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
     }
 
     @GetMapping("/changePassword")
@@ -232,9 +183,8 @@ public class CredentialController {
                  throw new BadRequestException("Incorrect old password " + changePasswordRequest.getOldPassword());
             }
             credentialService.changePasswordAndBlockToken(request, credential.getCredentialId(), changePasswordRequest.getPassword());
-            Authentication authentication = authenticationManager.authenticate
-                    (new UsernamePasswordAuthenticationToken(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordRequest.getPassword()));
-            return getResponseEntity(authentication);
+            AuthCredentialDetailsImpl credentialDetails = setAuthentication(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordRequest.getPassword());
+            return responseLoginInformation(credentialDetails);
         }
         else {
             return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
@@ -247,17 +197,19 @@ public class CredentialController {
         return ResponseEntity.ok(new MessageResponse("Logged out"));
     }
 
-    private ResponseEntity<?> getResponseEntity(Authentication authentication) {
+    private AuthCredentialDetailsImpl setAuthentication(String email, String password){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) authentication.getPrincipal();
-        List<String> roles = credentialDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        jwt = EncrypterHelper.encrypt(jwt);
+        return (AuthCredentialDetailsImpl) authentication.getPrincipal();
+    }
 
+    private ResponseEntity<?> responseLoginInformation(AuthCredentialDetailsImpl credentialDetails){
+        String jwt = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
+        jwt = EncrypterHelper.encrypt(jwt);
         return ResponseEntity.ok(new JwtResponse(jwt,
                 credentialDetails.getCredentialId(),
                 credentialDetails.getUsername(),
-                roles));
+                credentialDetails.getAuthorities().toString()));
     }
 }
 

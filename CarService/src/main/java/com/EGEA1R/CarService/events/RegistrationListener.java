@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 @Component
@@ -35,7 +36,7 @@ public class RegistrationListener implements
         this.confirmRegistration(event);
     }
 
-    private void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException {
+    private void confirmRegistration(OnRegistrationCompleteEvent event) throws MessagingException, UnsupportedEncodingException {
         Credential credential = event.getCredential();
         String token = UUID.randomUUID().toString();
         verificationTokenService.createVerificationToken(credential, token);

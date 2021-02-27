@@ -1,6 +1,6 @@
-package com.EGEA1R.CarService.exception;
+package com.EGEA1R.CarService.web.exception;
 
-import com.EGEA1R.CarService.message.ResponseMessage;
+import com.EGEA1R.CarService.web.DTO.payload.response.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

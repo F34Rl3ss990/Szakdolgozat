@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.EGEA1R.CarService.persistance.entity.Document;
-import com.EGEA1R.CarService.message.ResponseFile;
-import com.EGEA1R.CarService.message.ResponseMessage;
+import com.EGEA1R.CarService.web.DTO.payload.response.ResponseFile;
+import com.EGEA1R.CarService.web.DTO.payload.response.ResponseMessage;
 import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

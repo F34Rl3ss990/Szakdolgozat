@@ -16,6 +16,7 @@ public class CarServiceApplication {
 		SpringApplication.run(CarServiceApplication.class, args);
 	}
 
+<<<<<<< Updated upstream
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
@@ -31,4 +32,6 @@ public class CarServiceApplication {
 		return new Java8TimeDialect();
 	}
 
+=======
+>>>>>>> Stashed changes
 }
