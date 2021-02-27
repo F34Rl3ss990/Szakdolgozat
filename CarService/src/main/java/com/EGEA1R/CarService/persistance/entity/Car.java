@@ -9,9 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Builder
@@ -20,10 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "car")
-/*@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)*/
 @SqlResultSetMapping(
         name="GetCars",
         entities = {

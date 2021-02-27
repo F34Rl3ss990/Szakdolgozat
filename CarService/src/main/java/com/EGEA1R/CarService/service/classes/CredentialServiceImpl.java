@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,7 +109,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
 
     @Override
     public Credential getPasswordAndIdByEmail(String email) {
-        return  credentialRepository
+        return credentialRepository
                 .getPasswordAndIdByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException( String.format("User not found with email: %s", email)));
     }
@@ -226,7 +225,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
             } else if (mfaType.equals("email")) {
                 verify = emailVerify(code, email);
             }
-        if(verify){
+        if(Boolean.TRUE.equals(verify)){
             return credential;
         } else{
             throw new BadRequestException("Authentication was not successful");

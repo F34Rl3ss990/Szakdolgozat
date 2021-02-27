@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -20,7 +19,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -79,25 +77,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
 
+
+
     private void sendMessageUsingThymeleafTemplate(
-            String to, String token, String subject, String html, Context thymeleafContext)
-            throws MessagingException, UnsupportedEncodingException {
+            String to, String subject, String html, Context thymeleafContext) throws MessagingException, UnsupportedEncodingException {
         String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
         sendHtmlMessage(subject, to, htmlBody);
     }
-
-    private void sendMessageUsingThymeleafTemplate(
-            String to, String subject, String html, Context thymeleafContext)
-            throws MessagingException {
-        String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
-        try {
-            sendHtmlMessage(subject, to, htmlBody);
-        } catch(UnsupportedEncodingException e){
-
-        }
-    }
-
-
 
     @Override
     public void sendVerificationToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
@@ -105,7 +91,7 @@ public class EmailServiceImpl implements EmailService {
         String html = "VerificationEmailTemplate.html";
         Context thymeleafContext = new Context();
         tokenContext(thymeleafContext, token);
-        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
+        sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
     @Override
@@ -114,7 +100,7 @@ public class EmailServiceImpl implements EmailService {
         String html = "VerificationEmailResendTemplate.html";
         Context thymeleafContext = new Context();
         tokenContext(thymeleafContext, token);
-        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
+        sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
     @Override
@@ -123,11 +109,11 @@ public class EmailServiceImpl implements EmailService {
         String html = "PasswordResetTemplate.html";
         Context thymeleafContext = new Context();
         tokenContext(thymeleafContext, token);
-        sendMessageUsingThymeleafTemplate(to, token, subject, html, thymeleafContext);
+        sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
     @Override
-    public void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException{
+    public void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         String subject ="Reserved service information";
         String html ="ReservedService.html";
         Context thymeleafContext = new Context();

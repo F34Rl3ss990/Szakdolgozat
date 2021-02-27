@@ -2,7 +2,6 @@ package com.EGEA1R.CarService.web.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;

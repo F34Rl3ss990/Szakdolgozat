@@ -1,10 +1,7 @@
 package com.EGEA1R.CarService.persistance.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
@@ -13,7 +10,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 @Builder
 @Data
@@ -21,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "service_reservation")
-@EntityListeners(AuditingEntityListener.class)
 @SqlResultSetMapping(
         name="GetServicesByUser",
         classes = {

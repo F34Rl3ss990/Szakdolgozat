@@ -1,17 +1,12 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.TokenBlock;
 import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
 
 public interface CredentialService {
 

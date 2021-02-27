@@ -1,12 +1,9 @@
 package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Car;
-import com.EGEA1R.CarService.persistance.entity.Credential;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
-import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
-import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
@@ -34,9 +31,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .setParameter(1, user.getFirstName())
                 .setParameter(2, user.getLastName())
                 .setParameter(3, email)
-                .setParameter(4, user.getPhoneNumber().toString())
+                .setParameter(4, user.getPhoneNumber())
                 .setParameter(5, user.getBillingInformation().getBillingName())
-                .setParameter(6, user.getBillingInformation().getBillingPhoneNumber().toString())
+                .setParameter(6, user.getBillingInformation().getBillingPhoneNumber())
                 .setParameter(7, user.getBillingInformation().getBillingZipCode())
                 .setParameter(8, user.getBillingInformation().getBillingTown())
                 .setParameter(9, user.getBillingInformation().getBillingCountry())
@@ -79,9 +76,9 @@ public class UserRepositoryImpl implements UserRepository {
                 query.setParameter(1, user.getFirstName());
                 query.setParameter(2, user.getLastName());
                 query.setParameter(3, user.getEmail());
-                query.setParameter(4, user.getPhoneNumber().toString());
+                query.setParameter(4, user.getPhoneNumber());
                 query.setParameter(5, user.getBillingInformation().getBillingName());
-                query.setParameter(6, user.getBillingInformation().getBillingPhoneNumber().toString());
+                query.setParameter(6, user.getBillingInformation().getBillingPhoneNumber());
                 query.setParameter(7, user.getBillingInformation().getBillingZipCode());
                 query.setParameter(8, user.getBillingInformation().getBillingTown());
                 query.setParameter(9, user.getBillingInformation().getBillingCountry());
@@ -140,7 +137,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAllUser() {
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_ALL_USER", "GetUserByPermission");
-        return (List<User>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override

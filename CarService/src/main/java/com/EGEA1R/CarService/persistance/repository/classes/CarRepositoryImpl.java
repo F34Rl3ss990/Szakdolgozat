@@ -2,10 +2,8 @@ package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CarRepository;
-import com.EGEA1R.CarService.web.DTO.CarDTO;
 import org.springframework.stereotype.Repository;
 
-import javax.mail.Store;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -74,7 +72,7 @@ public class CarRepositoryImpl implements CarRepository {
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_ALL_CAR_BY_USER", "GetCars");
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
         query.setParameter(1, userId);
-        return (List<Car>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override

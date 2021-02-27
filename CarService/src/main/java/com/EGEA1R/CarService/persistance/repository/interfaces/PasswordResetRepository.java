@@ -2,7 +2,6 @@ package com.EGEA1R.CarService.persistance.repository.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.PasswordReset;
 
-import java.util.Date;
 import java.util.Optional;
 
 public interface PasswordResetRepository {

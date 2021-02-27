@@ -1,13 +1,11 @@
 package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Credential;
-import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +35,8 @@ public class CredentialRepositoryImpl implements CredentialRepository {
             query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
             query.setParameter(1, email);
             query.execute();
-            Optional<Credential> credential = Optional.of((Credential) query.getSingleResult());
-            if(credential!= null)
-                return true;
-            else
-                return false;
+            Credential credential = (Credential) query.getSingleResult();
+            return credential != null;
         } catch (NoResultException e) {
             return false;
         }
@@ -200,6 +195,6 @@ public class CredentialRepositoryImpl implements CredentialRepository {
     @Override
     public List<Credential> getAllAdmin() {
         Query query = em.createNativeQuery("SELECT credential_id, email, first_name, last_name from credential where permission = 'ROLE_ADMIN' ");
-        return (List<Credential>) query.getResultList();
+        return query.getResultList();
     }
 }

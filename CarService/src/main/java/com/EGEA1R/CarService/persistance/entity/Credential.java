@@ -8,11 +8,9 @@ import com.EGEA1R.CarService.validation.annotation.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,15 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-<<<<<<< Updated upstream
-@Table(name = "credential",
-uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-})
-=======
 @Table(name = "credential")
->>>>>>> Stashed changes
-//@EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
 @SqlResultSetMapping(
         name="FindByEmailMapping",
@@ -122,7 +112,7 @@ uniqueConstraints = {
         }
 )
 
-public class Credential implements Serializable {
+public class Credential{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

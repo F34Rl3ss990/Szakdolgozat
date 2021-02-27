@@ -16,5 +16,5 @@ public interface EmailService {
 
     void sendSimpleMessage(String to, String subject, String text);
 
-    void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO)  throws MessagingException;
+    void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException;
 }

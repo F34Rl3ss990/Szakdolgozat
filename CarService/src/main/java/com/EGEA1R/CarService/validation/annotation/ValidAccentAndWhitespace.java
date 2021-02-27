@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.validation.annotation;
 
 import com.EGEA1R.CarService.validation.AccentLettersAndWhitespaceValidator;
-import com.EGEA1R.CarService.validation.AccentLettersValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

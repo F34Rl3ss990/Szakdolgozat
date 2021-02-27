@@ -2,9 +2,7 @@ package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceReservationRepository;
-import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
@@ -41,7 +39,7 @@ public class ServiceReservationRepositoryImpl implements ServiceReservationRepos
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_SERVICES_BY_USER_ORDER_BY_DATE", "GetServicesByUser");
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
         query.setParameter(1, userId);
-        return (List<ServiceReservation>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -49,6 +47,6 @@ public class ServiceReservationRepositoryImpl implements ServiceReservationRepos
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_SERVICES_TODAY", "GetServicesByToday");
         query.registerStoredProcedureParameter(1, LocalDate.class, ParameterMode.IN);
         query.setParameter(1, localDate);
-        return (List<ServiceReservation>) query.getResultList();
+        return query.getResultList();
     }
 }

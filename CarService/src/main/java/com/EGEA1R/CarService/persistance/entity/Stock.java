@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +14,6 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @Entity
 @Table(name = "stock")
-@EntityListeners(AuditingEntityListener.class)
 public class Stock {
 
     @Id

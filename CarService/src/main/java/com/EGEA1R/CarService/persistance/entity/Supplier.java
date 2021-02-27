@@ -3,7 +3,6 @@ package com.EGEA1R.CarService.persistance.entity;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -14,7 +13,6 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "supplier")
-@EntityListeners(AuditingEntityListener.class)
 public class Supplier {
 
     @Id
@@ -33,7 +31,7 @@ public class Supplier {
 
     @NotNull
     @ValidEmail
-    @Column(name = "e-mail")
+    @Column(name = "email")
     private String email;
 
     @NotNull

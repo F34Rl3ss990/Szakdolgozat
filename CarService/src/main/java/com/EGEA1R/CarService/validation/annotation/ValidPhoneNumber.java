@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.validation.annotation;
 
-import com.EGEA1R.CarService.validation.EmailValidator;
 import com.EGEA1R.CarService.validation.PhoneNumberValidator;
 
 import javax.validation.Constraint;

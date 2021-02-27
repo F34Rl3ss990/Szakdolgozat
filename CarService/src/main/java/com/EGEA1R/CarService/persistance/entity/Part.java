@@ -2,7 +2,6 @@ package com.EGEA1R.CarService.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +15,6 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @Entity
 @Table(name = "part")
-@EntityListeners(AuditingEntityListener.class)
 public class Part {
 
     @Id

@@ -2,16 +2,12 @@ package com.EGEA1R.CarService.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Builder
 @Data
@@ -19,7 +15,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "workday")
-@EntityListeners(AuditingEntityListener.class)
 public class Workday {
 
     @Id

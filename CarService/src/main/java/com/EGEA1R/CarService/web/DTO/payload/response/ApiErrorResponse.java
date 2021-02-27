@@ -1,9 +1,7 @@
 package com.EGEA1R.CarService.web.DTO.payload.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;

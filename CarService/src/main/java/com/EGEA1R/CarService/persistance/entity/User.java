@@ -4,19 +4,13 @@ import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Data
@@ -24,10 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-/*@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)*/
 @SqlResultSetMapping(
         name="GetUserByFkId",
         entities = {
