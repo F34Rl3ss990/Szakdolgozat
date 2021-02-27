@@ -6,12 +6,13 @@ import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.support.PagedListHolder;
 
 import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 
 public interface UserService {
 
     void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email);
 
-    void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException;
+    void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException;
 
     void modifyUser(ModifyUserDateRequest modifyUserDateRequest);
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
 
     @Transactional
     @Override
-    public void saveService(ServiceReservationDTO serviceReservationDTO) throws MessagingException {
+    public void saveService(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         String services  = UserServiceImpl.servicesListToString(serviceReservationDTO.getReservedServices());
         serviceReservationRepository.saveService(mapDTOtoServiceReservation(serviceReservationDTO), services);
         sendEmailAfterServiceReservation(serviceReservationDTO);
@@ -90,7 +91,7 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
         return serviceReservation;
     }
 
-    private void sendEmailAfterServiceReservation(ServiceReservationDTO serviceReservationDTO) throws MessagingException {
+    private void sendEmailAfterServiceReservation(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         Car car = carService.getCarById(serviceReservationDTO.getFkServiceReservationCarId());
         User user = userService.getUserDetailsByCarId(serviceReservationDTO.getFkServiceReservationCarId());
         UnauthorizedUserReservationDTO unauthorizedUserReservationDTO = UnauthorizedUserReservationDTO.builder()

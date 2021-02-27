@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException {
+    public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
             String services = servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
             if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getBillingEuTax()){
                 if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){

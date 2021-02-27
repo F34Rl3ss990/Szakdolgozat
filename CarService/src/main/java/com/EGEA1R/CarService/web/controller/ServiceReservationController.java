@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -31,14 +32,14 @@ public class ServiceReservationController {
     }
 
     @PostMapping("/serviceReservationUnauthorized")
-    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException {
+    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
 
     @PostMapping("/reserveService")
     // @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> reserveService(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException {
+    public ResponseEntity<?> reserveService(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         serviceReservationService.saveService(serviceReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
