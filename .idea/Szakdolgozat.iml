@@ -5,6 +5,8 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/CarService/frontend/dist" />
       <excludeFolder url="file://$MODULE_DIR$/CarService/frontend/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/frontendCarservice/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/frontendCarservice/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

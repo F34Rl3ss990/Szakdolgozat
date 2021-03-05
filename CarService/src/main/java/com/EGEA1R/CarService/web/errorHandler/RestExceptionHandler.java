@@ -40,7 +40,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             errors.add(error.getField() + ": " + error.getDefaultMessage());
         }
         for (final ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
+            errors.add(error.getDefaultMessage());
         }
         final ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
@@ -160,8 +160,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) throws Exception {
-        if (ex instanceof AccessDeniedException
-                || ex instanceof BadCredentialsException) {
+        if (ex instanceof AccessDeniedException) {
             throw ex;
         }
         logger.info(ex.getClass().getName());
@@ -188,6 +187,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         final String error = ex.getMessage();
 
         final ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.SERVICE_UNAVAILABLE, ex.getLocalizedMessage(), error);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({ BadCredentialsException.class })
+    public ResponseEntity<Object> handleBadCredentialsException(final Exception ex, final WebRequest request) throws Exception {
+        logger.info(ex.getClass().getName());
+        logger.error("error", ex);
+        //
+        final ApiErrorResponse apiError = new ApiErrorResponse(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), "Wrong email or password!");
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }

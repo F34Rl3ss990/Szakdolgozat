@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.EGEA1R.CarService.web.DTO.payload.response.ErrorResponse;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.service.interfaces.*;
@@ -114,7 +115,7 @@ public class CredentialController {
         Boolean exist = credentialService.credentialExistByEmail(signupRequest.getEmail());
         if (Boolean.TRUE.equals(exist))
         {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            return ResponseEntity.badRequest().body(new ErrorResponse(new ArrayList<>(Collections.singleton("Email is already in use"))));
         }
         credentialService.createNewCredential(signupRequest.getEmail(), signupRequest.getPassword(), path);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -190,7 +191,8 @@ public class CredentialController {
         }
     }
 
-    @PostMapping("/logout")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         credentialService.saveBlockedToken(request);
         return ResponseEntity.ok(new MessageResponse("Logged out"));

@@ -1,0 +1,18 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(æóÌµ
+:
+java:S3010"$Remove this assignment of "ecipher".(é†¨¦
+?
+java:S3010 "$Remove this assignment of "dcipher".(ÉÖ´•øÿÿÿÿ
+9
+java:S5542"#Use secure mode and padding scheme.(é†¨¦
+>
+java:S5542 "#Use secure mode and padding scheme.(ÉÖ´•øÿÿÿÿ
+P
+java:S22097"5Change this instance-reference to a static reference.(í£„Ôúÿÿÿÿ
+P
+java:S2209;"5Change this instance-reference to a static reference.(½ñ°Åûÿÿÿÿ
+T
+java:S4719H"9Replace charset name argument with StandardCharsets.UTF_8(Ô»–Åÿÿÿÿÿ
+O
+java:S4719U"9Replace charset name argument with StandardCharsets.UTF_8(³Éø§

@@ -14,6 +14,7 @@ public class ApiErrorResponse {
     private HttpStatus status;
     private String message;
     private List<String> errors;
+    
 
     public ApiErrorResponse() {
         super();

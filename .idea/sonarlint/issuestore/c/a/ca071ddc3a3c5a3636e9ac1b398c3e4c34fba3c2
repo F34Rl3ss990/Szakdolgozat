@@ -1,30 +1,26 @@
 
-]
-java:S2789œ"FEnsure this "Optional" could never be null and remove this null-check.(ØÙû´
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢„ª‰
-G
-java:S1612e",Replace this lambda with a method reference.(‡ò¡½þÿÿÿÿ
-@
-java:S5411p"*Use the primitive boolean expression here.(ÿá¸€
-_
-java:S2259Ÿ"HA "NullPointerException" could be thrown; "credential" is nullable here.(÷Ô±è
-<
-java:S1452^"&Remove usage of generic wildcard type.(—­è€
-<
-java:S1452n"&Remove usage of generic wildcard type.(šŠÂÛ
-W
-java:S1075o"ARefactor your code to get this URI from a customizable parameter.(ÊÿÀÃ
-A
-java:S1452z"&Remove usage of generic wildcard type.(ùàÊéüÿÿÿÿ
 B
-java:S1452Ž"&Remove usage of generic wildcard type.(„Ò‚Íüÿÿÿÿ
-B
-java:S1452™"&Remove usage of generic wildcard type.(øŒ²Êþÿÿÿÿ
-W	java:S125"<This block of commented-out lines of code should be removed.(ïË²éþÿÿÿÿ
-<
-java:S1452ª"&Remove usage of generic wildcard type.(ª°›z
+java:S1452±"&Remove usage of generic wildcard type.(ÒÊÍôüÿÿÿÿ
 =
-java:S1452µ"&Remove usage of generic wildcard type.(ÑæùÄ
+java:S1452 "&Remove usage of generic wildcard type.(ÑæùÄ
 B
-java:S1452É"&Remove usage of generic wildcard type.(ËùÌúÿÿÿÿ
-W	java:S125Î"<This block of commented-out lines of code should be removed.(éÑ˜Óùÿÿÿÿ
+java:S1452"&Remove usage of generic wildcard type.(øŒ²Êþÿÿÿÿ
+B
+java:S1452•"&Remove usage of generic wildcard type.(¸£¨šùÿÿÿÿ
+?
+java:S1068*"*Remove this unused "logger" private field.(·ì“g
+A
+java:S1452R"&Remove usage of generic wildcard type.(¦æÐ¤ûÿÿÿÿ
+<
+java:S1452h"&Remove usage of generic wildcard type.(£˜€è
+A
+java:S1452|"&Remove usage of generic wildcard type.( ô–‚úÿÿÿÿ
+W
+java:S1075q"ARefactor your code to get this URI from a customizable parameter.(ÊÿÀÃ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢„ª‰
+B
+java:S1452Ã"&Remove usage of generic wildcard type.(Î·Š«þÿÿÿÿ
+<
+java:S1452]"&Remove usage of generic wildcard type.(—­è€
+<
+java:S1452p"&Remove usage of generic wildcard type.(šŠÂÛ

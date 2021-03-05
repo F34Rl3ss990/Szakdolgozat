@@ -14,13 +14,12 @@ import javax.validation.constraints.Size;
 @PasswordMatches
 public class SignupRequest {
 
-    @NotBlank
-    @Size(max = 255)
-    @ValidEmail
+    @NotBlank(message = "Email is required")
+    @ValidEmail(message = " Invalid Email")
     private String email;
 
-    @NotBlank
-    @ValidPassword
+    @NotBlank(message = "Password is required")
+    @ValidPassword(message = "Password must contain 1 upper case letter, 1 number and it should be at least 8 character long!")
     private String password;
 
     @NotBlank
