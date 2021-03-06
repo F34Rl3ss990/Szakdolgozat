@@ -59,3 +59,8 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
+
+.custom-dialog-container .mat-dialog-container {
+  background: #008000!important;
+  position: relative !important;
+}

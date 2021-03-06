@@ -3,9 +3,10 @@ import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Event, Router} from '@angular/router';
 import {TokenStorageService} from '../../services/token-storage.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {RegisterComponent} from '../register/register.component';
+import {RegisterComponent} from '../registration/register/register.component';
 import {LoginComponent} from '../login/login.component';
 import {AuthService} from '../../services/auth.service';
+import {RegistrationSuccessfulComponent} from '../registration/registration-successful/registration-successful.component';
 
 @Component({
   selector: 'app-navigation-bar',

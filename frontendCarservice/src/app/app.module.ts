@@ -12,7 +12,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { RegisterComponent } from './components/registration/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { BoardAdminComponent } from './components/board-admin/board-admin.component';
@@ -29,6 +29,7 @@ import { ErrorMatcherDirective } from './components/validators/error-matcher.dir
 import { MatchingPasswordMatcherDirective } from './components/validators/matching-password-matcher.directive';
 import { PasswordRegexpValidatorDirective } from './components/validators/password-regexp-validator.directive';
 import {ExistingEmailValidatorDirective} from './components/validators/existing-email-validator.directive';
+import { RegistrationSuccessfulComponent } from './components/registration/registration-successful/registration-successful.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {ExistingEmailValidatorDirective} from './components/validators/existing-
     ErrorMatcherDirective,
     MatchingPasswordMatcherDirective,
     PasswordRegexpValidatorDirective,
-    ExistingEmailValidatorDirective
+    ExistingEmailValidatorDirective,
+    RegistrationSuccessfulComponent
   ],
     imports: [
         BrowserModule,

@@ -1,12 +1,14 @@
 import {Component, HostListener, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {MatDialogRef} from '@angular/material/dialog';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {AuthService} from '../../../services/auth.service';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {matchingPasswordValidator} from '../validators/matching-password-validator.directive';
-import {MatchingPasswordMatcherDirective} from '../validators/matching-password-matcher.directive';
-import {passwordPatternValidator} from '../validators/password-regexp-validator.directive';
-import {existingEmailValidator} from '../validators/existing-email-validator.directive';
+import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
+import {MatchingPasswordMatcherDirective} from '../../validators/matching-password-matcher.directive';
+import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
+import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
+import {LoginComponent} from '../../login/login.component';
+import {RegistrationSuccessfulComponent} from '../registration-successful/registration-successful.component';
 
 @HostListener('document:keydown.meta.k')
 @Component({
@@ -30,7 +32,8 @@ export class RegisterComponent implements OnInit {
   constructor(private authService: AuthService,
               private dialogRef: MatDialogRef<RegisterComponent>,
               private renderer: Renderer2,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private dialog: MatDialog) {
     this.createForm();
   }
 
@@ -71,6 +74,7 @@ export class RegisterComponent implements OnInit {
         this.isSuccessful = true;
         this.isSignUpFailed = false;
         this.dialogRef.close();
+        this.openSuccessfulRegisterDialog();
       },
       err => {
         this.errorMessage = err.error.errors;
@@ -78,6 +82,14 @@ export class RegisterComponent implements OnInit {
         console.log(err.error.errors)
       }
     );
+  }
+
+  openSuccessfulRegisterDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(RegistrationSuccessfulComponent, dialogConfig);
   }
 
   close() {
