@@ -19,7 +19,7 @@ public class SignupRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @ValidPassword(message = "Password must contain 1 upper case letter, 1 number and it should be at least 8 character long!")
+    @ValidPassword(message = "Password must contain 1 upper case letter, 1 number, 1 special character and it should be at least 8 character long!")
     private String password;
 
     @NotBlank

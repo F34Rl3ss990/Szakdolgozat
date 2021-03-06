@@ -14,7 +14,8 @@ const httpOptions = {
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   login(credentials): Observable<any> {
     return this.http.post(AUTH_API + 'signin', {
@@ -23,11 +24,15 @@ export class AuthService {
     }, httpOptions);
   }
 
-  register(user): Observable<any>{
+  register(user): Observable<any> {
     return this.http.post(AUTH_API + 'signup', {
       email: user.email,
       password: user.password,
       matchingPassword: user.matchingPassword
     }, httpOptions);
+  }
+
+  getUserByEmail(userEmail: string): Promise<Boolean> {
+    return this.http.get<Boolean>(AUTH_API + 'emailValid?email=' + userEmail).toPromise();
   }
 }

@@ -24,6 +24,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {NavigationBarComponent} from './components/navigation-bar/navigation-bar.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
+import { MatchingPasswordValidatorDirective } from './components/validators/matching-password-validator.directive';
+import { ErrorMatcherDirective } from './components/validators/error-matcher.directive';
+import { MatchingPasswordMatcherDirective } from './components/validators/matching-password-matcher.directive';
+import { PasswordRegexpValidatorDirective } from './components/validators/password-regexp-validator.directive';
+import {ExistingEmailValidatorDirective} from './components/validators/existing-email-validator.directive';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,12 @@ import {MatIconModule} from '@angular/material/icon';
     ProfileComponent,
     BoardAdminComponent,
     BoardUserComponent,
-    NavigationBarComponent
+    NavigationBarComponent,
+    MatchingPasswordValidatorDirective,
+    ErrorMatcherDirective,
+    MatchingPasswordMatcherDirective,
+    PasswordRegexpValidatorDirective,
+    ExistingEmailValidatorDirective
   ],
     imports: [
         BrowserModule,

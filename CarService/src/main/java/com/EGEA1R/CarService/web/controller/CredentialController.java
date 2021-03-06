@@ -7,7 +7,9 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.web.DTO.payload.response.ErrorResponse;
+import com.EGEA1R.CarService.web.DTO.payload.response.ResponseMessage;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.service.interfaces.*;
@@ -108,6 +110,10 @@ public class CredentialController {
         return responseLoginInformation(credentialDetails);
     }
 
+    @GetMapping("/emailValid")
+    public Boolean emailValid(@RequestParam("email") String email){
+        return credentialService.credentialExistByEmail(email);
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){

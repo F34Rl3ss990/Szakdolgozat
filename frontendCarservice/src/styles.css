@@ -17,7 +17,7 @@
 
 .mat-form-field-flex {
   height: 50px;
-  background-color: white
+  background-color: white;
 }
 
 .mat-form-field {
@@ -37,6 +37,10 @@
 
 .mat-form-field-label {
   top: 1.75em
+}
+
+.mat-input-element{
+  font-size:14px!important;
 }
 
 .mat-error {
