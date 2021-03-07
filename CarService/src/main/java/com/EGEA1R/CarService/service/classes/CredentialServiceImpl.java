@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.events.OnRegistrationCompleteEvent;
 import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
@@ -18,14 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CredentialServiceImpl implements CredentialService, JwtTokenCheckService {
@@ -46,9 +49,9 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
 
     private OTPService otpService;
 
-    private ApplicationEventPublisher applicationEventPublisher;
-
     private EmailService emailService;
+
+    private VerificationTokenService verificationTokenService;
 
     @Autowired
     public void setJwtUtilId(JwtUtilId jwtUtilId){
@@ -86,13 +89,13 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Autowired
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher){
-        this.applicationEventPublisher = applicationEventPublisher;
+    public void setEmailService(EmailService emailService){
+        this.emailService = emailService;
     }
 
     @Autowired
-    public void setEmailService(EmailService emailService){
-        this.emailService = emailService;
+    public void setVerificationTokenService(VerificationTokenService verificationTokenService){
+        this.verificationTokenService = verificationTokenService;
     }
 
     @Override
@@ -151,15 +154,18 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Transactional
+    @Async
     @Override
-    public void createNewCredential(String email, String password, String path) {
+    public void createNewCredential(String email, String password, String path) throws UnsupportedEncodingException, MessagingException {
         Credential credential = Credential.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .build();
         Long id = credentialRepository.saveUser(credential);
         credential.setCredentialId(id);
-        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(credential, path));
+        String token = UUID.randomUUID().toString();
+        verificationTokenService.createVerificationToken(credential, token);
+        emailService.sendVerificationToken(credential.getEmail(), token);
     }
 
     @Override

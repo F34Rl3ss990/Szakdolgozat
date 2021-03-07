@@ -61,6 +61,6 @@ input:-webkit-autofill:active {
 }
 
 .custom-dialog-container .mat-dialog-container {
-  background: #008000!important;
+  background: white!important;
   position: relative !important;
 }

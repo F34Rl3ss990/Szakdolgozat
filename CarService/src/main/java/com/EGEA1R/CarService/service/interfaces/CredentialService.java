@@ -6,7 +6,9 @@ import com.EGEA1R.CarService.web.DTO.payload.request.LoginRequest;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.ResponseEntity;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 public interface CredentialService {
 
@@ -16,7 +18,7 @@ public interface CredentialService {
 
     Long getCredentialIdByToken(String passwordResetToken);
 
-    void createNewCredential(String email, String password, String path);
+    void createNewCredential(String email, String password, String path) throws UnsupportedEncodingException, MessagingException;
 
     boolean checkIfValidOldPassword(final String password, final String oldPassword);
 

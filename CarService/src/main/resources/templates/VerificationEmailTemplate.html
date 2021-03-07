@@ -39,14 +39,6 @@
 <body>
 <div class="containerr">
         <table style="text-align: center; max-width:600px; align-self: center; margin:0; display:inline-table">
-            <thead style="text-align: left">
-            <tr>
-                <th style=" padding-left: 10px">
-                    <p>Kedves felhasználó!</p>
-                    <p>Köszönjük, hogy regisztráltál az oldalon!</p>
-                </th>
-            </tr>
-            </thead>
             <tbody>
             <tr>
                 <td><img src='cid:unnamed'></td>
@@ -54,16 +46,23 @@
             <tr>
                 <td class="valami">
                     <p style="font-size: 30px; margin-top:0px">Regisztrációs e-mail</p>
-                    <p>Ezt a levelet azért kaptad, mert regisztráltál az oldalunkon(CarService).</p>
+                    <p>Kedves felhasználó!</p>
+                    <p>Köszönjük, hogy regisztráltál az oldalon!</p>
+                    <p>A profilodat a következő linken tudod aktiválni: <a th:href="${'http://localhost:4200/home/registrationConfirm/' + token}">Aktiválás</a></p>
                     <p>Amennyiben nem te kezdeményezted a regisztrációt, úgy hagyd figyelmen kívül ezt az üzenetet! Több levelet nem fogsz kapni.</p>
-                    <p>Az aktiváláshoz szükséges link: <a th:href="${'http://localhost:8080/api/auth/registrationConfirm?token=' + token}">Aktiválás</a></p>
                     <br>
-                    <p>CarService csapata</p>
-                    <p>http://localhost:8080/</p>
+                    <div>
+                    Bármilyen kérdésed van keress minket az alábbi elérhetőségeken:<br>
+                    Telefonszám:<br>
+                    Email:<br>
+                    CarService csapata<br>
+                    http://localhost:4200/<br>
+                    </div>
                 </td>
             </tr>
             </tbody>
         </table>
+    <p>© 2021 - 2021 Carservice - Minden jog fenntartva</p>
 </div>
 </div>
 </body>

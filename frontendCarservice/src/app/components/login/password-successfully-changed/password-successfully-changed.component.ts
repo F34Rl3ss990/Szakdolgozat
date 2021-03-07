@@ -2,13 +2,13 @@ import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-registration-successful',
-  templateUrl: './registration-successful.component.html',
-  styleUrls: ['./registration-successful.component.css']
+  selector: 'app-passwored-successfully-changed',
+  templateUrl: './password-successfully-changed.component.html',
+  styleUrls: ['./password-successfully-changed.component.css']
 })
-export class RegistrationSuccessfulComponent implements OnInit {
+export class PasswordSuccessfullyChangedComponent implements OnInit {
 
-  constructor(private dialogRef: MatDialogRef<RegistrationSuccessfulComponent>,
+  constructor(private dialogRef: MatDialogRef<PasswordSuccessfullyChangedComponent>,
               private renderer: Renderer2) {
   }
   ngOnInit(): void {
@@ -22,4 +22,5 @@ export class RegistrationSuccessfulComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
+
 }

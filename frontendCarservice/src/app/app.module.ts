@@ -11,7 +11,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
-import { LoginComponent } from './components/login/login.component';
+import { LoginDialogComponent } from './components/login/login-dialog/login-dialog.component';
 import { RegisterComponent } from './components/registration/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -30,12 +30,21 @@ import { MatchingPasswordMatcherDirective } from './components/validators/matchi
 import { PasswordRegexpValidatorDirective } from './components/validators/password-regexp-validator.directive';
 import {ExistingEmailValidatorDirective} from './components/validators/existing-email-validator.directive';
 import { RegistrationSuccessfulComponent } from './components/registration/registration-successful/registration-successful.component';
+import {RouterModule} from '@angular/router';
+import { VerificationDialogComponent } from './components/registration/verification-dialog/verification-dialog.component';
+import { VerificationDialogEntryComponent } from './components/registration/verification-dialog-entry/verification-dialog-entry.component';
+import { PasswordResetComponent } from './components/login/password-reset/password-reset.component';
+import { PasswordTokenSentComponent } from './components/login/password-token-sent/password-token-sent.component';
+import { PasswordResetDialogComponent } from './components/login/password-reset-dialog/password-reset-dialog.component';
+import { PasswordResetDialogEntryComponent } from './components/login/password-reset-dialog-entry/password-reset-dialog-entry.component';
+import { PasswordSuccessfullyChangedComponent } from './components/login/password-successfully-changed/password-successfully-changed.component';
+import { ExpiredResetPasswordTokenComponent } from './components/login/expired-reset-password-token/expired-reset-password-token.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FilterPipe,
-    LoginComponent,
+    LoginDialogComponent,
     RegisterComponent,
     HomeComponent,
     ProfileComponent,
@@ -47,7 +56,15 @@ import { RegistrationSuccessfulComponent } from './components/registration/regis
     MatchingPasswordMatcherDirective,
     PasswordRegexpValidatorDirective,
     ExistingEmailValidatorDirective,
-    RegistrationSuccessfulComponent
+    RegistrationSuccessfulComponent,
+    VerificationDialogComponent,
+    VerificationDialogEntryComponent,
+    PasswordResetComponent,
+    PasswordTokenSentComponent,
+    PasswordResetDialogComponent,
+    PasswordResetDialogEntryComponent,
+    PasswordSuccessfullyChangedComponent,
+    ExpiredResetPasswordTokenComponent
   ],
     imports: [
         BrowserModule,
@@ -64,12 +81,29 @@ import { RegistrationSuccessfulComponent } from './components/registration/regis
         MatFormFieldModule,
         MatCheckboxModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        RouterModule.forRoot([
+        {
+          path: 'home',
+          component: HomeComponent,
+          children: [
+            {
+              path: 'registrationConfirm/:token',
+              component: VerificationDialogEntryComponent
+            },
+            {
+              path: 'changePassword/:token',
+              component: PasswordResetDialogEntryComponent
+            }
+          ]
+        },
+        { path: '**', redirectTo: 'home' }
+      ])
     ],
   providers: [SlimLoadingBarService, authInterceptorProviders],
   exports: [AppComponent],
   bootstrap: [AppComponent],
-  entryComponents: [LoginComponent,
-  RegisterComponent]
+  entryComponents: [LoginDialogComponent,
+  RegisterComponent, VerificationDialogEntryComponent, VerificationDialogComponent]
 })
 export class AppModule { }

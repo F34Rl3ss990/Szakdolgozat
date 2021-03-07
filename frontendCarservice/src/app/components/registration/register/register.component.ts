@@ -7,8 +7,9 @@ import {matchingPasswordValidator} from '../../validators/matching-password-vali
 import {MatchingPasswordMatcherDirective} from '../../validators/matching-password-matcher.directive';
 import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
 import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
-import {LoginComponent} from '../../login/login.component';
+import {LoginDialogComponent} from '../../login/login-dialog/login-dialog.component';
 import {RegistrationSuccessfulComponent} from '../registration-successful/registration-successful.component';
+import {DialogService} from '../../../services/dialog.service';
 
 @HostListener('document:keydown.meta.k')
 @Component({
@@ -33,7 +34,7 @@ export class RegisterComponent implements OnInit {
               private dialogRef: MatDialogRef<RegisterComponent>,
               private renderer: Renderer2,
               private fb: FormBuilder,
-              private dialog: MatDialog) {
+              private dialogService: DialogService) {
     this.createForm();
   }
 
@@ -67,29 +68,18 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.form)
-    console.log(this.registerForm.value)
     this.authService.register(this.registerForm.value).subscribe(
       data => {
         this.isSuccessful = true;
         this.isSignUpFailed = false;
         this.dialogRef.close();
-        this.openSuccessfulRegisterDialog();
+        this.dialogService.openSuccessfulRegisterDialog();
       },
       err => {
         this.errorMessage = err.error.errors;
         this.isSignUpFailed = true;
-        console.log(err.error.errors)
       }
     );
-  }
-
-  openSuccessfulRegisterDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(RegistrationSuccessfulComponent, dialogConfig);
   }
 
   close() {

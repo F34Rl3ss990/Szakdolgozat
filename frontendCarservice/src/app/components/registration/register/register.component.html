@@ -15,7 +15,9 @@
     >
     <mat-icon *ngIf=" (registerForm.controls['email'].hasError('required') && registerForm.controls['email'].touched)
           || (registerForm.controls['email'].hasError('required') && registerForm.controls['email'].dirty)
-          || isSignUpFailed" matSuffix>
+          || (registerForm.controls['email'].hasError('pattern') && !registerForm.controls['email'].hasError('required'))
+          || isSignUpFailed
+          || registerForm.controls['email'].hasError('emailExists') " matSuffix>
       error
     </mat-icon>
     <mat-icon *ngIf="registerForm.controls['email'].valid" matSuffix>check_circle</mat-icon>
@@ -114,10 +116,6 @@
   <div class="alert alert-danger" *ngIf="submitted && isSignUpFailed">
     Signup failed!<br/>
   </div>
-</div>
-
-<div class="alert alert-success" *ngIf="isSuccessful">
-  Your registration is successful!
 </div>
 
 

@@ -98,7 +98,6 @@ public class CredentialController {
         String role = credentialDetails.getAuthorities().toString();
             if(role.equals("ROLE_ADMIN") || role.equals("ROLE_BOSS")){
                 return credentialService.authenticationChoose(credentialDetails.getUsername(), loginRequest);
-
         }
         return responseLoginInformation(credentialDetails);
     }
@@ -116,13 +115,8 @@ public class CredentialController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) throws UnsupportedEncodingException, MessagingException {
         String path = "/api/auth/signup";
-        Boolean exist = credentialService.credentialExistByEmail(signupRequest.getEmail());
-        if (Boolean.TRUE.equals(exist))
-        {
-            return ResponseEntity.badRequest().body(new ErrorResponse(new ArrayList<>(Collections.singleton("Email is already in use"))));
-        }
         credentialService.createNewCredential(signupRequest.getEmail(), signupRequest.getPassword(), path);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
@@ -146,20 +140,20 @@ public class CredentialController {
 
     @PostMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
-            @RequestParam String email) throws UnsupportedEncodingException, MessagingException {
+            @RequestBody String email) throws UnsupportedEncodingException, MessagingException {
         Credential credential = credentialService.getByEmail(email);
         passwordresetTokenService.createPasswordResetTokenForCredentialAndSendIt(credential);
         return ResponseEntity.ok(new MessageResponse("Password reset token sent"));
     }
 
     @GetMapping("/changePassword")
-    public ResponseEntity<?> validatePasswordResetToken(
+    public Boolean validatePasswordResetToken(
                                          @RequestParam("token") String passwordResetToken) {
         String result = passwordresetTokenService.validatePasswordResetToken(passwordResetToken);
         if(result != null) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired password reset token"));
+            return false;
         } else {
-            return ResponseEntity.ok(new MessageResponse("Redirect to savePassword page"));
+            return true;
         }
     }
 
