@@ -78,9 +78,6 @@ h2{
   display: table;
   clear: both;
 }
-.mat-form-field-appearance-outline.ng-valid .mat-form-field-outline {
-  color: green;
-}
 
 a{
   font-weight: bold;
@@ -89,3 +86,13 @@ a{
 a:hover{
   color: blue!important;
 }
+
+.mat-form-field-appearance-outline.ng-valid .mat-icon{
+  color:green!important;
+}
+
+.mat-form-field-appearance-outline.ng-invalid .mat-icon{
+  color:red!important;
+}
+
+

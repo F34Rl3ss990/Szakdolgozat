@@ -40,10 +40,8 @@ export class AuthService {
     return this.http.get(`${AUTH_API}registrationConfirm?token=${token}`);
   }
 
-  resetPassword(emailParam: string): Observable<any>{
-    return this.http.post(AUTH_API + 'resetPassword',{
-      email: emailParam
-    }, httpOptions);
+  resetPassword(email: string): Observable<any>{
+    return this.http.get(`${AUTH_API}resetPassword?email=${email}`);
   }
 
   checkPasswordResetToken(token: string): Observable<any>{
@@ -51,7 +49,7 @@ export class AuthService {
   }
 
   savePassword(passwordResetRequest, token): Observable<any>{
-    return this.http.post(AUTH_API + 'resetPassword',{
+    return this.http.post(AUTH_API + 'savePassword',{
       password: passwordResetRequest.password,
       matchingPassword: passwordResetRequest.matchingPassword,
       token: token

@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {AuthService} from '../../../services/auth.service';
 import {TokenStorageService} from '../../../services/token-storage.service';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
@@ -9,6 +9,8 @@ import {matchingPasswordValidator} from '../../validators/matching-password-vali
 import {ErrorStateMatcher} from '@angular/material/core';
 import {RegisterComponent} from '../../registration/register/register.component';
 import {DialogService} from '../../../services/dialog.service';
+import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
+
 
 @Component({
   selector: 'app-login',
@@ -23,65 +25,89 @@ export class LoginDialogComponent implements OnInit {
   roles: string[] = [];
   loginForm: FormGroup;
   hide = true;
-  matcher = new ErrorStateMatcher();
+  matcher = new ErrorMatcherDirective();
   isSuccessful = false;
   isSignUpFailed = false;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if(event.key === 'Enter'){
+      this.onSubmit()
+    } else if(event.key === 'Escape'){
+      this.close()
+    }
+  }
+
+
+
+  @ViewChild('submitButton')
+  myButton: ElementRef;
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService,
               private dialogRef: MatDialogRef<LoginDialogComponent>,
               private renderer: Renderer2,
               private fb: FormBuilder,
-              private dialogSerive: DialogService) {
+              private dialogService: DialogService) {
     this.createForm();
   }
 
+
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]+$';
+    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.loginForm = this.fb.group({
       email: this.fb.control('', {
         updateOn: 'blur',
         validators: [Validators.pattern(patternEmail), Validators.required]
       }),
       password: this.fb.control('', {
-        updateOn: 'blur'
+        updateOn: 'blur',
+        validators: [Validators.required]
       }),
-      hide: this.fb.control('')
+      hide: this.fb.control(''),
+      updateOn: "submit"
     });
   }
 
   openRegistrationDialog() {
-    this.dialogSerive.openRegistrationDialog();
+    this.dialogService.openRegistrationDialog();
     this.dialogRef.close();
   }
   resetPasswordDialog(){
-    this.dialogSerive.openPasswordResetDialog();
+    this.dialogService.openPasswordResetDialog();
       this.dialogRef.close();
   }
 
-  ngOnInit() {
-    /*if (this.tokenStorage.getToken()) {
+  ngOnInit(): void {
+    if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
-    }*/
-    this.renderer.listen(document, 'keydown', event => {
-      if (event.key === 'Enter' && this.loginForm.valid) {
-        this.save();
-      } else if (event.key === 'Escape') {
-        this.close();
-      }
-    });
+    }
   }
 
-  save() {
-    this.authService.register(this.loginForm.value).subscribe(
+  onSubmit(): void {
+    this.authService.login(this.loginForm.value).subscribe(
       data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+        this.roles = this.tokenStorage.getUser().roles;
+        this.isLoggedIn = true;
         this.dialogRef.close();
         this.reloadPage()
       },
       err => {
         this.errorMessage = err.error.errors;
-        this.isLoginFailed = true;
-        console.log(err.error.errors)
+        if(!this.loginForm.controls['email'].valid){
+          this.loginForm.controls['email'].setErrors({'pattern': true});
+        }
+        if(this.loginForm.controls['email'].value==''){
+          this.loginForm.controls['email'].setErrors({'required': true, 'pristine' : true});
+        }
+        if(this.loginForm.controls['password'].value==''){
+          this.loginForm.controls['password'].setErrors({'required': true, 'pristine' : true});
+        }
+        if(this.loginForm.controls['email'].valid && this.loginForm.controls['password'].value!='') {
+          this.loginForm.controls['password'].setErrors({'problem': true});
+        }
       }
     );
   }

@@ -10,6 +10,7 @@ import {existingEmailValidator} from '../../validators/existing-email-validator.
 import {LoginDialogComponent} from '../../login/login-dialog/login-dialog.component';
 import {RegistrationSuccessfulComponent} from '../registration-successful/registration-successful.component';
 import {DialogService} from '../../../services/dialog.service';
+import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
 
 @HostListener('document:keydown.meta.k')
 @Component({
@@ -27,7 +28,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   data = false;
   hide = true;
-  matcher = new ErrorStateMatcher();
+  matcher = new ErrorMatcherDirective();
   CrossFieldErrorMatcher = new MatchingPasswordMatcherDirective();
 
   constructor(private authService: AuthService,
@@ -39,7 +40,7 @@ export class RegisterComponent implements OnInit {
   }
 
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]+$';
+    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.registerForm = this.fb.group({
       email: this.fb.control('', {
         updateOn: 'blur',
@@ -50,15 +51,16 @@ export class RegisterComponent implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
       }),
-      matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
+      matchingPassword: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.minLength(8)]}),
       data: this.fb.control(''),
       hide: this.fb.control('')
-    }, {validator: matchingPasswordValidator});
+    }, {validator: matchingPasswordValidator},);
   }
 
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
-      if (event.key === 'Enter' && this.registerForm.valid) {
+      if (event.key === 'Enter' && this.registerForm.controls['data'].value==true) {
+        console.log('test')
         this.onSubmit();
       } else if (event.key === 'Escape') {
         this.close();
@@ -66,8 +68,12 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+
+  onSubmit(): void {
+    console.log('test2')
     this.submitted = true;
+    console.log(this.registerForm.controls['email'].valid)
+    console.log(this.registerForm.controls['email'].value==='')
     this.authService.register(this.registerForm.value).subscribe(
       data => {
         this.isSuccessful = true;
@@ -76,7 +82,18 @@ export class RegisterComponent implements OnInit {
         this.dialogService.openSuccessfulRegisterDialog();
       },
       err => {
-        this.errorMessage = err.error.errors;
+        if(!this.registerForm.controls['email'].valid){
+          this.registerForm.controls['email'].setErrors({'pattern': true});
+        }
+        if(this.registerForm.controls['email'].value===''){
+          this.registerForm.controls['email'].setErrors({'required': true, 'pristine': true});
+        }
+        if(this.registerForm.controls['password'].value===''){
+          this.registerForm.controls['password'].setErrors({'required': true, 'pristine': true});
+        }
+        if(this.registerForm.controls['matchingPassword'].value===''){
+          this.registerForm.controls['matchingPassword'].setErrors({'required': true, 'pristine': true});
+        }
         this.isSignUpFailed = true;
       }
     );

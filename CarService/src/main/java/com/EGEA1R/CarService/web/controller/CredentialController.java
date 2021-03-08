@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -138,9 +139,9 @@ public class CredentialController {
         return ResponseEntity.ok(new MessageResponse("Successfully verified"));
     }
 
-    @PostMapping("/resetPassword")
+    @GetMapping("/resetPassword")
     public ResponseEntity<?> resetPassword(
-            @RequestBody String email) throws UnsupportedEncodingException, MessagingException {
+            @RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
         Credential credential = credentialService.getByEmail(email);
         passwordresetTokenService.createPasswordResetTokenForCredentialAndSendIt(credential);
         return ResponseEntity.ok(new MessageResponse("Password reset token sent"));

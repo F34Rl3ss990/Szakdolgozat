@@ -2,6 +2,7 @@ import {Component, Input, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {VerificationDialogEntryComponent} from '../verification-dialog-entry/verification-dialog-entry.component';
 import {DataService} from '../../../services/data.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-verification-dialog',
@@ -14,7 +15,8 @@ export class VerificationDialogComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<VerificationDialogComponent>,
               private renderer: Renderer2,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private router: Router) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -27,5 +29,6 @@ export class VerificationDialogComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+    this.router.navigate(['home'])
   }
 }

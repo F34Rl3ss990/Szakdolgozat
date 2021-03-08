@@ -22,12 +22,14 @@
   padding-top:10px;
   color: green;
   font-weight: bold;
+  text-align:center
 }
 
 .p-unverif{
   padding-top:10px;
   color: red;
   font-weight: bold;
+  text-align:center
 }
 
 .close {

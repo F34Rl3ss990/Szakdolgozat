@@ -3,10 +3,13 @@
 </div>
 
 <h2 mat-dialog-title>Login</h2>
-<div
+<form
   [formGroup]="loginForm"
->
+  (ngSubmit)="onSubmit();
+  focuser.focus();"
+  >
   <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+    <input type="hidden" #focuser>
     <mat-label>Email</mat-label>
     <input type="email" matInput formControlName="email" #email
            [errorStateMatcher]="matcher"
@@ -14,7 +17,8 @@
     >
     <mat-icon *ngIf=" (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched)
           || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)
-          || (loginForm.controls['email'].hasError('pattern') && !loginForm.controls['email'].hasError('required'))" matSuffix>
+          || (loginForm.controls['email'].hasError('pattern') && !loginForm.controls['email'].hasError('required'))
+          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')" matSuffix>
       error
     </mat-icon>
     <mat-icon *ngIf="loginForm.controls['email'].valid" matSuffix>check_circle</mat-icon>
@@ -28,7 +32,8 @@
     This email is already registered
   </mat-error>
   <mat-error
-    *ngIf="(loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched) || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)">
+    *ngIf="(loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched) || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)
+          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')">
     Email is <strong>required</strong>
   </mat-error>
   <p></p>
@@ -40,14 +45,25 @@
         <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
                [errorStateMatcher]="matcher"
                placeholder="Password">
+        <mat-icon *ngIf="loginForm.controls['password'].hasError('problem')
+              || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')
+              || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched
+              || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)" matSuffix>
+          error
+        </mat-icon>
       </mat-form-field>
       <mat-error
         *ngIf="loginForm.controls['password'].hasError('minlength') && !loginForm.controls['password'].hasError('required') || loginForm.controls['password'].hasError('strong')">
         Please enter a valid password
       </mat-error>
       <mat-error
-        *ngIf="(loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched) || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)">
+        *ngIf="(loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched) || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)
+              || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')">
         Password is <strong>required</strong>
+      </mat-error>
+      <mat-error
+        *ngIf="loginForm.controls['password'].hasError('problem')">
+        Hibás email vagy jelszó
       </mat-error>
       <p></p>
     </div>
@@ -60,15 +76,15 @@
       <button type="button" class="btn btn-primary btn-block" style="width: 120px" (click)="close()">Close</button>
     </div>
     <div class="column" style="text-align: right">
-      <button type="submit" [disabled]="loginForm.pristine || loginForm.invalid"
-              class="btn btn-primary btn-block" style="width: 120px; float:right" (click)="save()">Sign in
+      <button type="submit"
+              class="btn btn-primary btn-block" style="width: 120px; float:right" #submitButton>Sign in
       </button>
     </div>
   </div>
 <br>
   <div class="row">
     <div class="column">
-      <a (click)="resetPasswordDialog()"  (click)="save()">Reset password</a>
+      <a (click)="resetPasswordDialog()">Reset password</a>
     </div>
     <div class="column" style="text-align: right">
       <a  (click)="openRegistrationDialog()" style="width: 120px; float:right">Registration</a>
@@ -76,4 +92,4 @@
   </div>
 
   <mat-error *ngIf="isLoginFailed" style="font-size:30px">Signup failed!</mat-error>
-</div>
+</form>

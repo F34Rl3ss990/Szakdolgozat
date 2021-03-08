@@ -30,8 +30,8 @@ export class DialogService {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = false;
     dialogConfig.panelClass = 'my-dialog';
+    dialogConfig.autoFocus = false;
 
     this.dialog.open(LoginDialogComponent, dialogConfig);
   }
@@ -40,8 +40,8 @@ export class DialogService {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = false;
     dialogConfig.panelClass = 'my-dialog';
+    dialogConfig.autoFocus = false;
 
     this.dialog.open(PasswordResetComponent, dialogConfig);
   }

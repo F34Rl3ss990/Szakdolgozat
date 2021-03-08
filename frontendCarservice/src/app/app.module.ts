@@ -39,6 +39,7 @@ import { PasswordResetDialogComponent } from './components/login/password-reset-
 import { PasswordResetDialogEntryComponent } from './components/login/password-reset-dialog-entry/password-reset-dialog-entry.component';
 import { PasswordSuccessfullyChangedComponent } from './components/login/password-successfully-changed/password-successfully-changed.component';
 import { ExpiredResetPasswordTokenComponent } from './components/login/expired-reset-password-token/expired-reset-password-token.component';
+import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { ExpiredResetPasswordTokenComponent } from './components/login/expired-r
     PasswordResetDialogComponent,
     PasswordResetDialogEntryComponent,
     PasswordSuccessfullyChangedComponent,
-    ExpiredResetPasswordTokenComponent
+    ExpiredResetPasswordTokenComponent,
+    EmailNotExistingValidatorDirective
   ],
     imports: [
         BrowserModule,

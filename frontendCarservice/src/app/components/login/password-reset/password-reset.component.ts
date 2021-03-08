@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, HostListener, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
@@ -7,6 +7,8 @@ import {passwordPatternValidator} from '../../validators/password-regexp-validat
 import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
 import {AuthService} from '../../../services/auth.service';
 import {DialogService} from '../../../services/dialog.service';
+import {notExistingEmailValidator} from '../../validators/email-not-existing-validator.directive';
+import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
 
 @Component({
   selector: 'app-password-reset',
@@ -15,10 +17,19 @@ import {DialogService} from '../../../services/dialog.service';
 })
 export class PasswordResetComponent implements OnInit {
 
-  matcher = new ErrorStateMatcher();
+  matcher = new ErrorMatcherDirective();
   resetPasswordForm: FormGroup;
   errorMessage = '';
   isSendFailed: boolean = false;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if(event.key === 'Enter'){
+      this.onSubmit()
+    } else if(event.key === 'Escape'){
+      this.close()
+    }
+  }
 
   constructor(private dialogRef: MatDialogRef<PasswordResetComponent>,
               private renderer: Renderer2,
@@ -29,35 +40,36 @@ export class PasswordResetComponent implements OnInit {
   }
 
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]+$';
+    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.resetPasswordForm = this.fb.group({
       email: this.fb.control('', {
         updateOn: 'blur',
         validators: [Validators.pattern(patternEmail), Validators.required],
-        asyncValidators: [existingEmailValidator(this.authService)]
+        asyncValidators: [notExistingEmailValidator(this.authService)]
       }),
-    })
+    },{updateOn: 'submit'})
   }
 
   ngOnInit(): void {
-    this.renderer.listen(document, 'keydown', event => {
-      if (event.key === 'Enter' && this.resetPasswordForm.valid) {
-        this.onSubmit();
-      } else if (event.key === 'Escape') {
-        this.close();
-      }
-    });
   }
 
-  onSubmit() {
-    this.authService.resetPassword(this.resetPasswordForm.value).subscribe(
+  doLogin(e){
+    console.log(e);
+  }
+
+  onSubmit(): void {
+    console.log("valami2")
+    console.log(this.resetPasswordForm.controls['email'].value)
+    this.authService.resetPassword(this.resetPasswordForm.value.email).subscribe(
       data => {
         this.isSendFailed = false;
-        this.dialogRef.close();
         this.dialogService.openPasswordTokenSent();
+        this.dialogRef.close();
       },
       err => {
-        this.errorMessage = err.error.errors;
+        if(this.resetPasswordForm.controls['email'].value===''){
+          this.resetPasswordForm.controls['email'].setErrors({'required' : true, 'pristine': true});
+        }
         this.isSendFailed = true;
       }
     );

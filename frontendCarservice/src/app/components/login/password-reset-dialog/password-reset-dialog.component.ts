@@ -12,6 +12,7 @@ import {DataService} from '../../../services/data.service';
 import {MatchingPasswordMatcherDirective} from '../../validators/matching-password-matcher.directive';
 import {VerificationDialogComponent} from '../../registration/verification-dialog/verification-dialog.component';
 import {PasswordSuccessfullyChangedComponent} from '../password-successfully-changed/password-successfully-changed.component';
+import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
 
 @Component({
   selector: 'app-password-reset-dialog',
@@ -20,7 +21,7 @@ import {PasswordSuccessfullyChangedComponent} from '../password-successfully-cha
 })
 export class PasswordResetDialogComponent implements OnInit {
 
-  matcher = new ErrorStateMatcher();
+  matcher = new ErrorMatcherDirective();
   resetPasswordForm: FormGroup;
   errorMessage = '';
   isResetFailed: boolean = false;
