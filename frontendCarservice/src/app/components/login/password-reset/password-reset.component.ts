@@ -1,14 +1,11 @@
-import {Component, HostListener, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
-import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
-import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
-import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
 import {AuthService} from '../../../services/auth.service';
 import {DialogService} from '../../../services/dialog.service';
 import {notExistingEmailValidator} from '../../validators/email-not-existing-validator.directive';
 import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
+import {DataService} from '../../../services/data.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -17,22 +14,26 @@ import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
 })
 export class PasswordResetComponent implements OnInit {
 
-  matcher = new ErrorMatcherDirective();
   resetPasswordForm: FormGroup;
   errorMessage = '';
   isSendFailed: boolean = false;
+  isSubmitted: boolean;
+  matcher = new ErrorMatcherDirective();
 
-  @HostListener('document:keydown', ['$event'])
+  @ViewChild('hideIt') hideEm : ElementRef;
+
+  @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if(event.key === 'Enter'){
-      this.onSubmit()
-    } else if(event.key === 'Escape'){
+    if(event.key === 'Escape'){
       this.close()
     }
   }
 
+  submit(){
+    this.hideEm.nativeElement.focus();
+  }
+
   constructor(private dialogRef: MatDialogRef<PasswordResetComponent>,
-              private renderer: Renderer2,
               private fb: FormBuilder,
               private authService: AuthService,
               private dialogService: DialogService) {
@@ -58,8 +59,8 @@ export class PasswordResetComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("valami2")
-    console.log(this.resetPasswordForm.controls['email'].value)
+    this.submit();
+    this.isSubmitted = true;
     this.authService.resetPassword(this.resetPasswordForm.value.email).subscribe(
       data => {
         this.isSendFailed = false;

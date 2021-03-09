@@ -4,8 +4,11 @@ import {Observable} from 'rxjs';
 
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
+//const AUTH_API = 'http://84.2.172.134:8080/api/auth/';
+
 
 const httpOptions = {
+
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
 
@@ -21,7 +24,7 @@ export class AuthService {
     return this.http.post(AUTH_API + 'signin', {
       email: credentials.email,
       password: credentials.password
-    }, httpOptions);
+    });
   }
 
   register(user): Observable<any> {

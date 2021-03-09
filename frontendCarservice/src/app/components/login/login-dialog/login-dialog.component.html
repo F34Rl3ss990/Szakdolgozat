@@ -5,11 +5,10 @@
 <h2 mat-dialog-title>Login</h2>
 <form
   [formGroup]="loginForm"
-  (ngSubmit)="onSubmit();
-  focuser.focus();"
+  (ngSubmit)="onSubmit()"
   >
   <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
-    <input type="hidden" #focuser>
+    <input type="hidden" focus="focuser">
     <mat-label>Email</mat-label>
     <input type="email" matInput formControlName="email" #email
            [errorStateMatcher]="matcher"
@@ -48,7 +47,10 @@
         <mat-icon *ngIf="loginForm.controls['password'].hasError('problem')
               || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')
               || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched
-              || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)" matSuffix>
+              || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty
+              || loginForm.controls['password'].hasError('badCredentials')
+              || loginForm.controls['password'].hasError('notVerified')
+              ||loginForm.controls['password'].hasError('banned'))" matSuffix>
           error
         </mat-icon>
       </mat-form-field>
@@ -62,8 +64,16 @@
         Password is <strong>required</strong>
       </mat-error>
       <mat-error
-        *ngIf="loginForm.controls['password'].hasError('problem')">
+        *ngIf="loginForm.controls['password'].hasError('badCredentials')">
         Hibás email vagy jelszó
+      </mat-error>
+      <mat-error
+        *ngIf="loginForm.controls['password'].hasError('notVerified')">
+        A felhasnzáló fiók nincs aktiválva
+      </mat-error>
+      <mat-error
+        *ngIf="loginForm.controls['password'].hasError('banned')">
+        A felhasnzáló fiók fel lett függesztve
       </mat-error>
       <p></p>
     </div>
@@ -89,7 +99,7 @@
     <div class="column" style="text-align: right">
       <a  (click)="openRegistrationDialog()" style="width: 120px; float:right">Registration</a>
     </div>
+    <input class="hideIt" #hideIt>
   </div>
-
   <mat-error *ngIf="isLoginFailed" style="font-size:30px">Signup failed!</mat-error>
 </form>

@@ -6,8 +6,7 @@
 <form
   *ngIf="!isSuccessful"
   [formGroup]="registerForm"
-  (ngSubmit)="onSubmit()"
->
+  (ngSubmit)="onSubmit();">
   <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
     <mat-label>Email</mat-label>
     <input type="email" matInput formControlName="email" #email
@@ -117,6 +116,7 @@
               class="btn btn-primary btn-block" style="width: 120px; float:right">Sign Up
       </button>
     </div>
+    <input class="hideIt" #hideIt>
   </div>
 <!--
   <mat-error *ngIf="isSignUpFailed" style="font-size:30px">Signup failed!</mat-error>

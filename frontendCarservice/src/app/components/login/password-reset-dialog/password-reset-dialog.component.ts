@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
@@ -21,14 +21,28 @@ import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
 })
 export class PasswordResetDialogComponent implements OnInit {
 
-  matcher = new ErrorMatcherDirective();
+
   resetPasswordForm: FormGroup;
   errorMessage = '';
   isResetFailed: boolean = false;
   token: string;
   hide = true;
   CrossFieldErrorMatcher = new MatchingPasswordMatcherDirective();
+  isSubmitted: boolean;
+  matcher = new ErrorMatcherDirective();
 
+  @ViewChild('hideIt') hideEm : ElementRef;
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+   if(event.key === 'Escape'){
+      this.close()
+    }
+  }
+
+  submit(){
+    this.hideEm.nativeElement.focus();
+  }
 
   constructor(private dialogRef: MatDialogRef<PasswordResetDialogComponent>,
               private renderer: Renderer2,
@@ -52,17 +66,12 @@ export class PasswordResetDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.renderer.listen(document, 'keydown', event => {
-      if (event.key === 'Enter' && this.resetPasswordForm.valid) {
-        this.onSubmit();
-      } else if (event.key === 'Escape') {
-        this.close();
-      }
-    });
     this.token = this.dataService.token;
   }
 
   onSubmit() {
+    this.submit()
+    this.isSubmitted = true;
     this.authService.savePassword(this.resetPasswordForm.value, this.token).subscribe(
       data => {
         this.dialogRef.close();

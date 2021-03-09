@@ -2,17 +2,17 @@
   <a class="close" (click)="close()"></a>
 </div>
 
-<h2 [ngClass]="{'h2-verif': isVerified, 'h2-unverif': !isVerified}" mat-dialog-title>Verification</h2>
+<h2 [ngClass]="{'h2-verif': liveToken, 'h2-unverif': expiredToken}" mat-dialog-title>Verification</h2>
 
-<div class="container" *ngIf="isVerified">
-  <p [ngClass]="{'p-verif': isVerified}">Sikeres aktiválás! A fiókod most már bejelentkezés után használható!</p>
+<div class="container" *ngIf="liveToken">
+  <p [ngClass]="{'p-verif': liveToken}">Sikeres aktiválás! A fiókod most már bejelentkezés után használható!</p>
   <div class="row">
-    <button type="button" class="btn btn-primary btn-block" [ngClass]="{'btn-verif': isVerified}" style="width: 120px" (click)="close()">Close</button>
+    <button type="button" class="btn btn-primary btn-block" [ngClass]="{'btn-verif': liveToken}" style="width: 120px" (click)="close()">Close</button>
   </div>
 </div>
-<div class="container" *ngIf="!isVerified">
-  <p [ngClass]="{'p-unverif': !isVerified}">Az aktiválás sikertelen! Az igazoló kód lejárt, ezért küldtünk neked egy másikat, amivel aktiválhatod magad!</p>
+<div class="container" *ngIf="expiredToken">
+  <p [ngClass]="{'p-unverif': expiredToken}">Az aktiválás sikertelen! Az igazoló kód lejárt, ezért küldtünk neked egy másikat, amivel aktiválhatod magad!</p>
   <div class="row">
-    <button type="button" class="btn btn-primary btn-block" [ngClass]="{'btn-unverif': !isVerified}" style="width: 120px" (click)="close()">Close</button>
+    <button type="button" class="btn btn-primary btn-block" [ngClass]="{'btn-unverif': expiredToken}" style="width: 120px" (click)="close()">Close</button>
   </div>
 </div>

@@ -97,9 +97,13 @@ public class CredentialController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         AuthCredentialDetailsImpl credentialDetails = setAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
         String role = credentialDetails.getAuthorities().toString();
-            if(role.equals("ROLE_ADMIN") || role.equals("ROLE_BOSS")){
+            if(role.equals("[ROLE_ADMIN]") || role.equals("[ROLE_BOSS]")){
                 return credentialService.authenticationChoose(credentialDetails.getUsername(), loginRequest);
-        }
+        } else if(role.equals("[ROLE_DISABLED]")){
+                return ResponseEntity.badRequest().body(new MessageResponse("Account is not verified"));
+            } else if (role.equals("[ROLE_0]")){
+                return ResponseEntity.badRequest().body(new MessageResponse("Account is banned or disabled"));
+            }
         return responseLoginInformation(credentialDetails);
     }
 
@@ -194,9 +198,8 @@ public class CredentialController {
 
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request){
+    public void logout(HttpServletRequest request){
         credentialService.saveBlockedToken(request);
-        return ResponseEntity.ok(new MessageResponse("Logged out"));
     }
 
     private AuthCredentialDetailsImpl setAuthentication(String email, String password){

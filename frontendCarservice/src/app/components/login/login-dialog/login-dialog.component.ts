@@ -2,14 +2,10 @@ import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from 
 import {AuthService} from '../../../services/auth.service';
 import {TokenStorageService} from '../../../services/token-storage.service';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
-import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
-import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
-import {ErrorStateMatcher} from '@angular/material/core';
-import {RegisterComponent} from '../../registration/register/register.component';
+import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import {DialogService} from '../../../services/dialog.service';
 import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
+import {DataService} from '../../../services/data.service';
 
 
 @Component({
@@ -21,31 +17,28 @@ export class LoginDialogComponent implements OnInit {
   form: any = {};
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
+  errorMessage: string = "";
   roles: string[] = [];
   loginForm: FormGroup;
   hide = true;
+  isSubmitted: boolean;
   matcher = new ErrorMatcherDirective();
-  isSuccessful = false;
-  isSignUpFailed = false;
 
-  @HostListener('document:keydown', ['$event'])
+  @ViewChild('hideIt') hideIt : ElementRef;
+
+  @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if(event.key === 'Enter'){
-      this.onSubmit()
-    } else if(event.key === 'Escape'){
+     if(event.key === 'Escape'){
       this.close()
     }
   }
 
-
-
-  @ViewChild('submitButton')
-  myButton: ElementRef;
+  submit(){
+    this.hideIt.nativeElement.focus();
+  }
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService,
               private dialogRef: MatDialogRef<LoginDialogComponent>,
-              private renderer: Renderer2,
               private fb: FormBuilder,
               private dialogService: DialogService) {
     this.createForm();
@@ -64,7 +57,7 @@ export class LoginDialogComponent implements OnInit {
         validators: [Validators.required]
       }),
       hide: this.fb.control(''),
-      updateOn: "submit"
+      updateOn: 'submit'
     });
   }
 
@@ -85,9 +78,10 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.submit()
     this.authService.login(this.loginForm.value).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveToken(data.token);
         this.tokenStorage.saveUser(data);
         this.roles = this.tokenStorage.getUser().roles;
         this.isLoggedIn = true;
@@ -95,7 +89,8 @@ export class LoginDialogComponent implements OnInit {
         this.reloadPage()
       },
       err => {
-        this.errorMessage = err.error.errors;
+        this.errorMessage = err.error.message;
+        console.log(this.errorMessage)
         if(!this.loginForm.controls['email'].valid){
           this.loginForm.controls['email'].setErrors({'pattern': true});
         }
@@ -105,8 +100,14 @@ export class LoginDialogComponent implements OnInit {
         if(this.loginForm.controls['password'].value==''){
           this.loginForm.controls['password'].setErrors({'required': true, 'pristine' : true});
         }
-        if(this.loginForm.controls['email'].valid && this.loginForm.controls['password'].value!='') {
-          this.loginForm.controls['password'].setErrors({'problem': true});
+        if(this.loginForm.controls['email'].valid && this.loginForm.controls['password'].value!='' && this.errorMessage.includes("Bad credentials")) {
+          this.loginForm.controls['password'].setErrors({'badCredentials': true});
+        }
+        if(this.errorMessage.includes("Account is not verified")) {
+          this.loginForm.controls['password'].setErrors({'notVerified': true})
+        }
+        if(this.errorMessage.includes("Account is banned")) {
+          this.loginForm.controls['password'].setErrors({'banned': true})
         }
       }
     );

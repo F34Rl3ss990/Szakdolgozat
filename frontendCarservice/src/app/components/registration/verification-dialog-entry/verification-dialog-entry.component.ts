@@ -31,12 +31,17 @@ export class VerificationDialogEntryComponent implements OnInit {
     this.route.params.subscribe(params =>{
       let token = params['token'];
       this.authService.confirmRegistration(token).subscribe(message =>{
-          this.dataService.sharedData = true;
+          this.dataService.liveToken = true;
           this.dialog.open(VerificationDialogComponent, dialogConfig);
         },
         err => {
-          this.dataService.sharedData = false;
-          this.dialog.open(VerificationDialogComponent, dialogConfig);
+          if(err.error.message.includes("This account is already verified or banned")){
+            this.dataService.alreadyVerified = true;
+          } else {
+            this.dataService.expiredVerifyToken = true;
+            this.dialog.open(VerificationDialogComponent, dialogConfig);
+          }
+
         }
       );
     });

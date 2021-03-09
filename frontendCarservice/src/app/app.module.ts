@@ -14,9 +14,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { LoginDialogComponent } from './components/login/login-dialog/login-dialog.component';
 import { RegisterComponent } from './components/registration/register/register.component';
 import { HomeComponent } from './components/home/home.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { BoardAdminComponent } from './components/board-admin/board-admin.component';
-import { BoardUserComponent } from './components/board-user/board-user.component';
 import { authInterceptorProviders } from './helpers/auth.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -41,6 +38,7 @@ import { PasswordSuccessfullyChangedComponent } from './components/login/passwor
 import { ExpiredResetPasswordTokenComponent } from './components/login/expired-reset-password-token/expired-reset-password-token.component';
 import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,9 +46,6 @@ import { EmailNotExistingValidatorDirective } from './components/validators/emai
     LoginDialogComponent,
     RegisterComponent,
     HomeComponent,
-    ProfileComponent,
-    BoardAdminComponent,
-    BoardUserComponent,
     NavigationBarComponent,
     MatchingPasswordValidatorDirective,
     ErrorMatcherDirective,

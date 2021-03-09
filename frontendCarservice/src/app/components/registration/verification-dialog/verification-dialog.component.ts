@@ -11,7 +11,9 @@ import {Router} from '@angular/router';
 })
 export class VerificationDialogComponent implements OnInit {
 
+  liveToken: boolean;
   isVerified: boolean;
+  expiredToken: boolean;
 
   constructor(private dialogRef: MatDialogRef<VerificationDialogComponent>,
               private renderer: Renderer2,
@@ -24,7 +26,8 @@ export class VerificationDialogComponent implements OnInit {
         this.close();
       }
     });
-    this.isVerified = this.dataService.sharedData;
+    this.liveToken = this.dataService.liveToken;
+    this.expiredToken = this.dataService.expiredVerifyToken;
   }
 
   close() {
