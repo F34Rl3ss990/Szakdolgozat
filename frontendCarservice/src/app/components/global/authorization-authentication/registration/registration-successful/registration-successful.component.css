@@ -1,0 +1,26 @@
+h2{
+  text-align: center;
+  border-bottom: 3px solid blue;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+  border-radius: 1px;
+  color: green;
+  font-weight: bold;
+}
+
+p{
+  padding-top:10px;
+  color: white;
+}
+.btn-primary{
+  color: green;
+  background-color: white;
+  width: 30% !important;
+}
+
+.row{
+  display: flex;
+  justify-content: center;
+}
+
+

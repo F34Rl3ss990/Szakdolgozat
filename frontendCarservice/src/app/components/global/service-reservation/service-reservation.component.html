@@ -1,0 +1,207 @@
+<app-navigation-bar></app-navigation-bar>
+<div class="container-lg" style="border: 1px solid black; border-radius:10px">
+  <form
+  [formGroup]="serviceReservationForm"
+  (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="column">
+      <h2>Személyes adatok</h2>
+      <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+        <mat-label>Vezetéknév*</mat-label>
+        <input type="text" matInput formControlName="lastName" #lastName
+               placeholder="Vezetéknév"
+        >
+      </mat-form-field>
+        <mat-error>
+        </mat-error>
+      <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+        <mat-label>Keresztnév*</mat-label>
+        <input type="text" matInput formControlName="firstName" #firstName
+               placeholder="Keresztnév"
+        >
+      </mat-form-field>
+      <mat-error>
+      </mat-error>
+      <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+        <mat-label>Email*</mat-label>
+        <input type="email" matInput formControlName="email" #email
+               placeholder="Email"
+        >
+      </mat-form-field>
+      <mat-error>
+      </mat-error>
+      <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+        <mat-label>Telefonszám*</mat-label>
+        <input type="number" matInput formControlName="phoneNumber" #phoneNumber
+               placeholder="Telefonszám"
+        >
+      </mat-form-field>
+      <mat-error>
+      </mat-error>
+    </div>
+      <div class="column">
+        <h2>Gépjármű adatok</h2>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Márka*</mat-label>
+          <input type="text" matInput formControlName="brand" #brand
+                 placeholder="Márka"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Típus*</mat-label>
+          <input type="text" matInput formControlName="type" #type
+                 placeholder=""
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Gyártási év*</mat-label>
+          <input type="text" matInput formControlName="yearOfManufacture" #yearOfManufacture
+                 placeholder="Gyártási év"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Motor típusa*</mat-label>
+          <input type="text" matInput formControlName="engineType" #engineType
+                 placeholder="Motor típusa"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Motorszám</mat-label>
+          <input type="text" matInput formControlName="engineNumber" #engineNumber
+                 placeholder="Motorszám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Alvázszám</mat-label>
+          <input type="text" matInput formControlName="chassisNumber" #chassisNumber
+                 placeholder="Alvázszám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Rendszám</mat-label>
+          <input type="text" matInput formControlName="licensePlateNumber" #licensePlateNumber
+                 placeholder="Rendszám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-checkbox
+          formControlName="foreignCountryPlate" #foreignCountryPlate>Nemzetközi rendszám
+        </mat-checkbox>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <h2>Szolgáltatások</h2>
+      <ng-container *ngFor="let checkbox of checkboxes; let i = index" formArrayName="checkboxes">
+        <input type="checkbox" [formControlName]="i" />{{checkbox.name}}
+        <br />
+      </ng-container>
+    </div>
+      <div class="column">
+        <h2>Számlázási adatok</h2>
+        <mat-checkbox
+          formControlName="billingToCompany" #billingToCompany>Cég nevére kérem a számlát
+        </mat-checkbox>
+        <mat-checkbox
+          formControlName="billingSameAsUserData" #billingSameAsUserData>Megegyezik a személyes adatokkal
+        </mat-checkbox>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Név:</mat-label>
+          <input type="text" matInput formControlName="billingName" #billingName
+                 placeholder="Számlázási név"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Telefonszám:</mat-label>
+          <input type="text" matInput formControlName="billingPhoneNumber" #billingPhoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Email</mat-label>
+          <input type="text" matInput formControlName="billingEmail" #billingEmail
+                 placeholder="Email"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <h3>Számlázási cím:</h3>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Irányítószám</mat-label>
+          <input type="text" matInput formControlName="billingZipCode" #billingZipCode
+                 placeholder="Irányítószám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Város</mat-label>
+          <input type="text" matInput formControlName="billingTown" #billingTown
+                 placeholder="Város"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Utca</mat-label>
+          <input type="text" matInput formControlName="billingStreet" #billingStreet
+                 placeholder="Utca"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Emelet, ajtó</mat-label>
+          <input type="text" matInput formControlName="billingOtherAddressType" #billingOtherAddressType
+                 placeholder="Emelet, ajtó"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+          <mat-label>Adószám</mat-label>
+          <input type="text" matInput formControlName="billingTax" #billingTax
+                 placeholder="Adószám"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <mat-checkbox
+          formControlName="billingForeignCountryTax" #billingForeignCountryTax>Nemzetközi adószám
+        </mat-checkbox>
+    </div>
+  </div>
+  <div class="row">
+    <h2>Időpnt foglalás</h2>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Choose a date</mat-label>
+      <input matInput [min]="minDate" [matDatepicker]="datePicker">
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+    <div class="col-xs-12" style="padding-top: 15px">
+      <mat-checkbox formControlName="data" (change)="data =!data">A <a href="" routerLink="">Felhasználói szabályzatot</a>
+        és az <a href="" routerLink="">
+          Adatvédelmi tájékoztatót</a> elolvastam és elfogadom.
+      </mat-checkbox>
+    </div>
+  </div>
+  </form>
+</div>

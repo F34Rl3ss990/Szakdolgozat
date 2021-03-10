@@ -1,55 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~mdb-ui-kit/css/mdb.min.css';
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '../node_modules/mdb-ui-kit/css/mdb.min.css';
+@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
 
-.cdk-overlay-pane.my-dialog {
+.cdk-overlay-pane.my-dialog, .cdk-overlay-pane.login-dialog {
   position: relative !important;
 }
 
-.mat-dialog-container {
+.my-dialog .mat-dialog-container, .login-dialog  .mat-dialog-container{
   max-width: 350px !important;
 }
 
-.mat-checkbox-label {
+.my-dialog  .mat-checkbox-label, .login-dialog .mat-checkbox-label {
   box-sizing: border-box !important;
   white-space: break-spaces !important;
 }
 
-.mat-form-field-flex {
+.my-dialog  .mat-form-field-flex, .login-dialog .mat-form-field-flex {
   height: 50px;
   background-color: white;
 }
 
-.mat-form-field {
+.my-dialog  .mat-form-field, .login-dialog .mat-form-field {
   height: 30px;
   padding-top: 10px;
 }
 
-.mat-form-field-infix {
+.my-dialog  .mat-form-field-infix, .login-dialog .mat-form-field-infix {
   padding: 7px 0px 1px 0px !important;
   width: 260px !important;
 }
 
-.mat-form-field-appearance-outline {
+.my-dialog  .mat-form-field-appearance-outline, .login-dialog .mat-form-field-appearance-outline {
   padding: 7px 0px 0px 0px !important;
   margin-bottom: 0px
 }
 
-.mat-form-field-label {
+.my-dialog  .mat-form-field-label, .login-dialog .mat-form-field-label {
   top: 1.75em
 }
 
-.mat-input-element{
+.my-dialog  .mat-input-element, .login-dialog .mat-input-element{
   font-size:14px!important;
 }
 
-.mat-error {
+.my-dialog .mat-error, .login-dialog .mat-error {
   padding-top: 10px;
   padding-left: 5px;
   font-size: 12px;
 }
 
-.mat-form-field-wrapper {
+.my-dialog  .mat-form-field-wrapper, .login-dialog .mat-form-field-wrapper {
   padding-bottom: 20px;
 }
 
@@ -60,12 +60,7 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-.custom-dialog-container .mat-dialog-container {
-  background: white!important;
-  position: relative !important;
-}
-
-.mat-form-field-appearance-outline.ng-valid .mat-form-field-outline {
+.my-dialog  .mat-form-field-appearance-outline.ng-valid .mat-form-field-outline {
   color: green;
 }
 
@@ -76,3 +71,37 @@ input:-webkit-autofill:active {
   margin:0;
   border:0;
 }
+
+.custom-dialog-container .mat-dialog-container {
+  background: white!important;
+  position: relative !important;
+  max-width: 350px !important;
+}
+
+.close {
+  position: absolute;
+  right: 5px;
+  top: 12px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 20px;
+  width: 2px;
+  background-color: darkblue;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
+

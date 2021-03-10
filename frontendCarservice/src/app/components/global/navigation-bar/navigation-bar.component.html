@@ -1,0 +1,103 @@
+<header>
+  <ng2-slim-loading-bar color="blue"></ng2-slim-loading-bar>
+  <div>
+    <nav class="navbar navbar-expand navbar-dark bg-dark" style="height: 30px">
+      <div class="container">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+          <li class="nav-item">
+            <a href="" class="nav-link" routerLink="">Test</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo">
+
+    <!-- Navbar brand -->
+    <mdb-navbar-brand>
+      <a class="navbar-brand" href="#">
+        <img src="https://mdbootstrap.com/img/logo/mdb-transparent.png" height="30" class="d-inline-block align-top" alt="">
+      </a>
+    </mdb-navbar-brand>
+
+    <!-- Collapsible content -->
+    <links>
+
+      <!-- Links -->
+      <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+        <li class="nav-item">
+          <a class="nav-link waves-light" (click)="openLoginDialog()" mdbWavesEffect>Belépés</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-light" (click)="openRegistrationDialog()"  mdbWavesEffect>Regisztráció</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+        <li class="nav-item active">
+          <a href="/profile" class="nav-link waves-light" routerLink="profile" mdbWavesEffect>Profil</a>
+        </li>
+        <li class="nav-item">
+          <a href class="nav-link waves-light" (click)="logout()" mdbWavesEffect>Kijelentkezés</a>
+        </li>
+      </ul>
+      <!-- Links -->
+    </links>
+    <!-- Collapsible content -->
+
+  </mdb-navbar>
+  <!--/.Navbar-->
+
+  <div>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+      <div class="container">
+        <ul class="navbar-nav ml-auto mr-auto" routerLinkActive="active">
+          <li class="nav-item">
+            <a href="/src" class="nav-link" routerLink="">Test </a>
+          </li>
+          <li class="nav-item">
+            <a href="/service-reservation" class="nav-link" routerLink="/service-reservation">Időpontfoglalás </a>
+          </li>
+          <li class="nav-item">
+            <a href="/src" class="nav-link" routerLink="">Test </a>
+          </li>
+          <li class="nav-item">
+            <a href="/src" class="nav-link" routerLink="">Test </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+</header>
+<br>

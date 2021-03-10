@@ -1,0 +1,91 @@
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {AuthService} from '../../../../../../services/auth.service';
+import {DialogService} from '../../../../../../services/dialog.service';
+import {existingEmailValidator} from '../../../../../validators/existing-email-validator.directive';
+import {passwordPatternValidator} from '../../../../../validators/password-regexp-validator.directive';
+import {matchingPasswordValidator} from '../../../../../validators/matching-password-validator.directive';
+import {ActivatedRoute} from '@angular/router';
+import {DataService} from '../../../../../../services/data.service';
+import {MatchingPasswordMatcherDirective} from '../../../../../validators/matching-password-matcher.directive';
+import {VerificationDialogComponent} from '../../../registration/verification-dialog/verification-dialog.component';
+import {PasswordSuccessfullyChangedComponent} from '../password-successfully-changed/password-successfully-changed.component';
+import {ErrorMatcherDirective} from '../../../../../validators/error-matcher.directive';
+
+@Component({
+  selector: 'app-password-reset-dialog',
+  templateUrl: './password-reset-dialog.component.html',
+  styleUrls: ['./password-reset-dialog.component.css']
+})
+export class PasswordResetDialogComponent implements OnInit {
+
+
+  resetPasswordForm: FormGroup;
+  errorMessage = '';
+  isResetFailed: boolean = false;
+  token: string;
+  hide = true;
+  CrossFieldErrorMatcher = new MatchingPasswordMatcherDirective();
+  isSubmitted: boolean;
+  matcher = new ErrorMatcherDirective();
+
+  @ViewChild('hideIt') hideEm : ElementRef;
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+   if(event.key === 'Escape'){
+      this.close()
+    }
+  }
+
+  submit(){
+    this.hideEm.nativeElement.focus();
+  }
+
+  constructor(private dialogRef: MatDialogRef<PasswordResetDialogComponent>,
+              private renderer: Renderer2,
+              private fb: FormBuilder,
+              private authService: AuthService,
+              private dialogService: DialogService,
+              private dataService: DataService) {
+    this.createForm();
+  }
+
+  createForm() {
+    this.resetPasswordForm = this.fb.group({
+      password: this.fb.control('', {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
+      }),
+      matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
+      hide: this.fb.control('')
+    }, {validator: matchingPasswordValidator});
+  }
+
+  ngOnInit(): void {
+    this.token = this.dataService.token;
+  }
+
+  onSubmit() {
+    this.submit()
+    this.isSubmitted = true;
+    this.authService.savePassword(this.resetPasswordForm.value, this.token).subscribe(
+      data => {
+        this.dialogRef.close();
+        this.dialogService.openSuccessPasswordChange();
+      },
+      err => {
+        this.errorMessage = err.error.errors;
+        this.isResetFailed = true;
+      }
+    );
+  }
+
+
+  close() {
+    this.dialogRef.close();
+  }
+
+}

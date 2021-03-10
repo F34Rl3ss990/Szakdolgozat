@@ -11,14 +11,14 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
-import { LoginDialogComponent } from './components/login/login-dialog/login-dialog.component';
-import { RegisterComponent } from './components/registration/register/register.component';
-import { HomeComponent } from './components/home/home.component';
+import { LoginDialogComponent } from './components/global/authorization-authentication/login/login-dialog/login-dialog.component';
+import { RegisterComponent } from './components/global/authorization-authentication/registration/register/register.component';
+import { HomeComponent } from './components/global/home/home.component';
 import { authInterceptorProviders } from './helpers/auth.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {NavigationBarComponent} from './components/navigation-bar/navigation-bar.component';
+import {NavigationBarComponent} from './components/global/navigation-bar/navigation-bar.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { MatchingPasswordValidatorDirective } from './components/validators/matching-password-validator.directive';
@@ -26,17 +26,20 @@ import { ErrorMatcherDirective } from './components/validators/error-matcher.dir
 import { MatchingPasswordMatcherDirective } from './components/validators/matching-password-matcher.directive';
 import { PasswordRegexpValidatorDirective } from './components/validators/password-regexp-validator.directive';
 import {ExistingEmailValidatorDirective} from './components/validators/existing-email-validator.directive';
-import { RegistrationSuccessfulComponent } from './components/registration/registration-successful/registration-successful.component';
+import { RegistrationSuccessfulComponent } from './components/global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {RouterModule} from '@angular/router';
-import { VerificationDialogComponent } from './components/registration/verification-dialog/verification-dialog.component';
-import { VerificationDialogEntryComponent } from './components/registration/verification-dialog-entry/verification-dialog-entry.component';
-import { PasswordResetComponent } from './components/login/password-reset/password-reset.component';
-import { PasswordTokenSentComponent } from './components/login/password-token-sent/password-token-sent.component';
-import { PasswordResetDialogComponent } from './components/login/password-reset-dialog/password-reset-dialog.component';
-import { PasswordResetDialogEntryComponent } from './components/login/password-reset-dialog-entry/password-reset-dialog-entry.component';
-import { PasswordSuccessfullyChangedComponent } from './components/login/password-successfully-changed/password-successfully-changed.component';
-import { ExpiredResetPasswordTokenComponent } from './components/login/expired-reset-password-token/expired-reset-password-token.component';
+import { VerificationDialogComponent } from './components/global/authorization-authentication/registration/verification-dialog/verification-dialog.component';
+import { VerificationDialogEntryComponent } from './components/global/authorization-authentication/registration/verification-dialog-entry/verification-dialog-entry.component';
+import { PasswordResetTokenSenderComponent } from './components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
+import { PasswordTokenSentComponent } from './components/global/authorization-authentication/login/passwordReset/password-token-sent/password-token-sent.component';
+import { PasswordResetDialogComponent } from './components/global/authorization-authentication/login/passwordReset/password-reset-dialog/password-reset-dialog.component';
+import { PasswordResetDialogEntryComponent } from './components/global/authorization-authentication/login/passwordReset/password-reset-dialog-entry/password-reset-dialog-entry.component';
+import { PasswordSuccessfullyChangedComponent } from './components/global/authorization-authentication/login/passwordReset/password-successfully-changed/password-successfully-changed.component';
+import { ExpiredResetPasswordTokenComponent } from './components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
+import { ServiceReservationComponent } from './components/global/service-reservation/service-reservation.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 @NgModule({
@@ -55,49 +58,53 @@ import { EmailNotExistingValidatorDirective } from './components/validators/emai
     RegistrationSuccessfulComponent,
     VerificationDialogComponent,
     VerificationDialogEntryComponent,
-    PasswordResetComponent,
+    PasswordResetTokenSenderComponent,
     PasswordTokenSentComponent,
     PasswordResetDialogComponent,
     PasswordResetDialogEntryComponent,
     PasswordSuccessfullyChangedComponent,
     ExpiredResetPasswordTokenComponent,
-    EmailNotExistingValidatorDirective
+    EmailNotExistingValidatorDirective,
+    ServiceReservationComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgbModule,
-        SlimLoadingBarModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MDBBootstrapModule.forRoot(),
-        MatPaginatorModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatIconModule,
-        RouterModule.forRoot([
-        {
-          path: 'home',
-          component: HomeComponent,
-          children: [
-            {
-              path: 'registrationConfirm/:token',
-              component: VerificationDialogEntryComponent
-            },
-            {
-              path: 'changePassword/:token',
-              component: PasswordResetDialogEntryComponent
-            }
-          ]
-        },
-        { path: '**', redirectTo: 'home' }
-      ])
-    ],
-  providers: [SlimLoadingBarService, authInterceptorProviders],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    SlimLoadingBarModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MDBBootstrapModule.forRoot(),
+    MatPaginatorModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    RouterModule.forRoot([
+      {
+        path: 'home',
+        component: HomeComponent,
+        children: [
+          {
+            path: 'registrationConfirm/:token',
+            component: VerificationDialogEntryComponent
+          },
+          {
+            path: 'changePassword/:token',
+            component: PasswordResetDialogEntryComponent
+          }
+        ]
+      },
+      {path: '**', redirectTo: 'home'}
+    ]),
+    MatDatepickerModule
+  ],
+  providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule],
   exports: [AppComponent],
   bootstrap: [AppComponent],
   entryComponents: [LoginDialogComponent,
