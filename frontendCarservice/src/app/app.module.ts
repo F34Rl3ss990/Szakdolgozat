@@ -37,6 +37,13 @@ import { PasswordResetDialogEntryComponent } from './components/login/password-r
 import { PasswordSuccessfullyChangedComponent } from './components/login/password-successfully-changed/password-successfully-changed.component';
 import { ExpiredResetPasswordTokenComponent } from './components/login/expired-reset-password-token/expired-reset-password-token.component';
 import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
+<<<<<<< Updated upstream
+=======
+import { ServiceReservationComponent } from './components/global/service-reservation/service-reservation.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {FlexModule} from '@angular/flex-layout';
+>>>>>>> Stashed changes
 
 
 @NgModule({
@@ -63,6 +70,7 @@ import { EmailNotExistingValidatorDirective } from './components/validators/emai
     ExpiredResetPasswordTokenComponent,
     EmailNotExistingValidatorDirective
   ],
+<<<<<<< Updated upstream
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -98,6 +106,47 @@ import { EmailNotExistingValidatorDirective } from './components/validators/emai
       ])
     ],
   providers: [SlimLoadingBarService, authInterceptorProviders],
+=======
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    SlimLoadingBarModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MDBBootstrapModule.forRoot(),
+    MatPaginatorModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    RouterModule.forRoot([
+      {
+        path: 'home',
+        component: HomeComponent,
+        children: [
+          {
+            path: 'registrationConfirm/:token',
+            component: VerificationDialogEntryComponent
+          },
+          {
+            path: 'changePassword/:token',
+            component: PasswordResetDialogEntryComponent
+          }
+        ]
+      },
+      {path: '**', redirectTo: 'home'}
+    ]),
+    MatDatepickerModule,
+    FlexModule
+  ],
+  providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule],
+>>>>>>> Stashed changes
   exports: [AppComponent],
   bootstrap: [AppComponent],
   entryComponents: [LoginDialogComponent,

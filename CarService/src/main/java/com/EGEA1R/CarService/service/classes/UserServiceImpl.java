@@ -6,7 +6,6 @@ import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.service.interfaces.EmailService;
 import com.EGEA1R.CarService.service.interfaces.UserService;
-import com.EGEA1R.CarService.web.DTO.ReservedServiceList;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.modelmapper.ModelMapper;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email){
-        if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getBillingEuTax()){
+        if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(unauthorizedUserReservationDTO.getBillingEuTax())){
             if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){
                 userRepository.saveUser(mapDTOtoUser(unauthorizedUserReservationDTO), credentialId, email);
             }else
@@ -68,10 +67,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
             String services = servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
-            if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && !unauthorizedUserReservationDTO.getBillingEuTax()){
+            if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(unauthorizedUserReservationDTO.getBillingEuTax())){
                 if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){
-                    if(CarServiceImpl.checkLicensePlate(unauthorizedUserReservationDTO.getForeignCountryPlate(),
-                            unauthorizedUserReservationDTO.getLicensePlateNumber())){
+                    if(Boolean.TRUE.equals(CarServiceImpl.checkLicensePlate(unauthorizedUserReservationDTO.getForeignCountryPlate(), unauthorizedUserReservationDTO.getLicensePlateNumber()))){
                         userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
                                 mapDTOtoCar(unauthorizedUserReservationDTO),
                                 mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
@@ -89,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyUser(ModifyUserDateRequest modifyUserDateRequest){
-        if(!modifyUserDateRequest.getBillingTaxNumber().isEmpty() && !modifyUserDateRequest.getBillingEuTax()){
+        if(!modifyUserDateRequest.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(modifyUserDateRequest.getBillingEuTax())){
             if(Pattern.matches(regexp, modifyUserDateRequest.getBillingTaxNumber())){
                 userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest));
             }else
@@ -123,15 +121,9 @@ public class UserServiceImpl implements UserService {
         return pageHolder;
     }
 
-    public static String servicesListToString(List<ReservedServiceList> reservedServiceLists){
-        List<String> servicesList = new ArrayList<>();
-        for(ReservedServiceList item : reservedServiceLists){
-            if(item.getChecked()){
-                servicesList.add(item.getServiceType());
-            }
-        }
-        return servicesList.stream()
-                .map(service -> String.valueOf(service))
+    public static String servicesListToString(List<String> reservedServiceLists){
+        return reservedServiceLists.stream()
+                .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
     }
@@ -159,8 +151,7 @@ public class UserServiceImpl implements UserService {
         return car;
     }
 
-    private ServiceReservation mapDTOtoServiceReservation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-        ServiceReservation serviceReservation = modelMapper.map(unauthorizedUserReservationDTO, ServiceReservation.class);
-        return serviceReservation;
+    private ServiceReservation mapDTOtoServiceReservation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) {
+        return modelMapper.map(unauthorizedUserReservationDTO, ServiceReservation.class);
     }
 }

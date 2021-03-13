@@ -24,24 +24,22 @@ public class UserRepositoryImpl implements UserRepository {
     @Transactional
     @Override
     public void saveUser(@Valid User user, Long credentialId, String email) {
-        em.createNativeQuery("INSERT INTO user (first_name, last_name, e_mail, phone_number, billing_name, " +
-                "billing_phone_number, billing_zip_code, billing_town, billing_country, billing_street, billing_other_address_type," +
+        em.createNativeQuery("INSERT INTO user (name, e_mail, phone_number, billing_name, " +
+                "billing_phone_number, billing_zip_code, billing_town, billing_street, billing_other_address_type," +
                 " billing_tax_number, billing_email, fk_user_credential)" +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-                .setParameter(1, user.getFirstName())
-                .setParameter(2, user.getLastName())
-                .setParameter(3, email)
-                .setParameter(4, user.getPhoneNumber())
-                .setParameter(5, user.getBillingInformation().getBillingName())
-                .setParameter(6, user.getBillingInformation().getBillingPhoneNumber())
-                .setParameter(7, user.getBillingInformation().getBillingZipCode())
-                .setParameter(8, user.getBillingInformation().getBillingTown())
-                .setParameter(9, user.getBillingInformation().getBillingCountry())
-                .setParameter(10, user.getBillingInformation().getBillingStreet())
-                .setParameter(11, user.getBillingInformation().getBillingOtherAddressType())
-                .setParameter(12, user.getBillingInformation().getBillingTaxNumber())
-                .setParameter(13, user.getBillingInformation().getBillingEmail())
-                .setParameter(14, credentialId)
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                .setParameter(1, user.getName())
+                .setParameter(2, email)
+                .setParameter(3, user.getPhoneNumber())
+                .setParameter(4, user.getBillingInformation().getBillingName())
+                .setParameter(5, user.getBillingInformation().getBillingPhoneNumber())
+                .setParameter(6, user.getBillingInformation().getBillingZipCode())
+                .setParameter(7, user.getBillingInformation().getBillingTown())
+                .setParameter(8, user.getBillingInformation().getBillingStreet())
+                .setParameter(9, user.getBillingInformation().getBillingOtherAddressType())
+                .setParameter(10, user.getBillingInformation().getBillingTaxNumber())
+                .setParameter(11, user.getBillingInformation().getBillingEmail())
+                .setParameter(12, credentialId)
                 .executeUpdate();
     }
 
@@ -54,8 +52,8 @@ public class UserRepositoryImpl implements UserRepository {
                 query.registerStoredProcedureParameter(3, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(4, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(5, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(6, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(7, Integer.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(6, Integer.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(7, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(8, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(9, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(10, String.class, ParameterMode.IN);
@@ -66,37 +64,33 @@ public class UserRepositoryImpl implements UserRepository {
                 query.registerStoredProcedureParameter(15, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(16, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(17, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(18, String.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(18, Integer.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(19, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(20, Integer.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(20, Date.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(21, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(22, Date.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(23, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(24, String.class, ParameterMode.IN);
-                query.setParameter(1, user.getFirstName());
-                query.setParameter(2, user.getLastName());
-                query.setParameter(3, user.getEmail());
-                query.setParameter(4, user.getPhoneNumber());
-                query.setParameter(5, user.getBillingInformation().getBillingName());
-                query.setParameter(6, user.getBillingInformation().getBillingPhoneNumber());
-                query.setParameter(7, user.getBillingInformation().getBillingZipCode());
-                query.setParameter(8, user.getBillingInformation().getBillingTown());
-                query.setParameter(9, user.getBillingInformation().getBillingCountry());
-                query.setParameter(10, user.getBillingInformation().getBillingStreet());
-                query.setParameter(11, user.getBillingInformation().getBillingOtherAddressType());
-                query.setParameter(12, user.getBillingInformation().getBillingTaxNumber());
-                query.setParameter(13, user.getBillingInformation().getBillingEmail());
-                query.setParameter(14, car.getBrand());
-                query.setParameter(15, car.getType());
-                query.setParameter(16, car.getEngineType());
-                query.setParameter(17, car.getYearOfManufacture());
-                query.setParameter(18, car.getEngineNumber());
-                query.setParameter(19, car.getChassisNumber());
-                query.setParameter(20, car.getCarMileages().get(0).getMileage());
-                query.setParameter(21, car.getLicensePlateNumber());
-                query.setParameter(22, serviceReservation.getReservedDate());
-                query.setParameter(23, serviceReservation.getComment());
-                query.setParameter(24, services);
+                query.registerStoredProcedureParameter(22, String.class, ParameterMode.IN);
+                query.setParameter(1, user.getName());
+                query.setParameter(2, user.getEmail());
+                query.setParameter(3, user.getPhoneNumber());
+                query.setParameter(4, user.getBillingInformation().getBillingName());
+                query.setParameter(5, user.getBillingInformation().getBillingPhoneNumber());
+                query.setParameter(6, user.getBillingInformation().getBillingZipCode());
+                query.setParameter(7, user.getBillingInformation().getBillingTown());
+                query.setParameter(8, user.getBillingInformation().getBillingStreet());
+                query.setParameter(9, user.getBillingInformation().getBillingOtherAddressType());
+                query.setParameter(10, user.getBillingInformation().getBillingTaxNumber());
+                query.setParameter(11, user.getBillingInformation().getBillingEmail());
+                query.setParameter(12, car.getBrand());
+                query.setParameter(13, car.getType());
+                query.setParameter(14, car.getEngineType());
+                query.setParameter(15, car.getYearOfManufacture());
+                query.setParameter(16, car.getEngineNumber());
+                query.setParameter(17, car.getChassisNumber());
+                query.setParameter(18, car.getCarMileages().get(0).getMileage());
+                query.setParameter(19, car.getLicensePlateNumber());
+                query.setParameter(20, serviceReservation.getReservedDate());
+                query.setParameter(21, serviceReservation.getComment());
+                query.setParameter(22, services);
                 query.executeUpdate();
     }
 
@@ -105,7 +99,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void modifyUserData(User user) {
         em.createNativeQuery("UPDATE user " +
                 "set phone_number = ?, billing_name = ?, billing_phone_number = ?," +
-                " billing_zip_code = ?, billing_town = ?, billing_country = ?, billing_street = ?," +
+                " billing_zip_code = ?, billing_town = ?, billing_street = ?," +
                 " billing_other_address_type = ?, billing_email = ?" +
                 " where user_id = ?")
                 .setParameter(1, user.getPhoneNumber())
@@ -113,11 +107,10 @@ public class UserRepositoryImpl implements UserRepository {
                 .setParameter(3, user.getBillingInformation().getBillingPhoneNumber())
                 .setParameter(4, user.getBillingInformation().getBillingZipCode())
                 .setParameter(5, user.getBillingInformation().getBillingTown())
-                .setParameter(6, user.getBillingInformation().getBillingCountry())
-                .setParameter(7, user.getBillingInformation().getBillingStreet())
-                .setParameter(8, user.getBillingInformation().getBillingOtherAddressType())
-                .setParameter(9, user.getBillingInformation().getBillingEmail())
-                .setParameter(10, user.getUserId())
+                .setParameter(6, user.getBillingInformation().getBillingStreet())
+                .setParameter(7, user.getBillingInformation().getBillingOtherAddressType())
+                .setParameter(8, user.getBillingInformation().getBillingEmail())
+                .setParameter(9, user.getUserId())
                 .executeUpdate();
     }
 

@@ -36,16 +36,16 @@ export class PasswordResetComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<PasswordResetComponent>,
               private fb: FormBuilder,
               private authService: AuthService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private dataService: DataService) {
     this.createForm();
   }
 
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.resetPasswordForm = this.fb.group({
       email: this.fb.control('', {
         updateOn: 'blur',
-        validators: [Validators.pattern(patternEmail), Validators.required],
+        validators: [Validators.pattern(this.dataService.patternEmail), Validators.required],
         asyncValidators: [notExistingEmailValidator(this.authService)]
       }),
     },{updateOn: 'submit'})

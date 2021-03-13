@@ -60,4 +60,33 @@ export class DialogService {
     dialogConfig.panelClass = 'custom-dialog-container';
     this.dialog.open(PasswordTokenSentComponent, dialogConfig);
   }
+<<<<<<< Updated upstream
+=======
+
+  openSuccessPasswordChange(): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(PasswordSuccessfullyChangedComponent, dialogConfig);
+  }
+
+  openPasswordResetDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'my-dialog';
+    this.dialog.open(PasswordResetDialogComponent, dialogConfig);
+  }
+
+  openExpiredTokenDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(ExpiredResetPasswordTokenComponent, dialogConfig);
+  }
+>>>>>>> Stashed changes
 }

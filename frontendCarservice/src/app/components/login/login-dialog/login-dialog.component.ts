@@ -40,17 +40,17 @@ export class LoginDialogComponent implements OnInit {
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService,
               private dialogRef: MatDialogRef<LoginDialogComponent>,
               private fb: FormBuilder,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private dataService: DataService) {
     this.createForm();
   }
 
 
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.loginForm = this.fb.group({
       email: this.fb.control('', {
         updateOn: 'blur',
-        validators: [Validators.pattern(patternEmail), Validators.required]
+        validators: [Validators.pattern(this.dataService.patternEmail), Validators.required]
       }),
       password: this.fb.control('', {
         updateOn: 'blur',
@@ -79,6 +79,8 @@ export class LoginDialogComponent implements OnInit {
 
   onSubmit(): void {
     this.submit()
+    console.log(this.loginForm.controls['email'].value)
+    this.isSubmitted = true;
     this.authService.login(this.loginForm.value).subscribe(
       data => {
         this.tokenStorage.saveToken(data.token);
@@ -90,7 +92,6 @@ export class LoginDialogComponent implements OnInit {
       },
       err => {
         this.errorMessage = err.error.message;
-        console.log(this.errorMessage)
         if(!this.loginForm.controls['email'].valid){
           this.loginForm.controls['email'].setErrors({'pattern': true});
         }

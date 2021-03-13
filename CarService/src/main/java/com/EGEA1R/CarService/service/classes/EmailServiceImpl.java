@@ -128,8 +128,7 @@ public class EmailServiceImpl implements EmailService {
     private void serviceContext(Context context, UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         String services = UserServiceImpl.servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        context.setVariable("lastName", unauthorizedUserReservationDTO.getLastName());
-        context.setVariable("firstName", unauthorizedUserReservationDTO.getFirstName());
+        context.setVariable("name", unauthorizedUserReservationDTO.getName());
         context.setVariable("email", unauthorizedUserReservationDTO.getEmail());
         context.setVariable("phoneNumber", unauthorizedUserReservationDTO.getPhoneNumber());
         context.setVariable("brand", unauthorizedUserReservationDTO.getBrand());
