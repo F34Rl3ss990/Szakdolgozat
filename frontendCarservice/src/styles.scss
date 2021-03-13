@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/mdb-ui-kit/css/mdb.min.css';
 @import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'customize-bootstrap.scss';
+@import '../node_modules/bootstrap/scss/bootstrap';
 
 .cdk-overlay-pane.my-dialog, .cdk-overlay-pane.login-dialog {
   position: relative !important;
@@ -41,6 +43,7 @@
 
 .my-dialog  .mat-input-element, .login-dialog .mat-input-element{
   font-size:14px!important;
+  margin-top: 0.3em;
 }
 
 .my-dialog .mat-error, .login-dialog .mat-error {
@@ -105,3 +108,6 @@ input:-webkit-autofill:active {
   transform: rotate(-45deg);
 }
 
+.btn-primary{
+  font-size:14px
+}
