@@ -38,7 +38,7 @@ public class CarDTO {
     @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String engineNumber;
 
-    @Size(max = 17)
+    @Size(max = 17, min = 17)
     @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String chassisNumber;
 

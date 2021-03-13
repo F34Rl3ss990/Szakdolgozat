@@ -77,7 +77,7 @@ export class DialogService {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
+    dialogConfig.panelClass = 'my-dialog';
     this.dialog.open(PasswordResetDialogComponent, dialogConfig);
   }
 

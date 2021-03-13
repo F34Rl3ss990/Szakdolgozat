@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Builder
 @Data
@@ -26,12 +27,11 @@ public class BillingInformation {
     private String billingPhoneNumber;
 
     @NotNull
-    private String billingCountry;
-
-    @NotNull
+    @Pattern(regexp = "^[0-9]{4}$")
     private Integer billingZipCode;
 
     @NotNull
+    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
     private String billingTown;
 
     @NotNull

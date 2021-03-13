@@ -87,16 +87,14 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
     }
 
     private ServiceReservation mapDTOtoServiceReservation(ServiceReservationDTO serviceReservationDTO){
-        ServiceReservation serviceReservation = modelMapper.map(serviceReservationDTO, ServiceReservation.class);
-        return serviceReservation;
+         return modelMapper.map(serviceReservationDTO, ServiceReservation.class);
     }
 
     private void sendEmailAfterServiceReservation(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         Car car = carService.getCarById(serviceReservationDTO.getFkServiceReservationCarId());
         User user = userService.getUserDetailsByCarId(serviceReservationDTO.getFkServiceReservationCarId());
         UnauthorizedUserReservationDTO unauthorizedUserReservationDTO = UnauthorizedUserReservationDTO.builder()
-                .lastName(user.getLastName())
-                .firstName(user.getFirstName())
+                .name(user.getName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .brand(car.getBrand())

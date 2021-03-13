@@ -40,6 +40,7 @@ import { EmailNotExistingValidatorDirective } from './components/validators/emai
 import { ServiceReservationComponent } from './components/global/service-reservation/service-reservation.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import {FlexModule} from '@angular/flex-layout';
 
 
 @NgModule({
@@ -102,7 +103,8 @@ import {MatNativeDateModule} from '@angular/material/core';
       },
       {path: '**', redirectTo: 'home'}
     ]),
-    MatDatepickerModule
+    MatDatepickerModule,
+    FlexModule
   ],
   providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule],
   exports: [AppComponent],

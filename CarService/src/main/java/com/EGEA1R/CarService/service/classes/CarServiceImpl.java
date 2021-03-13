@@ -34,14 +34,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addCar(CarDTO carDTO){
-        if(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber())){
+        if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))){
             carRepository.addCar(mapCarDTOtoCar(carDTO));
         }
     }
 
     @Override
     public void modifyCar(CarDTO carDTO){
-        if(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber())) {
+        if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))) {
             carRepository.modifyCarById(mapCarDTOtoCar(carDTO));
         }
     }

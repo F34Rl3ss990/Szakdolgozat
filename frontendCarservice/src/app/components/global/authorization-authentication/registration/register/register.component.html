@@ -18,7 +18,8 @@
           || (registerForm.controls['email'].hasError('pattern') && !registerForm.controls['email'].hasError('required'))
           || registerForm.controls['email'].hasError('emailExists')
           || registerForm.controls['email'].hasError('required') && registerForm.controls['email'].hasError('pristine')
-          || registerForm.controls['email'].hasError('pattern') && registerForm.controls['email'].hasError('pristine')" matSuffix>
+          || registerForm.controls['email'].hasError('pattern') && registerForm.controls['email'].hasError('pristine')
+          || isSubmitted && registerForm.controls['email'].value==''" matSuffix>
       error
     </mat-icon>
     <mat-icon *ngIf="registerForm.controls['email'].valid" matSuffix>check_circle</mat-icon>
@@ -33,14 +34,15 @@
   </mat-error>
   <mat-error
     *ngIf="(registerForm.controls['email'].hasError('required') && registerForm.controls['email'].touched) || (registerForm.controls['email'].hasError('required') && registerForm.controls['email'].dirty)
-        || registerForm.controls['email'].hasError('required') && registerForm.controls['email'].hasError('pristine')">
+        || registerForm.controls['email'].hasError('required') && registerForm.controls['email'].hasError('pristine')
+        || isSubmitted && registerForm.controls['email'].value==''">
     Email megadása kötelező
   </mat-error>
   <p></p>
 
   <div class="row">
     <div class="column">
-      <mat-form-field appearance="outline" style="max-width:150px!important">
+      <mat-form-field appearance="outline" style="max-width:150px!important; margin-left:5px">
         <mat-label>Jelszó</mat-label>
         <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
                [errorStateMatcher]="matcher"
@@ -49,7 +51,8 @@
              || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched)
              || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].dirty)
              || registerForm.controls['password'].hasError('strong')
-             || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')" matSuffix>error
+             || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')
+             || isSubmitted && registerForm.controls['password'].value==''" matSuffix>error
         </mat-icon>
         <mat-icon *ngIf="registerForm.controls['password'].valid" matSuffix>check_circle</mat-icon>
       </mat-form-field>
@@ -59,14 +62,15 @@
       </mat-error>
       <mat-error
         *ngIf="(registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched) || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].dirty)
-              || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')">
+              || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')
+              || isSubmitted && registerForm.controls['password'].value==''">
         Jelszó megadása kötelező
       </mat-error>
       <p></p>
     </div>
 
-    <div class="column">
-      <mat-form-field appearance="outline" style="max-width:150px!important">
+    <div class="column" style="padding-left: 7px">
+      <mat-form-field appearance="outline" style="max-width:150px!important;">
         <mat-label>Megerősítés</mat-label>
         <input matInput [type]="hide ? 'password' : 'text'" formControlName="matchingPassword" #matchingPassword
                [errorStateMatcher]="CrossFieldErrorMatcher"
@@ -74,7 +78,8 @@
         <mat-icon *ngIf="(registerForm.controls['matchingPassword'].hasError('minlength'))
              || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched || registerForm.hasError('passwordDoNotMatch'))
              || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].dirty || registerForm.hasError('passwordDoNotMatch'))
-             || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')"
+             || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')
+             || isSubmitted && registerForm.controls['matchingPassword'].value==''"
                   matSuffix>error
         </mat-icon>
         <mat-icon
@@ -88,7 +93,8 @@
       </mat-error>
       <mat-error *ngIf="(registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched)
           || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].dirty)
-          || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')">
+          || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')
+          || isSubmitted && registerForm.controls['matchingPassword'].value==''">
         A jelszó megerősítése kötelező
       </mat-error>
       <p></p>
@@ -96,11 +102,11 @@
     <mat-hint>Legalább 8 karaktert használjon, és szerepeljenek köztük betűk, számok és
       szimbólumok is
     </mat-hint>
+  </div>
+  <div class="col-xs-12" style="padding-top: 15px">
     <mat-checkbox
       formControlName="hide" (change)="hide = !hide">Jelszavak megjelenítése
     </mat-checkbox>
-  </div>
-  <div class="col-xs-12" style="padding-top: 15px">
     <mat-checkbox formControlName="data" (change)="data =!data">A <a href="" routerLink="">Felhasználói szabályzatot</a>
       és az <a href="" routerLink="">
         Adatvédelmi tájékoztatót</a> elolvastam és elfogadom.
@@ -108,16 +114,14 @@
 
   </div>
   <div class="row">
-    <div class="column">
+    <div class="column" style="padding-left:15px ">
       <button type="button" class="btn btn-primary btn-block" style="width: 120px" (click)="close()" >Bezárás</button>
     </div>
-    <div class="column" style="text-align: right">
+    <div class="column" style="text-align: right;padding-right:15px ">
       <button type="submit" [disabled]="data===false"
-              class="btn btn-primary btn-block" style="width: 120px; float:right">Regisztrálás
+              class="btn btn-primary btn-block" style="float:right">Regisztrálás
       </button>
     </div>
     <input class="hideIt" #hideIt>
   </div>
 </form>
-
-

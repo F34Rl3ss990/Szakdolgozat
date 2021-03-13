@@ -16,7 +16,8 @@
     <mat-icon *ngIf=" (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched)
           || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)
           || (loginForm.controls['email'].hasError('pattern') && !loginForm.controls['email'].hasError('required'))
-          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')" matSuffix>
+          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')
+          || isSubmitted && loginForm.controls['email'].value==''" matSuffix>
       error
     </mat-icon>
     <mat-icon *ngIf="loginForm.controls['email'].valid" matSuffix>check_circle</mat-icon>
@@ -26,14 +27,14 @@
     Érvénytelen e-mail formátum!
   </mat-error>
   <mat-error
-    *ngIf="(loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched) || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)
-          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')">
+    *ngIf="(loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched)
+          || (loginForm.controls['email'].hasError('required') && loginForm.controls['email'].dirty)
+          || loginForm.controls['email'].hasError('required') && loginForm.controls['email'].hasError('pristine')
+          || isSubmitted && loginForm.controls['email'].value==''">
     Email cím megadása kötelező
   </mat-error>
   <p></p>
 
-  <div class="row">
-    <div class="column">
       <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
         <mat-label>Jelszó</mat-label>
         <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
@@ -45,13 +46,15 @@
               || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty
               || loginForm.controls['password'].hasError('badCredentials')
               || loginForm.controls['password'].hasError('notVerified')
-              ||loginForm.controls['password'].hasError('banned'))" matSuffix>
+              ||loginForm.controls['password'].hasError('banned')
+              || isSubmitted && loginForm.controls['password'].value=='')" matSuffix>
           error
         </mat-icon>
       </mat-form-field>
       <mat-error
         *ngIf="(loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched) || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)
-              || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')">
+              || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')
+              || isSubmitted && loginForm.controls['password'].value==''">
         Jelszó megadása kötelező
       </mat-error>
       <mat-error
@@ -67,16 +70,14 @@
         A felhasználói fiók fel lett függesztve
       </mat-error>
       <p></p>
-    </div>
-    <mat-checkbox
-      formControlName="hide" (change)="hide = !hide">Jelszó megjelenítése
-    </mat-checkbox>
-  </div>
+  <mat-checkbox
+    formControlName="hide" (change)="hide = !hide">Jelszó megjelenítése
+  </mat-checkbox>
   <div class="row">
-    <div class="column">
+    <div class="column" style="padding-left:15px">
       <button type="button" class="btn btn-primary btn-block" style="width: 120px" (click)="close()">Bezárás</button>
     </div>
-    <div class="column" style="text-align: right">
+    <div class="column" style="text-align: right; padding-right:15px">
       <button type="submit"
               class="btn btn-primary btn-block" style="float:right" #submitButton>Bejelentkezés
       </button>
@@ -84,10 +85,10 @@
   </div>
 <br>
   <div class="row">
-    <div class="column">
+    <div class="column" style="padding-left:15px">
       <a (click)="resetPasswordDialog()">Elfelejtett jelszó</a>
     </div>
-    <div class="column" style="text-align: right">
+    <div class="column" style="text-align: right;padding-right:15px">
       <a  (click)="openRegistrationDialog()" style="width: 120px; float:right">Regisztráció</a>
     </div>
     <input class="hideIt" #hideIt>

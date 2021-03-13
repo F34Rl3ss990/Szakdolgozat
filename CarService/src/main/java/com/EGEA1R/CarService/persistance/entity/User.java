@@ -2,6 +2,7 @@ package com.EGEA1R.CarService.persistance.entity;
 
 import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
+import com.EGEA1R.CarService.validation.annotation.ValidName;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,8 +33,7 @@ import java.util.List;
                         targetClass = com.EGEA1R.CarService.persistance.entity.User.class,
                         columns = {
                                 @ColumnResult(name = "user_id", type = Long.class),
-                                @ColumnResult(name = "first_name", type = String.class),
-                                @ColumnResult(name = "last_name", type = String.class),
+                                @ColumnResult(name = "name", type = String.class),
                                 @ColumnResult(name = "e_mail", type = String.class),
                                 @ColumnResult(name = "phone_number", type = String.class)
                         }
@@ -46,8 +46,7 @@ import java.util.List;
                 @ConstructorResult(
                         targetClass = com.EGEA1R.CarService.persistance.entity.User.class,
                         columns = {
-                                @ColumnResult(name = "last_name", type = String.class),
-                                @ColumnResult(name = "first_name", type = String.class),
+                                @ColumnResult(name = "name", type = String.class),
                                 @ColumnResult(name = "e_mail", type = String.class),
                                 @ColumnResult(name = "phone_number", type = String.class)
                         }
@@ -64,16 +63,10 @@ public class User {
     private Long userId;
 
     @NotNull
-    @ValidAccentLetters
-    @Size(max = 60)
-    @Column(name = "first_name")
-    private String firstName;
-
-    @NotNull
-    @ValidAccentLetters
-    @Size(max = 60)
-    @Column(name = "last_name")
-    private String lastName;
+    @ValidName
+    @Size(max = 255)
+    @Column(name = "name")
+    private String name;
 
     @NotNull
     @ValidEmail
@@ -109,7 +102,6 @@ public class User {
     @AttributeOverrides({
             @AttributeOverride( name = "billingName", column =  @Column(name = "billing_name")),
             @AttributeOverride( name = "billingPhoneNumber", column = @Column(name = "billing_phone_number")),
-            @AttributeOverride( name = "billingCountry", column = @Column(name = "billing_country")),
             @AttributeOverride( name = "billingZipCode", column = @Column(name = "billing_zip_code")),
             @AttributeOverride( name = "billingTown", column = @Column(name = "billing_town")),
             @AttributeOverride( name = "billingStreet", column = @Column(name = "billing_street")),
@@ -119,17 +111,15 @@ public class User {
     })
     private BillingInformation billingInformation;
 
-    public User(Long userId, String firstName, String lastName, String email, String phoneNumber){
+    public User(Long userId, String name, String email, String phoneNumber){
         this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public User(String lastName, String firstName, String email, String phoneNumber){
-        this.lastName = lastName;
-        this.firstName = firstName;
+    public User(String name, String email, String phoneNumber){
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }

@@ -1,9 +1,6 @@
 package com.EGEA1R.CarService.web.DTO;
 
-import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
-import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
-import com.EGEA1R.CarService.validation.annotation.ValidEmail;
-import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
+import com.EGEA1R.CarService.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,15 +51,10 @@ public class UnauthorizedUserReservationDTO {
     @PositiveOrZero
     private Integer mileage;
 
-    @ValidAccentLetters
-    @Size(max = 60)
+    @ValidName
+    @Size(max = 255)
     @NotNull
-    private String firstName;
-
-    @ValidAccentLetters
-    @Size(max = 40)
-    @NotNull
-    private String lastName;
+    private String name;
 
     @ValidEmail
     @NotNull
@@ -73,6 +65,8 @@ public class UnauthorizedUserReservationDTO {
     private String phoneNumber;
 
     @NotNull
+    @ValidName
+    @Size(max = 255)
     private String billingName;
 
     @NotNull
@@ -80,14 +74,11 @@ public class UnauthorizedUserReservationDTO {
     private String billingPhoneNumber;
 
     @NotNull
-    @ValidAccentAndWhitespace
-    private String billingCountry;
-
-    @NotNull
+    @Pattern(regexp = "^[0-9]{4}$")
     private Integer billingZipCode;
 
     @NotNull
-    @ValidAccentAndWhitespace
+    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
     private String billingTown;
 
     @NotNull
@@ -108,7 +99,8 @@ public class UnauthorizedUserReservationDTO {
     @NotNull
     private Date reservedDate;
 
-    private List<ReservedServiceList> reservedServices = new ArrayList<>();
+    @NotNull
+    private List<String> reservedServices = new ArrayList<>();
 }
 
 
