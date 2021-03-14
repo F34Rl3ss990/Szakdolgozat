@@ -6,7 +6,7 @@
 <form
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
-  >
+>
   <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
     <mat-label>Email</mat-label>
     <input type="email" matInput formControlName="email" #email
@@ -35,12 +35,12 @@
   </mat-error>
   <p></p>
 
-      <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
-        <mat-label>Jelszó</mat-label>
-        <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
-               [errorStateMatcher]="matcher"
-               placeholder="Jelszó">
-        <mat-icon *ngIf="loginForm.controls['password'].hasError('problem')
+  <mat-form-field appearance="outline" style="max-width: 308px!important; width:308px;!important;">
+    <mat-label>Jelszó</mat-label>
+    <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
+           [errorStateMatcher]="matcher"
+           placeholder="Jelszó">
+    <mat-icon *ngIf="loginForm.controls['password'].hasError('problem')
               || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')
               || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched
               || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty
@@ -48,28 +48,28 @@
               || loginForm.controls['password'].hasError('notVerified')
               ||loginForm.controls['password'].hasError('banned')
               || isSubmitted && loginForm.controls['password'].value=='')" matSuffix>
-          error
-        </mat-icon>
-      </mat-form-field>
-      <mat-error
-        *ngIf="(loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched) || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)
+      error
+    </mat-icon>
+  </mat-form-field>
+  <mat-error
+    *ngIf="(loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched) || (loginForm.controls['password'].hasError('required') && loginForm.controls['password'].dirty)
               || loginForm.controls['password'].hasError('required') && loginForm.controls['password'].hasError('pristine')
               || isSubmitted && loginForm.controls['password'].value==''">
-        Jelszó megadása kötelező
-      </mat-error>
-      <mat-error
-        *ngIf="loginForm.controls['password'].hasError('badCredentials')">
-        Hibás email vagy jelszó
-      </mat-error>
-      <mat-error
-        *ngIf="loginForm.controls['password'].hasError('notVerified')">
-        A felhasnzálói fiók nincs aktiválva
-      </mat-error>
-      <mat-error
-        *ngIf="loginForm.controls['password'].hasError('banned')">
-        A felhasználói fiók fel lett függesztve
-      </mat-error>
-      <p></p>
+    Jelszó megadása kötelező
+  </mat-error>
+  <mat-error
+    *ngIf="loginForm.controls['password'].hasError('badCredentials')">
+    Hibás email vagy jelszó
+  </mat-error>
+  <mat-error
+    *ngIf="loginForm.controls['password'].hasError('notVerified')">
+    A felhasnzálói fiók nincs aktiválva
+  </mat-error>
+  <mat-error
+    *ngIf="loginForm.controls['password'].hasError('banned')">
+    A felhasználói fiók fel lett függesztve
+  </mat-error>
+  <p></p>
   <mat-checkbox
     formControlName="hide" (change)="hide = !hide">Jelszó megjelenítése
   </mat-checkbox>
@@ -83,7 +83,7 @@
       </button>
     </div>
   </div>
-<br>
+  <br>
   <div class="row">
     <div class="column" style="padding-left:15px">
       <a (click)="resetPasswordDialog()">Elfelejtett jelszó</a>

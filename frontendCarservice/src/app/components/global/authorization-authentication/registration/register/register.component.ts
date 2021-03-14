@@ -33,14 +33,14 @@ export class RegisterComponent implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
       this.close();
     }
   }
 
-submit(){
-  this.hideEm.nativeElement.focus();
-}
+  submit(){
+    this.hideEm.nativeElement.focus();
+  }
 
 
   constructor(private authService: AuthService,

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {RegisterComponent} from '../components/global/authorization-authentication/registration/register/register.component';
 import {AuthService} from './auth.service';
-import {LoginDialogComponent} from '../components/global/authorization-authentication/login/login-dialog/login-dialog.component';
 import {TokenStorageService} from './token-storage.service';
-import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
+import {LoginDialogComponent} from '../components/global/authorization-authentication/login/login-dialog/login-dialog.component';
+import {RegisterComponent} from '../components/global/authorization-authentication/registration/register/register.component';
 import {RegistrationSuccessfulComponent} from '../components/global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {PasswordTokenSentComponent} from '../components/global/authorization-authentication/login/passwordReset/password-token-sent/password-token-sent.component';
 import {PasswordSuccessfullyChangedComponent} from '../components/global/authorization-authentication/login/passwordReset/password-successfully-changed/password-successfully-changed.component';
 import {PasswordResetDialogComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-dialog/password-reset-dialog.component';
 import {ExpiredResetPasswordTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
+import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
 
 @Injectable({
   providedIn: 'root'

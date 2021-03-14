@@ -2,7 +2,7 @@
   <a class="close" (click)="close()"></a>
 </div>
 
-<h2 [ngClass]="{'h2-verif': liveToken, 'h2-unverif': expiredToken}" mat-dialog-title>Aktiválás</h2>
+<h2 [ngClass]="{'h2-verif': liveToken, 'h2-unverif': expiredToken}" mat-dialog-title>Verification</h2>
 
 <div class="container" *ngIf="liveToken">
   <p [ngClass]="{'p-verif': liveToken}">Sikeres aktiválás! A fiókod most már bejelentkezés után használható!</p>

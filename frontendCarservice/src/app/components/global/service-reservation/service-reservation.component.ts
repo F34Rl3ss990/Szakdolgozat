@@ -28,17 +28,6 @@ export class ServiceReservationComponent implements OnInit {
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
-  checkboxes = [{
-    name: 'Value 1',
-    value: 'value-1'
-  }, {
-    name: 'Value 2',
-    value: 'value-2'
-  }, {
-    name: 'Value 3',
-    value: 'value-3'
-  }];
-
   carInspection = [{
     name: 'Minimalista csomag',
     value: 'minimalista csomag'

@@ -6,7 +6,6 @@ import {VerificationDialogComponent} from '../../../registration/verification-di
 import {DataService} from '../../../../../../services/data.service';
 import {ExpiredResetPasswordTokenComponent} from '../expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetDialogComponent} from '../password-reset-dialog/password-reset-dialog.component';
-import {DialogService} from '../../../../../../services/dialog.service';
 
 @Component({
   selector: 'app-password-reset-dialog-entry',
@@ -18,10 +17,25 @@ export class PasswordResetDialogEntryComponent implements OnInit {
   constructor(private dialog: MatDialog,
               private route: ActivatedRoute,
               private dataService: DataService,
-              private authService: AuthService,
-              private dialogService: DialogService){
+              private authService: AuthService){
   }
 
+  openPasswordResetDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(PasswordResetDialogComponent, dialogConfig);
+  }
+
+  openExpiredTokenDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(ExpiredResetPasswordTokenComponent, dialogConfig);
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params =>{
@@ -29,9 +43,9 @@ export class PasswordResetDialogEntryComponent implements OnInit {
       this.authService.checkPasswordResetToken(token).subscribe(result =>{
         if (result==true){
           this.dataService.token = token;
-          this.dialogService.openPasswordResetDialog();
+          this.openPasswordResetDialog();
         } else{
-          this.dialogService.openExpiredTokenDialog();
+          this.openExpiredTokenDialog();
         }
       })
     })

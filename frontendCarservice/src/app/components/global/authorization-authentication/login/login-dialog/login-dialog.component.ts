@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {AuthService} from '../../../../../services/auth.service';
 import {TokenStorageService} from '../../../../../services/token-storage.service';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
@@ -66,7 +66,7 @@ export class LoginDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   resetPasswordDialog(){
-    this.dialogService.openPasswordResetTokenSenderDialog();
+    this.dialogService.openPasswordResetDialog();
       this.dialogRef.close();
   }
 

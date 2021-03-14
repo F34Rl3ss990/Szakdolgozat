@@ -1,7 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {DataService} from '../../../../../../services/data.service';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-expired-reset-password-token',
@@ -13,8 +12,7 @@ export class ExpiredResetPasswordTokenComponent implements OnInit {
   isVerified: boolean;
 
   constructor(private dialogRef: MatDialogRef<ExpiredResetPasswordTokenComponent>,
-              private renderer: Renderer2,
-              private router: Router) {
+              private renderer: Renderer2) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -26,6 +24,5 @@ export class ExpiredResetPasswordTokenComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-    this.router.navigate(['home'])
   }
 }

@@ -49,7 +49,8 @@ export class PasswordResetDialogComponent implements OnInit {
               private fb: FormBuilder,
               private authService: AuthService,
               private dialogService: DialogService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private dialog: MatDialog) {
     this.createForm();
   }
 
@@ -74,7 +75,7 @@ export class PasswordResetDialogComponent implements OnInit {
     this.authService.savePassword(this.resetPasswordForm.value, this.token).subscribe(
       data => {
         this.dialogRef.close();
-        this.dialogService.openSuccessPasswordChange();
+        this.openDialog();
       },
       err => {
         this.errorMessage = err.error.errors;
@@ -82,7 +83,14 @@ export class PasswordResetDialogComponent implements OnInit {
       }
     );
   }
+  openDialog(): void {
+    const dialogConfig = new MatDialogConfig();
 
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(PasswordSuccessfullyChangedComponent, dialogConfig);
+  }
 
   close() {
     this.dialogRef.close();

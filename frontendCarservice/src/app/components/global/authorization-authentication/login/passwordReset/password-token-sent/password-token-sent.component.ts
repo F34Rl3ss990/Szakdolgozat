@@ -1,6 +1,5 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-password-token-sent',
@@ -10,8 +9,7 @@ import {Router} from '@angular/router';
 export class PasswordTokenSentComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<PasswordTokenSentComponent>,
-              private renderer: Renderer2,
-              private router: Router) {
+              private renderer: Renderer2) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -23,7 +21,6 @@ export class PasswordTokenSentComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-    this.router.navigate(['home'])
   }
 
 }

@@ -1,6 +1,5 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-passwored-successfully-changed',
@@ -10,8 +9,7 @@ import {Router} from '@angular/router';
 export class PasswordSuccessfullyChangedComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<PasswordSuccessfullyChangedComponent>,
-              private renderer: Renderer2,
-              private router: Router) {
+              private renderer: Renderer2) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -23,7 +21,6 @@ export class PasswordSuccessfullyChangedComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-    this.router.navigate(['home'])
   }
 
 }
