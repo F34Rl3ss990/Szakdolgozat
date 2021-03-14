@@ -2,7 +2,7 @@
   <a class="close" (click)="close()"></a>
 </div>
 
-<h2 mat-dialog-title>Registration</h2>
+<h2 mat-dialog-title>Regisztráció</h2>
 <form
   *ngIf="!isSuccessful"
   [formGroup]="registerForm"
@@ -26,37 +26,27 @@
   </mat-form-field>
   <mat-error
     *ngIf="registerForm.controls['email'].hasError('pattern') && !registerForm.controls['email'].hasError('required')">
-    Please enter a valid email address
+    Érvénytelen email formátum
   </mat-error>
   <mat-error
     *ngIf="registerForm.controls['email'].hasError('emailExists')">
-    This email is already registered
+    Ezzel az emailel már regisztráltak a rendszerünkben
   </mat-error>
   <mat-error
     *ngIf="(registerForm.controls['email'].hasError('required') && registerForm.controls['email'].touched) || (registerForm.controls['email'].hasError('required') && registerForm.controls['email'].dirty)
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-        || registerForm.controls['email'].hasError('required') && registerForm.controls['email'].hasError('pristine')">
-    Email is <strong>required</strong>
-=======
         || registerForm.controls['email'].hasError('required') && registerForm.controls['email'].hasError('pristine')
         || isSubmitted && registerForm.controls['email'].value==''">
     Email megadása kötelező
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
   </mat-error>
   <p></p>
 
   <div class="row">
     <div class="column">
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-      <mat-form-field appearance="outline" style="max-width:150px!important">
-        <mat-label>Password</mat-label>
-=======
       <mat-form-field appearance="outline" style="max-width:150px!important; margin-left:5px">
         <mat-label>Jelszó</mat-label>
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
         <input matInput [type]="hide ? 'password': 'text'" formControlName="password" #password
                [errorStateMatcher]="matcher"
-               placeholder="Password">
+               placeholder="Jelszó">
         <mat-icon *ngIf="(registerForm.controls['password'].hasError('minlength') && !registerForm.controls['password'].hasError('required'))
              || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched)
              || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].dirty)
@@ -68,34 +58,23 @@
       </mat-form-field>
       <mat-error
         *ngIf="registerForm.controls['password'].hasError('minlength') && !registerForm.controls['password'].hasError('required') || registerForm.controls['password'].hasError('strong')">
-        Please enter a valid password
+        Érvénytelen jelszó
       </mat-error>
       <mat-error
         *ngIf="(registerForm.controls['password'].hasError('required') && registerForm.controls['password'].touched) || (registerForm.controls['password'].hasError('required') && registerForm.controls['password'].dirty)
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-              || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')">
-        Password is <strong>required</strong>
-=======
               || registerForm.controls['password'].hasError('required') && registerForm.controls['password'].hasError('pristine')
               || isSubmitted && registerForm.controls['password'].value==''">
         Jelszó megadása kötelező
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
       </mat-error>
       <p></p>
     </div>
 
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-    <div class="column">
-      <mat-form-field appearance="outline" style="max-width:150px!important">
-        <mat-label>Confirm</mat-label>
-=======
     <div class="column" style="padding-left: 7px">
       <mat-form-field appearance="outline" style="max-width:150px!important;">
         <mat-label>Megerősítés</mat-label>
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
         <input matInput [type]="hide ? 'password' : 'text'" formControlName="matchingPassword" #matchingPassword
                [errorStateMatcher]="CrossFieldErrorMatcher"
-               placeholder="Matching password">
+               placeholder="Megerősítés">
         <mat-icon *ngIf="(registerForm.controls['matchingPassword'].hasError('minlength'))
              || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched || registerForm.hasError('passwordDoNotMatch'))
              || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].dirty || registerForm.hasError('passwordDoNotMatch'))
@@ -110,28 +89,23 @@
       </mat-form-field>
       <mat-error
         *ngIf="registerForm.hasError('passwordDoNotMatch') && !registerForm.controls['matchingPassword'].hasError('required')">
-        Passwords doesn't match
+        A jelszavak nem egyeznek
       </mat-error>
       <mat-error *ngIf="(registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched)
           || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].dirty)
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-          || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')">
-        Matching password is <strong>required</strong>
-=======
           || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')
           || isSubmitted && registerForm.controls['matchingPassword'].value==''">
         A jelszó megerősítése kötelező
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
       </mat-error>
       <p></p>
     </div>
-    <mat-hint style="font-size:12px">Legalább 8 karaktert használjon, és szerepeljenek köztük betűk, számok és
+    <mat-hint>Legalább 8 karaktert használjon, és szerepeljenek köztük betűk, számok és
       szimbólumok is
     </mat-hint>
   </div>
   <div class="col-xs-12" style="padding-top: 15px">
     <mat-checkbox
-      formControlName="hide" (change)="hide = !hide">Show password
+      formControlName="hide" (change)="hide = !hide">Jelszavak megjelenítése
     </mat-checkbox>
     <mat-checkbox formControlName="data" (change)="data =!data">A <a href="" routerLink="">Felhasználói szabályzatot</a>
       és az <a href="" routerLink="">
@@ -140,28 +114,14 @@
 
   </div>
   <div class="row">
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-    <div class="column">
-      <button type="button" class="btn btn-primary btn-block" style="width: 120px" (click)="close()" >Close</button>
-=======
     <div class="column" style="padding-left:15px ">
       <button type="button" class="btn btn-primary btn-block" style="width: 120px" (click)="close()" >Bezárás</button>
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
     </div>
     <div class="column" style="text-align: right;padding-right:15px ">
       <button type="submit" [disabled]="data===false"
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.html
-              class="btn btn-primary btn-block" style="width: 120px; float:right">Sign Up
-=======
               class="btn btn-primary btn-block" style="float:right">Regisztrálás
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.html
       </button>
     </div>
     <input class="hideIt" #hideIt>
   </div>
-<!--
-  <mat-error *ngIf="isSignUpFailed" style="font-size:30px">Signup failed!</mat-error>
-  <div class="alert alert-danger" *ngIf="submitted && isSignUpFailed">
-    Signup failed!<br/>
-  </div>-->
 </form>

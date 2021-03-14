@@ -1,18 +1,18 @@
 import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../services/auth.service';
-import {DialogService} from '../../../services/dialog.service';
-import {notExistingEmailValidator} from '../../validators/email-not-existing-validator.directive';
-import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
-import {DataService} from '../../../services/data.service';
+import {AuthService} from '../../../../../../services/auth.service';
+import {DialogService} from '../../../../../../services/dialog.service';
+import {notExistingEmailValidator} from '../../../../../validators/email-not-existing-validator.directive';
+import {ErrorMatcherDirective} from '../../../../../validators/error-matcher.directive';
+import {DataService} from '../../../../../../services/data.service';
 
 @Component({
   selector: 'app-password-reset',
-  templateUrl: './password-reset.component.html',
-  styleUrls: ['./password-reset.component.css']
+  templateUrl: './password-reset-token-sender.component.html',
+  styleUrls: ['./password-reset-token-sender.component.css']
 })
-export class PasswordResetComponent implements OnInit {
+export class PasswordResetTokenSenderComponent implements OnInit {
 
   resetPasswordForm: FormGroup;
   errorMessage = '';
@@ -33,7 +33,7 @@ export class PasswordResetComponent implements OnInit {
     this.hideEm.nativeElement.focus();
   }
 
-  constructor(private dialogRef: MatDialogRef<PasswordResetComponent>,
+  constructor(private dialogRef: MatDialogRef<PasswordResetTokenSenderComponent>,
               private fb: FormBuilder,
               private authService: AuthService,
               private dialogService: DialogService,

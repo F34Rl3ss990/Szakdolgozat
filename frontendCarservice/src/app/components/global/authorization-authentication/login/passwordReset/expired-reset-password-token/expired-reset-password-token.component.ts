@@ -1,6 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {DataService} from '../../../services/data.service';
+import {DataService} from '../../../../../../services/data.service';
 
 @Component({
   selector: 'app-expired-reset-password-token',

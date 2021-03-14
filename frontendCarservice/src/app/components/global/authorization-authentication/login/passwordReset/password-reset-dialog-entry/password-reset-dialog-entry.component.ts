@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ActivatedRoute} from '@angular/router';
-import {AuthService} from '../../../services/auth.service';
-import {VerificationDialogComponent} from '../../registration/verification-dialog/verification-dialog.component';
-import {DataService} from '../../../services/data.service';
+import {AuthService} from '../../../../../../services/auth.service';
+import {VerificationDialogComponent} from '../../../registration/verification-dialog/verification-dialog.component';
+import {DataService} from '../../../../../../services/data.service';
 import {ExpiredResetPasswordTokenComponent} from '../expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetDialogComponent} from '../password-reset-dialog/password-reset-dialog.component';
 

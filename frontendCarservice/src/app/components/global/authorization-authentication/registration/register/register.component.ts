@@ -1,19 +1,7 @@
 import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
-import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {AuthService} from '../../../../../services/auth.service';
+import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-<<<<<<< Updated upstream:frontendCarservice/src/app/components/registration/register/register.component.ts
-import {ErrorStateMatcher} from '@angular/material/core';
-import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
-import {MatchingPasswordMatcherDirective} from '../../validators/matching-password-matcher.directive';
-import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
-import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
-import {LoginDialogComponent} from '../../login/login-dialog/login-dialog.component';
-import {RegistrationSuccessfulComponent} from '../registration-successful/registration-successful.component';
-import {DialogService} from '../../../services/dialog.service';
-import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
-import {DataService} from '../../../services/data.service';
-=======
 import {matchingPasswordValidator} from '../../../../validators/matching-password-validator.directive';
 import {MatchingPasswordMatcherDirective} from '../../../../validators/matching-password-matcher.directive';
 import {passwordPatternValidator} from '../../../../validators/password-regexp-validator.directive';
@@ -21,14 +9,12 @@ import {existingEmailValidator} from '../../../../validators/existing-email-vali
 import {DialogService} from '../../../../../services/dialog.service';
 import {ErrorMatcherDirective} from '../../../../validators/error-matcher.directive';
 import {DataService} from '../../../../../services/data.service';
->>>>>>> Stashed changes:frontendCarservice/src/app/components/global/authorization-authentication/registration/register/register.component.ts
 
 @HostListener('document:keydown.meta.k')
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   form: any = {};
@@ -47,14 +33,14 @@ export class RegisterComponent implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
       this.close();
     }
   }
 
-submit(){
-  this.hideEm.nativeElement.focus();
-}
+  submit(){
+    this.hideEm.nativeElement.focus();
+  }
 
 
   constructor(private authService: AuthService,

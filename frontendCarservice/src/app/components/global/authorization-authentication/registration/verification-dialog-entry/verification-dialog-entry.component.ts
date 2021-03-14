@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {VerificationDialogComponent} from '../verification-dialog/verification-dialog.component';
-import {AuthService} from '../../../services/auth.service';
-import {DataService} from '../../../services/data.service';
-import {DialogService} from '../../../services/dialog.service';
+import {AuthService} from '../../../../../services/auth.service';
+import {DataService} from '../../../../../services/data.service';
+import {DialogService} from '../../../../../services/dialog.service';
 
 @Component({
   selector: 'app-verification-dialog-entry',

@@ -3,10 +3,10 @@ import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Event, Router} from '@angular/router';
 import {TokenStorageService} from '../../services/token-storage.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {RegisterComponent} from '../registration/register/register.component';
-import {LoginDialogComponent} from '../login/login-dialog/login-dialog.component';
+import {RegisterComponent} from '../global/authorization-authentication/registration/register/register.component';
+import {LoginDialogComponent} from '../global/authorization-authentication/login/login-dialog/login-dialog.component';
 import {AuthService} from '../../services/auth.service';
-import {RegistrationSuccessfulComponent} from '../registration/registration-successful/registration-successful.component';
+import {RegistrationSuccessfulComponent} from '../global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {DialogService} from '../../services/dialog.service';
 
 @Component({

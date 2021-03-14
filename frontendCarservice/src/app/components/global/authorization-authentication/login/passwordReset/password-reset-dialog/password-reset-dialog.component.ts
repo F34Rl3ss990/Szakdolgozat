@@ -2,17 +2,17 @@ import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from 
 import {ErrorStateMatcher} from '@angular/material/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {AuthService} from '../../../services/auth.service';
-import {DialogService} from '../../../services/dialog.service';
-import {existingEmailValidator} from '../../validators/existing-email-validator.directive';
-import {passwordPatternValidator} from '../../validators/password-regexp-validator.directive';
-import {matchingPasswordValidator} from '../../validators/matching-password-validator.directive';
+import {AuthService} from '../../../../../../services/auth.service';
+import {DialogService} from '../../../../../../services/dialog.service';
+import {existingEmailValidator} from '../../../../../validators/existing-email-validator.directive';
+import {passwordPatternValidator} from '../../../../../validators/password-regexp-validator.directive';
+import {matchingPasswordValidator} from '../../../../../validators/matching-password-validator.directive';
 import {ActivatedRoute} from '@angular/router';
-import {DataService} from '../../../services/data.service';
-import {MatchingPasswordMatcherDirective} from '../../validators/matching-password-matcher.directive';
-import {VerificationDialogComponent} from '../../registration/verification-dialog/verification-dialog.component';
+import {DataService} from '../../../../../../services/data.service';
+import {MatchingPasswordMatcherDirective} from '../../../../../validators/matching-password-matcher.directive';
+import {VerificationDialogComponent} from '../../../registration/verification-dialog/verification-dialog.component';
 import {PasswordSuccessfullyChangedComponent} from '../password-successfully-changed/password-successfully-changed.component';
-import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
+import {ErrorMatcherDirective} from '../../../../../validators/error-matcher.directive';
 
 @Component({
   selector: 'app-password-reset-dialog',

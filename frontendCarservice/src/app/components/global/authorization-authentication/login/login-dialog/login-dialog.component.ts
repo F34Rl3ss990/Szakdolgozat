@@ -1,11 +1,11 @@
 import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
-import {TokenStorageService} from '../../../services/token-storage.service';
+import {AuthService} from '../../../../../services/auth.service';
+import {TokenStorageService} from '../../../../../services/token-storage.service';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
-import {DialogService} from '../../../services/dialog.service';
-import {ErrorMatcherDirective} from '../../validators/error-matcher.directive';
-import {DataService} from '../../../services/data.service';
+import {DialogService} from '../../../../../services/dialog.service';
+import {ErrorMatcherDirective} from '../../../../validators/error-matcher.directive';
+import {DataService} from '../../../../../services/data.service';
 
 
 @Component({
