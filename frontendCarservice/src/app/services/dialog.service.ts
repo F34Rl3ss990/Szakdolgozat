@@ -56,6 +56,7 @@ export class DialogService {
     dialogConfig.panelClass = 'custom-dialog-container';
     this.dialog.open(RegistrationSuccessfulComponent, dialogConfig);
   }
+
   openPasswordTokenSent(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -66,7 +67,6 @@ export class DialogService {
 
   openSuccessPasswordChange(): void {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
@@ -88,5 +88,13 @@ export class DialogService {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
     this.dialog.open(ExpiredResetPasswordTokenComponent, dialogConfig);
+  }
+
+  openSuccessfullyReservedUnauthorizedService(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(PasswordTokenSentComponent, dialogConfig);
   }
 }

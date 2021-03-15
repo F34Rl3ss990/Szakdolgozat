@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.validation.annotation;
 
-import com.EGEA1R.CarService.validation.PhoneNumberValidator;
-import com.EGEA1R.CarService.validation.ValidNameValidator;
+import com.EGEA1R.CarService.validation.classes.NameValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = ValidNameValidator.class)
+@Constraint(validatedBy = NameValidator.class)
 @Documented
 public @interface ValidName {
     String message() default "Invalid name";

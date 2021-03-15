@@ -2,7 +2,7 @@ package com.EGEA1R.CarService.validation.annotation;
 
 
 
-import com.EGEA1R.CarService.validation.EmailValidator;
+import com.EGEA1R.CarService.validation.classes.EmailValidator;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

@@ -48,7 +48,8 @@ export class RegisterComponent implements OnInit {
               private renderer: Renderer2,
               private fb: FormBuilder,
               private dialogService: DialogService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private el: ElementRef) {
     this.createForm();
   }
 
@@ -97,6 +98,13 @@ export class RegisterComponent implements OnInit {
           this.registerForm.controls['matchingPassword'].setErrors({'required': true, 'pristine': true});
         }
         this.isSignUpFailed = true;
+        for (const key of Object.keys(this.registerForm.controls)) {
+          if (this.registerForm.controls[key].invalid) {
+            const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
+            invalidControl.focus();
+            break;
+          }
+        }
       }
     );
   }

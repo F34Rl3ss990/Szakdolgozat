@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.validation;
+package com.EGEA1R.CarService.validation.classes.passwordmatches;
 
 import com.EGEA1R.CarService.validation.annotation.PasswordMatches;
 
@@ -12,7 +12,6 @@ public abstract class PasswordMatchesValidator<Object> implements ConstraintVali
     public void initialize(final PasswordMatches constraintAnnotation) {
         //
     }
-
 
     @Override
     public boolean isValid(final Object obj, final ConstraintValidatorContext context) {

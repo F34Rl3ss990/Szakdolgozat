@@ -26,6 +26,8 @@ export class LoginDialogComponent implements OnInit {
 
   @ViewChild('hideIt') hideIt : ElementRef;
 
+
+
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
      if(event.key === 'Escape'){
@@ -41,7 +43,8 @@ export class LoginDialogComponent implements OnInit {
               private dialogRef: MatDialogRef<LoginDialogComponent>,
               private fb: FormBuilder,
               private dialogService: DialogService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private el: ElementRef) {
     this.createForm();
   }
 
@@ -66,7 +69,7 @@ export class LoginDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   resetPasswordDialog(){
-    this.dialogService.openPasswordResetDialog();
+    this.dialogService.openPasswordResetTokenSenderDialog();
       this.dialogRef.close();
   }
 
@@ -79,7 +82,6 @@ export class LoginDialogComponent implements OnInit {
 
   onSubmit(): void {
     this.submit()
-    console.log(this.loginForm.controls['email'].value)
     this.isSubmitted = true;
     this.authService.login(this.loginForm.value).subscribe(
       data => {
@@ -109,6 +111,13 @@ export class LoginDialogComponent implements OnInit {
         }
         if(this.errorMessage.includes("Account is banned")) {
           this.loginForm.controls['password'].setErrors({'banned': true})
+        }
+        for (const key of Object.keys(this.loginForm.controls)) {
+          if (this.loginForm.controls[key].invalid) {
+            const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
+            invalidControl.focus();
+            break;
+          }
         }
       }
     );

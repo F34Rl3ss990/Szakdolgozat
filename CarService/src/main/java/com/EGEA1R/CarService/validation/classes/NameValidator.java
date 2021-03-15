@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.validation;
+package com.EGEA1R.CarService.validation.classes;
 
 import com.EGEA1R.CarService.validation.annotation.ValidName;
 import javax.validation.ConstraintValidator;
@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ValidNameValidator implements ConstraintValidator<ValidName, String> {
+public class NameValidator implements ConstraintValidator<ValidName, String> {
     private static final String NAME_PATTERN = "((?![0-9<>{}\\\\\\\"/|;:~!?@#$%^=&¿§«»ω⊙¤°℃℉€¥£¢¡®©_+]).)*$";
 
     private static final Pattern PATTERN = Pattern.compile(NAME_PATTERN);

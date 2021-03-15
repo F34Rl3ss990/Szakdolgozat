@@ -41,6 +41,20 @@
         </mat-form-field>
         <p></p>
         <mat-form-field appearance="outline">
+          <mat-label>Kilométeróra állása</mat-label>
+          <input type="text" matInput formControlName="mileage" #mileage
+                 placeholder="Kilométeróra állása"
+          >
+          <span matSuffix>km</span>
+        </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['mileage'].hasError('pattern')">
+          A mező csak számokat tartalmazhat!
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['mileage'].hasError('max')">
+          A megengedett maximális méret 999999!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
           <mat-label>Motorkód</mat-label>
           <input type="text" matInput formControlName="engineNumber" #engineNumber
                  placeholder="Motorkód"
@@ -69,10 +83,11 @@
                  placeholder="Rendszám"
           >
         </mat-form-field>
-        <mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && foreignCountryPlate">
         </mat-error>
-        <p></p>
-
+        <mat-checkbox
+          formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate">Nemzetközi rendszám
+        </mat-checkbox>
     </div>
     <div class="column">
       <h2>2. Személyes adatok</h2>
@@ -108,10 +123,10 @@
       <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('pattern') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           Érvénytelen karakterek a telefonszám mezőben!
       </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('minLength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
+      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('minlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           A telefonszámnak legalább 8 számból kell állnia!
       </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('maxLength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
+      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('maxlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           A telefonszám legfeljebb 14 számból állhat!
       </mat-error>
       <p></p>
@@ -135,7 +150,7 @@
       <h2>3. Időpont foglalás</h2>
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Válasszon egy időpontot*</mat-label>
-        <input matInput [min]="minDate" formControlName="reservedDate" [matDatepicker]="reservedDate">
+        <input matInput [min]="minDate" [matDatepickerFilter]="myFilter2" formControlName="reservedDate" [matDatepicker]="reservedDate">
         <mat-datepicker-toggle matSuffix [for]="reservedDate"></mat-datepicker-toggle>
         <mat-datepicker #reservedDate disabled="false"></mat-datepicker>
       </mat-form-field>
@@ -518,6 +533,8 @@
       </mat-checkbox>
     </div>
     <mat-hint>A *-al jelölt mezők kitöltése kötelező!</mat-hint>
+    <mat-hint>Egyéb szolgáltatás kiválasztása esetén a megjegyzés mező kötelező!</mat-hint>
+    <p></p>
   </div>
     <div class="row textarea-row-class">
     <button type="submit"

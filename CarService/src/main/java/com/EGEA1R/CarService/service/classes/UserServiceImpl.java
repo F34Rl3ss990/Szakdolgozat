@@ -11,6 +11,7 @@ import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -27,13 +28,15 @@ import java.util.stream.Collectors;
 @Validated
 public class UserServiceImpl implements UserService {
 
+    private final String regexp = "^[0-9]{8}[-][0-9][-][0-9]{2}$";
+
     private UserRepository userRepository;
 
     private ModelMapper modelMapper;
 
     private EmailService emailService;
 
-    private final String regexp = "^[0-9]{8}[-][0-9][-][0-9]{2}$";
+
     private final String taxNumError = "Tax number is incorrect";
 
     @Autowired
@@ -53,49 +56,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email){
-        if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(unauthorizedUserReservationDTO.getBillingEuTax())){
-            if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){
-                userRepository.saveUser(mapDTOtoUser(unauthorizedUserReservationDTO), credentialId, email);
-            }else
-                throw new BadRequestException(taxNumError);
-    } else {
             userRepository.saveUser(mapDTOtoUser(unauthorizedUserReservationDTO), credentialId, email);
-        }
     }
 
     @Transactional
     @Override
     public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
             String services = servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
-            if(!unauthorizedUserReservationDTO.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(unauthorizedUserReservationDTO.getBillingEuTax())){
-                if(Pattern.matches(regexp, unauthorizedUserReservationDTO.getBillingTaxNumber())){
-                    if(Boolean.TRUE.equals(CarServiceImpl.checkLicensePlate(unauthorizedUserReservationDTO.getForeignCountryPlate(), unauthorizedUserReservationDTO.getLicensePlateNumber()))){
-                        userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
-                                mapDTOtoCar(unauthorizedUserReservationDTO),
-                                mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
-                        emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
-                    }
-                }else
-                    throw new BadRequestException(taxNumError);
-            } else{
-                userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
-                        mapDTOtoCar(unauthorizedUserReservationDTO),
-                        mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
-                emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
-            }
+        userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
+                mapDTOtoCar(unauthorizedUserReservationDTO),
+                mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
+        emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }
 
     @Override
     public void modifyUser(ModifyUserDateRequest modifyUserDateRequest){
-        if(!modifyUserDateRequest.getBillingTaxNumber().isEmpty() && Boolean.FALSE.equals(modifyUserDateRequest.getBillingEuTax())){
-            if(Pattern.matches(regexp, modifyUserDateRequest.getBillingTaxNumber())){
-                userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest));
-            }else
-                throw new BadRequestException(taxNumError);
-        }
-        else{
             userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest));
-        }
     }
 
     @Override
@@ -124,7 +100,7 @@ public class UserServiceImpl implements UserService {
     public static String servicesListToString(List<String> reservedServiceLists){
         return reservedServiceLists.stream()
                 .map(String::valueOf)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
 
     }
 

@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.validation;
+package com.EGEA1R.CarService.validation.classes.passwordmatches;
 
 import com.EGEA1R.CarService.web.DTO.payload.request.ChangePasswordRequest;
 

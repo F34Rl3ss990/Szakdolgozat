@@ -1,8 +1,12 @@
 import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DataService} from '../../../services/data.service';
-import {ServiceReservationService} from '../../../services/service-reservation.service';
+import {DataService} from '../../../../services/data.service';
+import {ServiceReservationService} from '../../../../services/service-reservation.service';
 import {Subscription} from 'rxjs';
+import {DialogService} from '../../../../services/dialog.service';
+import {Router} from '@angular/router';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'app-service-reservation',
@@ -25,6 +29,8 @@ export class ServiceReservationComponent implements OnInit {
   submittedValue: any;
   dateFieldValue: boolean;
   isSubmitted: boolean;
+  errorMessage = ''
+  foreignCountryPlate = false;
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
@@ -153,19 +159,42 @@ export class ServiceReservationComponent implements OnInit {
     value: ' egyéb'
   }]
 
+  holidayList=[
+  ]
+
   submit(){
     this.hideIt.nativeElement.focus();
   }
 
   constructor(private fb: FormBuilder,
               private dataService: DataService,
-              private serviceReservation: ServiceReservationService) {
+              private serviceReservation: ServiceReservationService,
+              private el: ElementRef,
+              private dialogService: DialogService,
+              private router: Router) {
     const currentYear = Date.now();
     this.minDate = new Date(currentYear);
     this.createForm();
   }
 
   ngOnInit(): void {
+  }
+
+  dateSetter(){
+     this.holidayList=[
+      new Date(`${this.dataService.currentYear}. 01. 01.`),
+      new Date(`${this.dataService.currentYear}. 03. 15`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.goodFridayMonth}. ${this.dataService.goodFriday}`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.easterMonth}. ${this.dataService.easterDay}`),
+      new Date(`${this.dataService.currentYear}. 05. 01.`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.pentecostMonth}. ${this.dataService.pentecostDay}`),
+      new Date(`${this.dataService.currentYear}. 08. 20.`),
+      new Date(`${this.dataService.currentYear}. 10. 23.`),
+      new Date(`${this.dataService.currentYear}. 11. 01.`),
+      new Date(`${this.dataService.currentYear}. 12. 24.`),
+      new Date(`${this.dataService.currentYear}. 12. 25.`),
+      new Date(`${this.dataService.currentYear}. 12. 26.`),
+    ]
   }
 
   createForm() {
@@ -178,6 +207,7 @@ export class ServiceReservationComponent implements OnInit {
       type: this.fb.control('', {}),
       yearOfManufacture: this.fb.control('', {}),
       engineType: this.fb.control('', {}),
+      mileage: this.fb.control('',{updateOn: 'blur', validators: [Validators.max(999999), Validators.pattern('[0-9]+')]}),
       engineNumber: this.fb.control('', {updateOn: 'submit', validators: [Validators.pattern('^[A-Za-z0-9]+$')]}),
       chassisNumber: this.fb.control('', {updateOn: 'submit', validators: [Validators.pattern('^[A-Za-z0-9]+$'), Validators.minLength(17), Validators.maxLength(17)]}),
       licensePlateNumber: this.fb.control('', {updateOn: 'submit'}),
@@ -211,6 +241,7 @@ export class ServiceReservationComponent implements OnInit {
       other: this.fb.array(this.other.map(x => false)),
       comment: this.fb.control('', {})
     }, {updateOn: 'submit'});
+
     const carInsepctionControl = (this.serviceReservationForm.controls.carInspection as FormArray);
     this.subscription = carInsepctionControl.valueChanges.subscribe(checkbox => {
       carInsepctionControl.setValue(
@@ -310,6 +341,25 @@ export class ServiceReservationComponent implements OnInit {
       );
     });
   }
+  myFilter2 = (d: Date): boolean => {
+    this.dataService.goodFridayAndEasterAndPentecostCalculator(d.getFullYear())
+    this.dateSetter()
+    const time = d.getTime();
+    const day = d.getDay();
+    const longWeekCounter = d.getTime() + 86400000;
+    let y;
+    if(this.holidayList.find(x=>x.getTime() == longWeekCounter)) {
+      y = this.holidayList.find(x => x.getTime() == longWeekCounter)
+      y = y.getDay()
+      if (y == 2) {
+        y -= 1;
+      } else if (y == 4) {
+        y += 1;
+      }
+    }
+    return !this.holidayList.find(x=>x.getTime()==time) && (day !== 0 && day !==6) && (day !== y)
+  }
+
 
   billingDataSetter(){
     if(this.billingSameAsUserData){
@@ -328,27 +378,25 @@ export class ServiceReservationComponent implements OnInit {
       this.serviceReservationForm.controls['billingEmail'].setValue('');
       this.serviceReservationForm.controls['billingEmail'].enable();
     }
-
   }
 
   collectorSetter(){
     this.collector = [''];
-    this.collector = [
-      this.serviceReservationForm.controls['carInspection'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['authenticityTest'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['tyre'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['brake'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['undercarriage'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['oil'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['periodicService'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['timingBelt'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['diagnostic'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['technicalExamination'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['clime'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['accumulator'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['bodywork'].value.filter(value=> !!value),
-      this.serviceReservationForm.controls['other'].value.filter(value=> !!value)
-    ]
+    this.collector = this.serviceReservationForm.controls['carInspection'].value.filter(value => !!value)
+      .concat(this.serviceReservationForm.controls['authenticityTest'].value.filter(value => !!value))
+      .concat(this.serviceReservationForm.controls['tyre'].value.filter(value => !!value))
+      .concat(this.serviceReservationForm.controls['brake'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['undercarriage'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['oil'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['periodicService'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['timingBelt'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['diagnostic'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['technicalExamination'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['clime'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['accumulator'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['bodywork'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['other'].value.filter(value=> !!value));
+
     this.atLeastOneServiceChecked = false;
     for (let i = 0; i < 14; i++) {
       if(this.collector[i]!=''){
@@ -361,8 +409,10 @@ export class ServiceReservationComponent implements OnInit {
     this.dateFieldValue = false;
     if(this.serviceReservationForm.controls['reservedDate'].value==''){
       this.dateFieldValue = true;
+      console.log(this.dateFieldValue)
     } else{
       this.dateFieldValue = false;
+      console.log(this.dateFieldValue)
     }
   }
 
@@ -374,21 +424,53 @@ export class ServiceReservationComponent implements OnInit {
     }
   }
 
+  engineAndChassisSetterIfNull(){
+    if(this.serviceReservationForm.controls['chassisNumber'].value==''){
+      this.serviceReservationForm.controls['chassisNumber'].setValue(null)
+    }
+    if(this.serviceReservationForm.controls['engineNumber'].value ==''){
+      this.serviceReservationForm.controls['engineNumber'].setValue(null)
+    }
+  }
+
   onSubmit(): void{
     this.submit()
     this.collectorSetter()
     this.dateGetter()
     this.containsOther()
+    this.engineAndChassisSetterIfNull()
     this.isSubmitted = true;
-    this.serviceReservation.reserveUnauthorizedService(this.serviceReservationForm, this.collector).subscribe(data =>{
-
+    this.serviceReservation.reserveUnauthorizedService(this.serviceReservationForm.getRawValue(), this.collector).subscribe(data =>{
+      this.router.navigate(['home']);
+      this.dialogService.openSuccessfullyReservedUnauthorizedService();
     },
-      error => {
+      err => {
+      console.log(err)
+        this.errorMessage = err.error.message;
+        if(this.errorMessage.includes('Tax number is inc')){
+          this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : true});
+        } else{
+          this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : null});
+          this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+        }
+        if(this.errorMessage.includes('LicensePlate is incor')){
+          console.log('?')
+          this.serviceReservationForm.controls['licensePlateNumber'].setErrors({'badLicensePlatePattern' : true});
+        } else{
+          console.log('!')
+          this.serviceReservationForm.controls['licensePlateNumber'].setErrors({'badLicensePlatePattern' : null});
+          this.serviceReservationForm.controls['licensePlateNumber'].updateValueAndValidity();
+          console.log(this.serviceReservationForm.controls['licensePlateNumber'])
+        }
 
+        for (const key of Object.keys(this.serviceReservationForm.controls)) {
+          if (this.serviceReservationForm.controls[key].invalid) {
+            const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
+            invalidControl.focus();
+            break;
+          }
+        }
       })
-    // err license plate from backend
-    // tax err from backend
-    // if any of the egyéb box checked make comment required
-    // if no szolgáltatás checked error
+
   }
 }

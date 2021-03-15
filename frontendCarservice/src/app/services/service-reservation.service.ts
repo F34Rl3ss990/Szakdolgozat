@@ -17,6 +17,8 @@ export class ServiceReservationService {
   constructor(private http: HttpClient) { }
 
   reserveUnauthorizedService(unauthorizedService, collector): Observable<any> {
+    console.log(unauthorizedService)
+    console.log(collector)
     return this.http.post(AUTH_API + 'serviceReservationUnauthorized', {
       name: unauthorizedService.name,
       email: unauthorizedService.email,
@@ -25,6 +27,7 @@ export class ServiceReservationService {
       type: unauthorizedService.type,
       yearOfManufacture: unauthorizedService.yearOfManufacture,
       engineType: unauthorizedService.engineType,
+      mileage: unauthorizedService.mileage,
       engineNumber: unauthorizedService.engineNumber,
       chassisNumber: unauthorizedService.chassisNumber,
       licensePlateNumber: unauthorizedService.licensePlateNumber,

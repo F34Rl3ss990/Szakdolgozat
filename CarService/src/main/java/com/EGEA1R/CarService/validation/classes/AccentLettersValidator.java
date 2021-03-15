@@ -1,4 +1,4 @@
-package com.EGEA1R.CarService.validation;
+package com.EGEA1R.CarService.validation.classes;
 
 import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 

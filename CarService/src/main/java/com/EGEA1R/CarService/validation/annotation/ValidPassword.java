@@ -1,6 +1,6 @@
 package com.EGEA1R.CarService.validation.annotation;
 
-import com.EGEA1R.CarService.validation.PasswordConstraintValidator;
+import com.EGEA1R.CarService.validation.classes.PasswordConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,22 +1,18 @@
 package com.EGEA1R.CarService.web.DTO.payload.request;
 
-import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
-import com.EGEA1R.CarService.validation.annotation.ValidEmail;
-import com.EGEA1R.CarService.validation.annotation.ValidName;
-import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
+import com.EGEA1R.CarService.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidTaxNumber
 public class UserAddRequest {
 
     @ValidName
@@ -28,6 +24,8 @@ public class UserAddRequest {
     @ValidPhoneNumber
     private String phoneNumber;
 
+    private Boolean billingToCompany;
+
     @ValidName
     @Size(max = 255)
     private String billingName;
@@ -37,11 +35,12 @@ public class UserAddRequest {
     private String billingPhoneNumber;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{4}$")
+    @Min(1000)
+    @Max(9999)
     private Integer billingZipCode;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
+    @ValidAccentAndWhitespace
     private String billingTown;
 
     @NotNull

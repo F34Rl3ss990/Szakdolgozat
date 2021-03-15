@@ -1,31 +1,28 @@
 package com.EGEA1R.CarService.validation.annotation;
 
+import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateCarAdd;
+import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateNumberValidator;
+import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateUnauthorizedUserService;
 import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesAddAdminRequest;
 import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesChangePasswordValidator;
 import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesPasswordresetValidator;
 import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesSignupValidator;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
+import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ TYPE, ANNOTATION_TYPE })
+@Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {PasswordMatchesSignupValidator.class, PasswordMatchesPasswordresetValidator.class, PasswordMatchesChangePasswordValidator.class, PasswordMatchesAddAdminRequest.class})
+@Constraint(validatedBy = {LicensePlateCarAdd.class, LicensePlateUnauthorizedUserService.class})
 @Documented
-public @interface PasswordMatches {
-
-    String message() default "Password don't match";
-
+public @interface ValidLicensePlateNumber {
+    String message() default "Invalid license plate number";
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
-
 }

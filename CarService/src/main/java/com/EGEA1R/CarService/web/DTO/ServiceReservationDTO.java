@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.web.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class ServiceReservationDTO {
     @FutureOrPresent
     private Date reservedDate;
 
+    @JsonProperty
     @NotNull
     private List<String> reservedServices = new ArrayList<>();
 }

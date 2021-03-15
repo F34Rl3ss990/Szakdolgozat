@@ -37,7 +37,8 @@ export class PasswordResetTokenSenderComponent implements OnInit {
               private fb: FormBuilder,
               private authService: AuthService,
               private dialogService: DialogService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private el: ElementRef) {
     this.createForm();
   }
 
@@ -72,6 +73,13 @@ export class PasswordResetTokenSenderComponent implements OnInit {
           this.resetPasswordForm.controls['email'].setErrors({'required' : true, 'pristine': true});
         }
         this.isSendFailed = true;
+        for (const key of Object.keys(this.resetPasswordForm.controls)) {
+          if (this.resetPasswordForm.controls[key].invalid) {
+            const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
+            invalidControl.focus();
+            break;
+          }
+        }
       }
     );
   }

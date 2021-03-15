@@ -24,9 +24,9 @@ import { PasswordRegexpValidatorDirective } from './components/validators/passwo
 import {ExistingEmailValidatorDirective} from './components/validators/existing-email-validator.directive';
 import {RouterModule} from '@angular/router';
 import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
-import { ServiceReservationComponent } from './components/global/service-reservation/service-reservation.component';
+import { ServiceReservationComponent } from './components/global/service-related-components/service-reservation/service-reservation.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {FlexModule} from '@angular/flex-layout';
 import {LoginDialogComponent} from './components/global/authorization-authentication/login/login-dialog/login-dialog.component';
 import {RegisterComponent} from './components/global/authorization-authentication/registration/register/register.component';
@@ -41,6 +41,9 @@ import {PasswordResetDialogEntryComponent} from './components/global/authorizati
 import {PasswordSuccessfullyChangedComponent} from './components/global/authorization-authentication/login/passwordReset/password-successfully-changed/password-successfully-changed.component';
 import {ExpiredResetPasswordTokenComponent} from './components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
+import { SuccessfullyReservedUnauthorizedServiceComponent } from './components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
+import {MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapterService} from './services/date-adapter.service';
 
 
 @NgModule({
@@ -66,7 +69,8 @@ import {PasswordResetTokenSenderComponent} from './components/global/authorizati
     PasswordSuccessfullyChangedComponent,
     ExpiredResetPasswordTokenComponent,
     EmailNotExistingValidatorDirective,
-    ServiceReservationComponent
+    ServiceReservationComponent,
+    SuccessfullyReservedUnauthorizedServiceComponent
   ],
   imports: [
     BrowserModule,
@@ -106,7 +110,10 @@ import {PasswordResetTokenSenderComponent} from './components/global/authorizati
     MatDatepickerModule,
     FlexModule
   ],
-  providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule],
+  providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule,
+    {provide: MAT_DATE_LOCALE, useValue: 'hu'},
+    {provide: DateAdapter, useClass: DateAdapterService},
+    ],
   exports: [AppComponent],
   bootstrap: [AppComponent],
   entryComponents: [LoginDialogComponent,

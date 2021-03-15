@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidTaxNumber
 public class ModifyUserDateRequest {
 
     @NotNull
@@ -22,6 +23,8 @@ public class ModifyUserDateRequest {
     @NotNull
     @ValidPhoneNumber
     private String phoneNumber;
+
+    private Boolean billingToCompany;
 
     @ValidName
     private String billingName;

@@ -15,6 +15,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidTaxNumber
+@ValidLicensePlateNumber
 public class UnauthorizedUserReservationDTO {
 
 
@@ -64,6 +66,8 @@ public class UnauthorizedUserReservationDTO {
     @NotNull
     private String phoneNumber;
 
+    private Boolean billingToCompany;
+
     @NotNull
     @ValidName
     @Size(max = 255)
@@ -74,11 +78,12 @@ public class UnauthorizedUserReservationDTO {
     private String billingPhoneNumber;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{4}$")
+    @Min(1000)
+    @Max(9999)
     private Integer billingZipCode;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
+    @ValidAccentAndWhitespace
     private String billingTown;
 
     @NotNull

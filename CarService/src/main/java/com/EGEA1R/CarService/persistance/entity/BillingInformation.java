@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import lombok.AllArgsConstructor;
@@ -8,8 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Builder
 @Data
@@ -27,11 +27,12 @@ public class BillingInformation {
     private String billingPhoneNumber;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{4}$")
+    @Min(1000)
+    @Max(9999)
     private Integer billingZipCode;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
+    @ValidAccentAndWhitespace
     private String billingTown;
 
     @NotNull

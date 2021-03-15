@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.web.DTO;
 
 import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
+import com.EGEA1R.CarService.validation.annotation.ValidLicensePlateNumber;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import javax.validation.constraints.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidLicensePlateNumber
 public class CarDTO {
 
     private Long fkCarUserId;
