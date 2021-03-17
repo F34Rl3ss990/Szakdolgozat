@@ -1,5 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
+import {DataService} from '../../../../../../services/data.service';
 
 @Component({
   selector: 'app-passwored-successfully-changed',
@@ -9,7 +10,8 @@ import {MatDialogRef} from '@angular/material/dialog';
 export class PasswordSuccessfullyChangedComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<PasswordSuccessfullyChangedComponent>,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private dataService: DataService) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -20,6 +22,7 @@ export class PasswordSuccessfullyChangedComponent implements OnInit {
   }
 
   close() {
+    this.dataService.token = null;
     this.dialogRef.close();
   }
 

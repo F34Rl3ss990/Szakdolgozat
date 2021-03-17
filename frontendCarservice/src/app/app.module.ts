@@ -42,9 +42,9 @@ import {PasswordSuccessfullyChangedComponent} from './components/global/authoriz
 import {ExpiredResetPasswordTokenComponent} from './components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
 import { SuccessfullyReservedUnauthorizedServiceComponent } from './components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
-import {MAT_MOMENT_DATE_FORMATS, MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapterService} from './services/date-adapter.service';
-
+import {MatSelectModule} from '@angular/material/select';
+import { VerifyServiceReservationComponent } from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,8 @@ import {DateAdapterService} from './services/date-adapter.service';
     ExpiredResetPasswordTokenComponent,
     EmailNotExistingValidatorDirective,
     ServiceReservationComponent,
-    SuccessfullyReservedUnauthorizedServiceComponent
+    SuccessfullyReservedUnauthorizedServiceComponent,
+    VerifyServiceReservationComponent
   ],
   imports: [
     BrowserModule,
@@ -108,7 +109,8 @@ import {DateAdapterService} from './services/date-adapter.service';
       {path: '**', redirectTo: 'home'}
     ]),
     MatDatepickerModule,
-    FlexModule
+    FlexModule,
+    MatSelectModule
   ],
   providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule,
     {provide: MAT_DATE_LOCALE, useValue: 'hu'},

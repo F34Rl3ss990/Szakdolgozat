@@ -31,6 +31,8 @@ export class VerificationDialogComponent implements OnInit {
   }
 
   close() {
+    this.dataService.liveToken = null;
+    this.dataService.expiredVerifyToken = null;
     this.dialogRef.close();
     this.router.navigate(['home'])
   }

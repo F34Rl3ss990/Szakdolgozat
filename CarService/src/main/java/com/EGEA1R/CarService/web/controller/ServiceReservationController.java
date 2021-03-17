@@ -1,16 +1,24 @@
 package com.EGEA1R.CarService.web.controller;
 
+import com.EGEA1R.CarService.service.classes.ExcelServiceImpl;
+import com.EGEA1R.CarService.service.interfaces.ExcelService;
 import com.EGEA1R.CarService.service.interfaces.ServiceReservationService;
 import com.EGEA1R.CarService.service.interfaces.UserService;
+import com.EGEA1R.CarService.web.DTO.ExcelCarDTO;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
+import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -20,6 +28,8 @@ public class ServiceReservationController {
     private ServiceReservationService serviceReservationService;
 
     private UserService userService;
+
+    private ExcelService excelService;
 
     @Autowired
     public void setServiceService(ServiceReservationService serviceReservationService){
@@ -31,21 +41,31 @@ public class ServiceReservationController {
         this.userService = userService;
     }
 
+    @Autowired
+    public void setExcelService(ExcelService excelService){
+        this.excelService = excelService;
+    }
+
+    @PostMapping("/serviceReservationUnauthorizedValidation")
+    public ResponseEntity<?> unauthorizedUserReservationValidation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) {
+        return ResponseEntity.ok(new MessageResponse("Valid!"));
+    }
+
     @PostMapping("/serviceReservationUnauthorized")
-    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> unauthorizedUserReservation(@RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
-        return ResponseEntity.ok("Successfully reserved!");
+        return ResponseEntity.ok(new MessageResponse("Successfully reserved!"));
     }
 
     @PostMapping("/reserveService")
-    // @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> reserveService(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         serviceReservationService.saveService(serviceReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
 
     @GetMapping("/getServicesByUser")
-    // @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getServicesByUser(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestBody Long userId){
@@ -53,12 +73,16 @@ public class ServiceReservationController {
     }
 
     @GetMapping("/getServicesToday")
-   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getEveryServiceToday(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size){
         return ResponseEntity.ok(serviceReservationService.getServicesTodayOrderByDate(page, size));
     }
 
+    @GetMapping("/reserveDataGetter")
+    public List<ExcelCarDTO> test() throws IOException {
+        return excelService.getExcelData();
+    }
 
 
 }

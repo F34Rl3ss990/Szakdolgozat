@@ -7,6 +7,8 @@ import {DialogService} from '../../../../services/dialog.service';
 import {Router} from '@angular/router';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {serviceableCarList} from '../../../../models/serviceableCarList';
+import {ErrorMatcherDirective} from '../../../validators/error-matcher.directive';
 
 @Component({
   selector: 'app-service-reservation',
@@ -31,6 +33,17 @@ export class ServiceReservationComponent implements OnInit {
   isSubmitted: boolean;
   errorMessage = ''
   foreignCountryPlate = false;
+  serviceableCarList: serviceableCarList[];
+  loading: boolean;
+  brandSet = new Set();
+  typeSet = new Set();
+  yearOfManufactureSet = new Set();
+  engineTypeSet = new Set();
+  selectedBrand = '';
+  selectedType = '';
+  selectedYearOfManufacture = '';
+  selectedEngineType = '';
+  errorMatcher = new ErrorMatcherDirective();
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
@@ -172,29 +185,36 @@ export class ServiceReservationComponent implements OnInit {
               private el: ElementRef,
               private dialogService: DialogService,
               private router: Router) {
+    this.listSetter();
     const currentYear = Date.now();
     this.minDate = new Date(currentYear);
     this.createForm();
+    if(this.dataService.serviceReservationForm != undefined) {
+      this.serviceReservationForm = this.dataService.serviceReservationForm;
+      this.brandSet.add(this.serviceReservationForm.controls['brand'].value)
+      this.typeSet.add(this.serviceReservationForm.controls['type'].value)
+      this.yearOfManufactureSet.add(this.serviceReservationForm.controls['yearOfManufacture'].value)
+      this.engineTypeSet.add(this.serviceReservationForm.controls['engineType'].value)
+      this.billingToCompany = this.dataService.billingToCompany;
+      this.foreignCountryPlate = this.dataService.foreignCountryPlate;
+      this.billingForeignCountryTax = this.dataService.foreignCountryTax;
+      this.data = this.dataService.data;
+    }
   }
 
-  ngOnInit(): void {
+   ngOnInit(): void {
   }
 
-  dateSetter(){
-     this.holidayList=[
-      new Date(`${this.dataService.currentYear}. 01. 01.`),
-      new Date(`${this.dataService.currentYear}. 03. 15`),
-      new Date(`${this.dataService.currentYear}. ${this.dataService.goodFridayMonth}. ${this.dataService.goodFriday}`),
-      new Date(`${this.dataService.currentYear}. ${this.dataService.easterMonth}. ${this.dataService.easterDay}`),
-      new Date(`${this.dataService.currentYear}. 05. 01.`),
-      new Date(`${this.dataService.currentYear}. ${this.dataService.pentecostMonth}. ${this.dataService.pentecostDay}`),
-      new Date(`${this.dataService.currentYear}. 08. 20.`),
-      new Date(`${this.dataService.currentYear}. 10. 23.`),
-      new Date(`${this.dataService.currentYear}. 11. 01.`),
-      new Date(`${this.dataService.currentYear}. 12. 24.`),
-      new Date(`${this.dataService.currentYear}. 12. 25.`),
-      new Date(`${this.dataService.currentYear}. 12. 26.`),
-    ]
+  listSetter(): void {
+    this.loading = true;
+    this.serviceReservation.getServiceableCarsList().subscribe(data => {
+      this.serviceableCarList = data;
+      for(let item of this.serviceableCarList){
+        this.brandSet.add(item.brand)
+      }
+    },  error => {
+      this.loading = false;
+    });
   }
 
   createForm() {
@@ -203,16 +223,16 @@ export class ServiceReservationComponent implements OnInit {
       name: this.fb.control('',  {updateOn: 'blur', validators: [Validators.required, Validators.pattern(this.dataService.negatedSet)]}),
       email: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern(patternEmail), Validators.required]}),
       phoneNumber: this.fb.control('',{updateOn: 'blur', validators: [Validators.required, Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]}),
-      brand: this.fb.control('',{}),
-      type: this.fb.control('', {}),
-      yearOfManufacture: this.fb.control('', {}),
-      engineType: this.fb.control('', {}),
+      brand: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
+      type: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
+      yearOfManufacture: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
+      engineType: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
       mileage: this.fb.control('',{updateOn: 'blur', validators: [Validators.max(999999), Validators.pattern('[0-9]+')]}),
-      engineNumber: this.fb.control('', {updateOn: 'submit', validators: [Validators.pattern('^[A-Za-z0-9]+$')]}),
-      chassisNumber: this.fb.control('', {updateOn: 'submit', validators: [Validators.pattern('^[A-Za-z0-9]+$'), Validators.minLength(17), Validators.maxLength(17)]}),
-      licensePlateNumber: this.fb.control('', {updateOn: 'submit'}),
+      engineNumber: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern('^[A-Za-z0-9]+$')]}),
+      chassisNumber: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern('^[A-Za-z0-9]+$'), Validators.minLength(17), Validators.maxLength(17)]}),
+      licensePlateNumber: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern('^[a-zA-Z]{3}[-][0-9]{3}$|[a-zA-Z]{2}[-][0-9]{2}[-][0-9]{2}$|[/p/P][-][0-9]{5}$|^[a-zA-z]{3}[0-9]{5}')]}),
       foreignCountryPlate: this.fb.control('', {}),
-      reservedDate: this.fb.control({value: '', disabled: true}, {updateOn: 'blur', validators: Validators.required}),
+      reservedDate: this.fb.control({value: ''}, {updateOn: 'blur', validators: Validators.required}),
       billingToCompany: this.fb.control('', {}),
       billingSameAsUserData: this.fb.control(''),
       billingName: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
@@ -222,24 +242,24 @@ export class ServiceReservationComponent implements OnInit {
       billingTown: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.pattern(this.dataService.negatedSet)]}),
       billingStreet: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
       billingOtherAddressType: this.fb.control('', {}),
-      billingTax: this.fb.control('', {}),
+      billingTax: this.fb.control('', {updateOn: 'blur'}),
       billingForeignCountryTax: this.fb.control('',{}),
       data: this.fb.control('', {}),
-      carInspection: this.fb.array(this.carInspection.map(x => false)),
-      authenticityTest: this.fb.array(this.authenticityTest.map(x => false)),
-      tyre: this.fb.array(this.tyre.map(x => false)),
-      brake: this.fb.array(this.brake.map(x => false)),
-      undercarriage: this.fb.array(this.undercarriage.map(x => false)),
-      oil: this.fb.array(this.oil.map(x => false)),
-      periodicService: this.fb.array(this.periodicService.map(x => false)),
-      timingBelt: this.fb.array(this.timingBelt.map(x => false)),
-      diagnostic: this.fb.array(this.diagnostic.map(x => false)),
-      technicalExamination: this.fb.array(this.technicalExamination.map(x => false)),
-      clime: this.fb.array(this.clime.map(x => false)),
-      accumulator: this.fb.array(this.accumulator.map(x => false)),
-      bodywork: this.fb.array(this.bodywork.map(x => false)),
-      other: this.fb.array(this.other.map(x => false)),
-      comment: this.fb.control('', {})
+      carInspection: this.fb.array(this.carInspection.map(x => false), {updateOn: 'change'}),
+      authenticityTest: this.fb.array(this.authenticityTest.map(x => false), {updateOn: 'change'}),
+      tyre: this.fb.array(this.tyre.map(x => false), {updateOn: 'change'}),
+      brake: this.fb.array(this.brake.map(x => false), {updateOn: 'change'}),
+      undercarriage: this.fb.array(this.undercarriage.map(x => false), {updateOn: 'change'}),
+      oil: this.fb.array(this.oil.map(x => false), {updateOn: 'change'}),
+      periodicService: this.fb.array(this.periodicService.map(x => false), {updateOn: 'change'}),
+      timingBelt: this.fb.array(this.timingBelt.map(x => false), {updateOn: 'change'}),
+      diagnostic: this.fb.array(this.diagnostic.map(x => false), {updateOn: 'change'}),
+      technicalExamination: this.fb.array(this.technicalExamination.map(x => false), {updateOn: 'change'}),
+      clime: this.fb.array(this.clime.map(x => false), {updateOn: 'change'}),
+      accumulator: this.fb.array(this.accumulator.map(x => false), {updateOn: 'change'}),
+      bodywork: this.fb.array(this.bodywork.map(x => false), {updateOn: 'change'}),
+      other: this.fb.array(this.other.map(x => false), {updateOn: 'change'}),
+      comment: this.fb.control('', {updateOn: 'blur'})
     }, {updateOn: 'submit'});
 
     const carInsepctionControl = (this.serviceReservationForm.controls.carInspection as FormArray);
@@ -341,6 +361,88 @@ export class ServiceReservationComponent implements OnInit {
       );
     });
   }
+
+  licensePlateValidator(event){
+        if(!event.checked) {
+          this.serviceReservationForm.controls['licensePlateNumber'].setValidators(Validators.pattern('^[a-zA-Z]{3}[-][0-9]{3}$|[a-zA-Z]{2}[-][0-9]{2}[-][0-9]{2}$|[/p/P][-][0-9]{5}$|^[a-zA-z]{3}[0-9]{5}'))
+          this.serviceReservationForm.controls['licensePlateNumber'].updateValueAndValidity();
+        } else {
+          this.serviceReservationForm.controls['licensePlateNumber'].clearValidators();
+          this.serviceReservationForm.controls['licensePlateNumber'].updateValueAndValidity();
+        }
+      }
+
+  taxNumberValidator(event){
+    if(!event.checked) {
+      this.serviceReservationForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required])
+      this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+    } else {
+      this.serviceReservationForm.controls['billingTax'].clearValidators();
+      this.serviceReservationForm.controls['billingTax'].setValidators(Validators.required)
+      this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+    }
+  }
+
+  taxNumberRequiredSetter(event){
+    if(event.checked) {
+      this.serviceReservationForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required])
+      this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+    } else {
+      this.serviceReservationForm.controls['billingTax'].clearValidators();
+      this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+    }
+  }
+
+  dateSetter(){
+    this.holidayList=[
+      new Date(`${this.dataService.currentYear}. 01. 01.`),
+      new Date(`${this.dataService.currentYear}. 03. 15`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.goodFridayMonth}. ${this.dataService.goodFriday}`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.easterMonth}. ${this.dataService.easterDay}`),
+      new Date(`${this.dataService.currentYear}. 05. 01.`),
+      new Date(`${this.dataService.currentYear}. ${this.dataService.pentecostMonth}. ${this.dataService.pentecostDay}`),
+      new Date(`${this.dataService.currentYear}. 08. 20.`),
+      new Date(`${this.dataService.currentYear}. 10. 23.`),
+      new Date(`${this.dataService.currentYear}. 11. 01.`),
+      new Date(`${this.dataService.currentYear}. 12. 24.`),
+      new Date(`${this.dataService.currentYear}. 12. 25.`),
+      new Date(`${this.dataService.currentYear}. 12. 26.`),
+    ]
+  }
+
+  typeSetter(data){
+    this.typeSet.clear()
+    this.yearOfManufactureSet.clear()
+    this.engineTypeSet.clear()
+    for(let item of this.serviceableCarList){
+      if(item.brand === data.value){
+        this.typeSet.add((item.type))
+      }
+    }
+  }
+
+  yearOfManufactureSetter(data){
+    this.yearOfManufactureSet.clear()
+    this.engineTypeSet.clear()
+    for(let item of this.serviceableCarList){
+      if(item.brand === this.selectedBrand
+        && item.type === data.value){
+        console.log(item.yearOfManufacture)
+        this.yearOfManufactureSet.add(item.yearOfManufacture)
+      }
+    }
+  }
+
+  engineTypeSetter(data){
+    for(let item of this.serviceableCarList){
+      if(item.brand === this.selectedBrand
+      && item.type === this.selectedType
+      && item.yearOfManufacture === data.value){
+        this.engineTypeSet.add((item.engineType))
+      }
+    }
+  }
+
   myFilter2 = (d: Date): boolean => {
     this.dataService.goodFridayAndEasterAndPentecostCalculator(d.getFullYear())
     this.dateSetter()
@@ -398,29 +500,37 @@ export class ServiceReservationComponent implements OnInit {
       .concat(this.serviceReservationForm.controls['other'].value.filter(value=> !!value));
 
     this.atLeastOneServiceChecked = false;
-    for (let i = 0; i < 14; i++) {
-      if(this.collector[i]!=''){
+      if(this.collector!=''){
         this.atLeastOneServiceChecked = true;
-      }
     }
+    this.collector = this.collector.join(', ')
+    if(!this.atLeastOneServiceChecked){
+      this.serviceReservationForm.controls['carInspection'].setErrors({'noServiceChecked': true});
+    } else{
+      this.serviceReservationForm.controls['carInspection'].setErrors({'noServiceChecked': null});
+      this.serviceReservationForm.controls['carInspection'].updateValueAndValidity();
+    }
+    this.containsOther()
   }
 
   dateGetter() {
     this.dateFieldValue = false;
-    if(this.serviceReservationForm.controls['reservedDate'].value==''){
+    if(this.serviceReservationForm.controls['reservedDate'].value.value===""){
       this.dateFieldValue = true;
-      console.log(this.dateFieldValue)
     } else{
       this.dateFieldValue = false;
-      console.log(this.dateFieldValue)
     }
   }
 
   containsOther(){
     if((this.collector.toString()).includes('egyéb')){
       this.otherChecked = true;
+      this.serviceReservationForm.controls['comment'].setValidators(Validators.required);
+      this.serviceReservationForm.controls['comment'].updateValueAndValidity();
     }else{
       this.otherChecked = false;
+      this.serviceReservationForm.controls['comment'].clearValidators()
+      this.serviceReservationForm.controls['comment'].updateValueAndValidity();
     }
   }
 
@@ -433,44 +543,62 @@ export class ServiceReservationComponent implements OnInit {
     }
   }
 
+  autoFocusOnError() {
+    for (const key of Object.keys(this.serviceReservationForm.controls)) {
+      if (this.serviceReservationForm.controls[key].invalid) {
+        const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
+        invalidControl.focus();
+        break;
+      }
+    }
+  }
+
+  errCleaner(){
+    this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : null});
+    this.serviceReservationForm.controls['licensePlateNumber'].setErrors({'badLicensePlatePattern' : null});
+    this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
+    this.serviceReservationForm.controls['licensePlateNumber'].updateValueAndValidity();
+  }
+
+  dataServiceSetter(){
+    this.dataService.serviceReservationForm = this.serviceReservationForm;
+    this.dataService.collector = this.collector;
+    this.dataService.billingToCompany = this.billingToCompany;
+    this.dataService.foreignCountryPlate = this.foreignCountryPlate;
+    this.dataService.foreignCountryTax = this.billingForeignCountryTax;
+    this.dataService.data = this.data;
+  }
+
   onSubmit(): void{
     this.submit()
     this.collectorSetter()
     this.dateGetter()
     this.containsOther()
     this.engineAndChassisSetterIfNull()
+    this.dataServiceSetter()
     this.isSubmitted = true;
-    this.serviceReservation.reserveUnauthorizedService(this.serviceReservationForm.getRawValue(), this.collector).subscribe(data =>{
-      this.router.navigate(['home']);
-      this.dialogService.openSuccessfullyReservedUnauthorizedService();
+    this.errCleaner()
+    if(!this.serviceReservationForm.valid) {
+      this.autoFocusOnError()
+      return;
+    } else {
+    this.serviceReservation.reserveUnauthorizedServiceValidation(this.serviceReservationForm.getRawValue(), this.collector, this.foreignCountryPlate, this.billingToCompany).subscribe(data =>{
+      console.log(data)
+      this.router.navigate(['/verif'])
     },
       err => {
       console.log(err)
         this.errorMessage = err.error.message;
+      console.log(err.error.message)
         if(this.errorMessage.includes('Tax number is inc')){
           this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : true});
-        } else{
-          this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : null});
-          this.serviceReservationForm.controls['billingTax'].updateValueAndValidity();
         }
         if(this.errorMessage.includes('LicensePlate is incor')){
-          console.log('?')
           this.serviceReservationForm.controls['licensePlateNumber'].setErrors({'badLicensePlatePattern' : true});
-        } else{
-          console.log('!')
-          this.serviceReservationForm.controls['licensePlateNumber'].setErrors({'badLicensePlatePattern' : null});
-          this.serviceReservationForm.controls['licensePlateNumber'].updateValueAndValidity();
-          console.log(this.serviceReservationForm.controls['licensePlateNumber'])
         }
-
-        for (const key of Object.keys(this.serviceReservationForm.controls)) {
-          if (this.serviceReservationForm.controls[key].invalid) {
-            const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');
-            invalidControl.focus();
-            break;
-          }
-        }
+        this.autoFocusOnError()
       })
 
+  }
   }
 }

@@ -22,9 +22,7 @@ import java.util.Date;
 public class CarMileage {
 
     @NotNull
-    @Max(9999999)
-    @PositiveOrZero
-    private Integer mileage;
+    private String mileage;
 
     private Date dateOfSet;
 }

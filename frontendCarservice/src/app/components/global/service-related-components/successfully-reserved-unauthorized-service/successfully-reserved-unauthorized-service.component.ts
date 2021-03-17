@@ -1,5 +1,7 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {DataService} from '../../../../services/data.service';
 
 @Component({
   selector: 'app-successfully-reserved-unauthorized-service',
@@ -9,7 +11,9 @@ import {MatDialogRef} from '@angular/material/dialog';
 export class SuccessfullyReservedUnauthorizedServiceComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<SuccessfullyReservedUnauthorizedServiceComponent>,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private router: Router,
+              private dataService: DataService) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -20,7 +24,14 @@ export class SuccessfullyReservedUnauthorizedServiceComponent implements OnInit 
   }
 
   close() {
+    this.dataService.serviceReservationForm = null;
+    this.dataService.collector = null;
+    this.dataService.billingToCompany = null;
+    this.dataService.foreignCountryPlate = null;
+    this.dataService.foreignCountryTax = null;
+    this.dataService.data = null;
     this.dialogRef.close();
+    this.router.navigate(['home']);
   }
 
 }

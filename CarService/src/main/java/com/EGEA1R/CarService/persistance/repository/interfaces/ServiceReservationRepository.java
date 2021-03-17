@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ServiceReservationRepository {
 
-    void saveService(ServiceReservation serviceReservation, String services);
+    void saveService(ServiceReservation serviceReservation);
 
     List<ServiceReservation> getAllServiceByUser(Long userId);
 

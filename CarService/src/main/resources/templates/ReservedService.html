@@ -46,53 +46,81 @@
         </tr>
         <tr>
             <td class="valami">
-                <p>Kedves <span th:text="${lastName}"></span> <span th:text="${firstName}"></span></p>
+                <p>Kedves <span th:text="${name}"></span></p>
                 <p>Köszönjük, hogy minket választottál!</p>
                 <br>
                 <p>Az általad foglalt szolgáltatások adatati a következőek:</p>
+                <p>Személyes adatok:</p>
                 <table style="width: 100%; text-align: center; border: 1px solid black">
                     <tbody>
                     <tr>
-                        <th style="border: 1px solid black">Name</th>
+                        <th style="border: 1px solid black">Név</th>
+                        <th style="border: 1px solid black">Telefonszám</th>
                         <th style="border: 1px solid black">Email</th>
-                        <th style="border: 1px solid black">Phone number</th>
                     </tr>
                     <tr>
                         <td th:text="${name}" style="border: 1px solid black"></td>
-                        <td th:text="${email}" style="border: 1px solid black"></td>
                         <td th:text="${phoneNumber}" style="border: 1px solid black"></td>
+                        <td th:text="${email}" style="border: 1px solid black"></td>
                     </tr>
                     </tbody>
                 </table>
             <br>
-                <table style="text-align: center; border: 1px solid black">
+                <p>Számlázási adatok</p>
+                <table style="width: 100%; text-align: center; border: 1px solid black">
                     <tbody>
                     <tr>
-                        <th style="border: 1px solid black">Brand</th>
-                        <th style="border: 1px solid black">Type</th>
-                        <th style="border: 1px solid black">Engine type</th>
-                        <th style="border: 1px solid black">Year of manufacture</th>
-                        <th style="border: 1px solid black">Engine number</th>
-                        <th style="border: 1px solid black">Chassis number</th>
-                        <th style="border: 1px solid black">Mileage</th>
-                        <th style="border: 1px solid black">License plate</th>
+                        <th style="border: 1px solid black">Irányítószám</th>
+                        <th style="border: 1px solid black">Város</th>
+                        <th style="border: 1px solid black">Utca, házszám</th>
+                        <th style="border: 1px solid black">Emelet, ajtó</th>
+                        <th style="border: 1px solid black">Név</th>
+                        <th style="border: 1px solid black">Telefonszám</th>
+                        <th style="border: 1px solid black">Email</th>
+                        <th style="border: 1px solid black">Adószám</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${billingZipCode}" style="border: 1px solid black"></td>
+                        <td th:text="${billingTown}" style="border: 1px solid black"></td>
+                        <td th:text="${billingStreet}" style="border: 1px solid black"></td>
+                        <td th:text="${billingOtherAddressType} ?: '-'" style="border: 1px solid black"></td>
+                        <td th:text="${billingName}" style="border: 1px solid black"></td>
+                        <td th:text="${billingPhoneNumber}" style="border: 1px solid black"></td>
+                        <td th:text="${billingEmail}" style="border: 1px solid black"></td>
+                        <td th:text="${billingTax} ?: '-'" style="border: 1px solid black"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <p>Gépjármű adatok:</p>
+                <table style="width: 100%; text-align: center; border: 1px solid black">
+                    <tbody>
+                    <tr>
+                        <th style="border: 1px solid black">Márka</th>
+                        <th style="border: 1px solid black">Típus</th>
+                        <th style="border: 1px solid black">Gyártási év</th>
+                        <th style="border: 1px solid black">Motor típus</th>
+                        <th style="border: 1px solid black">Motorkód</th>
+                        <th style="border: 1px solid black">Alvázszám</th>
+                        <th style="border: 1px solid black">Kilométeróra állása</th>
+                        <th style="border: 1px solid black">Rendszám</th>
                     </tr>
                     <tr>
                         <td th:text="${brand}" style="border: 1px solid black"></td>
                         <td th:text="${type}" style="border: 1px solid black"></td>
-                        <td th:text="${engineType}" style="border: 1px solid black"></td>
                         <td th:text="${yearOfManufacture}" style="border: 1px solid black"></td>
-                        <td th:text="${engineNumber}" style="border: 1px solid black"></td>
-                        <td th:text="${chassisNumber}" style="border: 1px solid black"></td>
-                        <td th:text="${mileage}" style="border: 1px solid black"></td>
-                        <td th:text="${licensePlate}" style="border: 1px solid black"></td>
+                        <td th:text="${engineType}" style="border: 1px solid black"></td>
+                        <td th:text="${engineNumber} ?: '-'" style="border: 1px solid black"></td>
+                        <td th:text="${chassisNumber} ?: '-'" style="border: 1px solid black"></td>
+                        <td th:text="${mileage} ?: '-'" style="border: 1px solid black"></td>
+                        <td th:text="${licensePlate} ?: '-'" style="border: 1px solid black"></td>
                     </tr>
                     </tbody>
                 </table>
             <br>
-            <p>Reserved date: <span th:text="${reservedDate}"></span></p>
-            <p>Reserved services: <span th:text="${reservedServices}"></span></p>
-            <p>Comment: <span th:text="${comment}"></span></p>
+            <p>Lefoglalt időpont: <span th:text="${reservedDate}"></span></p>
+            <p>Igényelt szolgáltatások: <span th:text="${reservedServices}"></span></p>
+            <p>Megjegyzés: <span th:text="${comment}"></span></p>
             <br>
                 <div>
                     Bármilyen kérdésed van keress minket az alábbi elérhetőségeken:<br>

@@ -12,7 +12,7 @@ public interface UserRepository {
 
     void saveUser(@Valid User user, Long credentialId, String email);
 
-    void saveUnAuthorizedUser(User user, Car car, ServiceReservation serviceReservation, String services);
+    void saveUnAuthorizedUser(User user, Car car, ServiceReservation serviceReservation);
 
     void modifyUserData(User user);
 

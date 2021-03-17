@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.context.Context;
@@ -112,6 +113,7 @@ public class EmailServiceImpl implements EmailService {
         sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
+    @Async
     @Override
     public void sendReservedServiceInformation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         String subject ="Reserved service information";
@@ -126,8 +128,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void serviceContext(Context context, UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-        String services = UserServiceImpl.servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         context.setVariable("name", unauthorizedUserReservationDTO.getName());
         context.setVariable("email", unauthorizedUserReservationDTO.getEmail());
         context.setVariable("phoneNumber", unauthorizedUserReservationDTO.getPhoneNumber());
@@ -140,7 +141,16 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("mileage", unauthorizedUserReservationDTO.getMileage());
         context.setVariable("licensePlate", unauthorizedUserReservationDTO.getLicensePlateNumber());
         context.setVariable("reservedDate", sdf.format(unauthorizedUserReservationDTO.getReservedDate()));
-        context.setVariable("reservedServices", services);
+        context.setVariable("reservedServices", unauthorizedUserReservationDTO.getReservedServices());
         context.setVariable("comment", unauthorizedUserReservationDTO.getComment());
+        context.setVariable("billingName", unauthorizedUserReservationDTO.getBillingName());
+        context.setVariable("billingPhoneNumber", unauthorizedUserReservationDTO.getBillingPhoneNumber());
+        context.setVariable("billingEmail", unauthorizedUserReservationDTO.getBillingEmail());
+        context.setVariable("billingTax", unauthorizedUserReservationDTO.getBillingTaxNumber());
+        context.setVariable("billingZipCode", unauthorizedUserReservationDTO.getBillingZipCode());
+        context.setVariable("billingTown", sdf.format(unauthorizedUserReservationDTO.getBillingTown()));
+        context.setVariable("billingStreet", unauthorizedUserReservationDTO.getBillingStreet());
+        context.setVariable("billingOtherAddressType", unauthorizedUserReservationDTO.getBillingOtherAddressType());
+
     }
 }

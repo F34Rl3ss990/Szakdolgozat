@@ -12,7 +12,8 @@ export class ExpiredResetPasswordTokenComponent implements OnInit {
   isVerified: boolean;
 
   constructor(private dialogRef: MatDialogRef<ExpiredResetPasswordTokenComponent>,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private dataService: DataService) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -23,6 +24,7 @@ export class ExpiredResetPasswordTokenComponent implements OnInit {
   }
 
   close() {
+    this.dataService.token = null;
     this.dialogRef.close();
   }
 }

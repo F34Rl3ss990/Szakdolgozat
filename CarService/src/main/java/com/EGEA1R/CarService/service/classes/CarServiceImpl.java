@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Car;
@@ -34,6 +35,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addCar(CarDTO carDTO){
+        mileageSetter(carDTO);
         if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))){
             carRepository.addCar(mapCarDTOtoCar(carDTO));
         }
@@ -41,6 +43,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void modifyCar(CarDTO carDTO){
+        mileageSetter(carDTO);
         if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))) {
             carRepository.modifyCarById(mapCarDTOtoCar(carDTO));
         }
@@ -60,6 +63,13 @@ public class CarServiceImpl implements CarService {
     public Car getCarById(Long carId){
         return carRepository.finCarByCarId(carId)
                 .orElseThrow(() -> new ResourceNotFoundException( String.format("Car not found with id: %s", carId)));
+    }
+
+    private void mileageSetter(CarDTO carDTO){
+        String mileageNum = (carDTO.getMileage() == null) ? "" : carDTO.getMileage();
+        if (mileageNum.equals("")) {
+            carDTO.setMileage(mileageNum);
+        }
     }
 
     public static Boolean checkLicensePlate(Boolean foreignPlate, String licensePlate){

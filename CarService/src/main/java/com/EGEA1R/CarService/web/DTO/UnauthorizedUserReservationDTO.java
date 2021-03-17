@@ -49,9 +49,7 @@ public class UnauthorizedUserReservationDTO {
 
     private Boolean foreignCountryPlate;
 
-    @Max(9999999)
-    @PositiveOrZero
-    private Integer mileage;
+    private String mileage;
 
     @ValidName
     @Size(max = 255)
@@ -102,10 +100,11 @@ public class UnauthorizedUserReservationDTO {
     private String comment;
 
     @NotNull
+    @FutureOrPresent
     private Date reservedDate;
 
     @NotNull
-    private List<String> reservedServices = new ArrayList<>();
+    private String reservedServices;
 }
 
 

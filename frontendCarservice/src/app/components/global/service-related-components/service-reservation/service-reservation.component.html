@@ -7,38 +7,66 @@
       <div class="column">
         <h2>1. Gépjármű adatok</h2>
         <mat-form-field appearance="outline">
-          <mat-label>Márka*</mat-label>
-          <input type="text" matInput formControlName="brand" #brand
-                 placeholder="Márka"
-          >
+          <mat-label>Kérem válasszon gépjármű márkát*</mat-label>
+          <mat-select [(value)]="selectedBrand" (selectionChange)="typeSetter($event)" formControlName="brand">
+            <ng-container *ngFor="let brand of brandSet; let i = index">
+              <mat-option value="{{this.brand}}">{{this.brand}}</mat-option>
+            </ng-container>
+          </mat-select>
         </mat-form-field>
-        <mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['brand'].hasError('required') && serviceReservationForm.controls['brand'].touched
+                   || serviceReservationForm.controls['brand'].hasError('required') && serviceReservationForm.controls['brand'].dirty
+                   || serviceReservationForm.controls['brand'].hasError('required') && serviceReservationForm.controls['brand'].hasError('pristine')
+                   || isSubmitted && serviceReservationForm.controls['brand'].hasError('required')">
+          Márka megadása kötelező!
         </mat-error>
         <p></p>
         <mat-form-field appearance="outline">
-          <mat-label>Típus*</mat-label>
-          <input type="text" matInput formControlName="type" #type
-                 placeholder="Típus"
-          >
+          <mat-label>Kérem válasszon típust*</mat-label>
+          <mat-select [(value)]="selectedType" (selectionChange)="yearOfManufactureSetter($event)" formControlName="type">
+            <ng-container *ngFor="let type of typeSet; let i = index">
+              <mat-option value="{{this.type}}">{{this.type}}</mat-option>
+            </ng-container>
+          </mat-select>
         </mat-form-field>
-        <mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['type'].hasError('required') && serviceReservationForm.controls['type'].touched
+                   || serviceReservationForm.controls['type'].hasError('required') && serviceReservationForm.controls['type'].dirty
+                   || serviceReservationForm.controls['type'].hasError('required') && serviceReservationForm.controls['type'].hasError('pristine')
+                   || isSubmitted && serviceReservationForm.controls['type'].hasError('required')">
+          Típus megadása kötelező!
         </mat-error>
         <p></p>
+
         <mat-form-field appearance="outline">
-          <mat-label>Gyártási év*</mat-label>
-          <input type="text" matInput formControlName="yearOfManufacture" #yearOfManufacture
-                 placeholder="Gyártási év"
-          >
+          <mat-label>Kérem válasszon gyártási évet*</mat-label>
+          <mat-select [(value)]="selectedYearOfManufacture" (selectionChange)="engineTypeSetter($event)" formControlName="yearOfManufacture">
+            <ng-container *ngFor="let yearOfManufacture of yearOfManufactureSet; let i = index">
+              <mat-option value="{{this.yearOfManufacture}}">{{this.yearOfManufacture}}</mat-option>
+            </ng-container>
+          </mat-select>
         </mat-form-field>
-        <mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['yearOfManufacture'].hasError('required') && serviceReservationForm.controls['yearOfManufacture'].touched
+                   || serviceReservationForm.controls['yearOfManufacture'].hasError('required') && serviceReservationForm.controls['yearOfManufacture'].dirty
+                   || serviceReservationForm.controls['yearOfManufacture'].hasError('required') && serviceReservationForm.controls['yearOfManufacture'].hasError('pristine')
+                   || isSubmitted && serviceReservationForm.controls['yearOfManufacture'].hasError('required')">
+          Gyártási év megadása kötelező!
         </mat-error>
         <p></p>
+
         <mat-form-field appearance="outline">
-          <mat-label>Motor típusa*</mat-label>
-          <input type="text" matInput formControlName="engineType" #engineType
-                 placeholder="Motor típusa"
-          >
+          <mat-label>Kérem válasszon motor típust*</mat-label>
+          <mat-select [(value)]="selectedEngineType" formControlName="engineType">
+            <ng-container *ngFor="let engineType of engineTypeSet; let i = index">
+              <mat-option value="{{this.engineType}}">{{this.engineType}}</mat-option>
+            </ng-container>
+          </mat-select>
         </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['engineType'].hasError('required') && serviceReservationForm.controls['engineType'].touched
+                   || serviceReservationForm.controls['engineType'].hasError('required') && serviceReservationForm.controls['engineType'].dirty
+                   || serviceReservationForm.controls['engineType'].hasError('required') && serviceReservationForm.controls['engineType'].hasError('pristine')
+                   || isSubmitted && serviceReservationForm.controls['engineType'].hasError('required')">
+          Motor típus megadása kötelező!
+        </mat-error>
         <p></p>
         <mat-form-field appearance="outline">
           <mat-label>Kilométeróra állása</mat-label>
@@ -83,10 +111,12 @@
                  placeholder="Rendszám"
           >
         </mat-form-field>
-        <mat-error *ngIf="serviceReservationForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && foreignCountryPlate">
+        <mat-error *ngIf="serviceReservationForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && !foreignCountryPlate
+                        || serviceReservationForm.controls['licensePlateNumber'].hasError('pattern') && !foreignCountryPlate">
+          Ilyen rendszám formátum nem létezik Magyarországon!
         </mat-error>
         <mat-checkbox
-          formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate">Nemzetközi rendszám
+          formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate; licensePlateValidator($event)">Nemzetközi rendszám
         </mat-checkbox>
     </div>
     <div class="column">
@@ -150,12 +180,13 @@
       <h2>3. Időpont foglalás</h2>
       <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Válasszon egy időpontot*</mat-label>
-        <input matInput [min]="minDate" [matDatepickerFilter]="myFilter2" formControlName="reservedDate" [matDatepicker]="reservedDate">
+        <input matInput [errorStateMatcher]="errorMatcher" [disabled]="true" [min]="minDate" [matDatepickerFilter]="myFilter2" formControlName="reservedDate" [matDatepicker]="reservedDate">
         <mat-datepicker-toggle matSuffix [for]="reservedDate"></mat-datepicker-toggle>
         <mat-datepicker #reservedDate disabled="false"></mat-datepicker>
       </mat-form-field>
-      <mat-error *ngIf="dateFieldValue">
-          Időpont megadása kötelező!
+      <mat-error *ngIf="serviceReservationForm.controls['reservedDate'].value.value =='' && serviceReservationForm.controls['reservedDate'].touched
+                   || isSubmitted && serviceReservationForm.controls['reservedDate'].value.value==''">
+        Időpont megadása kötelező!
       </mat-error>
       <p></p>
     </div>
@@ -166,7 +197,7 @@
       </div>
       <div class="column billing-check-box">
       <mat-checkbox
-        formControlName="billingToCompany" (change)="billingToCompany = !billingToCompany">Cég nevére kérem a számlát
+        formControlName="billingToCompany" (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)">Cég nevére kérem a számlát
       </mat-checkbox>
       </div>
       <div class="column billing-box">
@@ -241,16 +272,19 @@
                   placeholder="Adószám"
           >
         </mat-form-field>
-        <mat-error *ngIf="serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].touched && billingToCompany
-                   || serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].dirty && billingToCompany
-                   || serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].hasError('pristine') && billingToCompany
-                   || isSubmitted && serviceReservationForm.controls['name'].value=='' && billingToCompany">
+        <mat-error *ngIf="(serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].touched) && billingToCompany
+                   || (serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].dirty) && billingToCompany
+                   || (serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].hasError('pristine')) && billingToCompany
+                   || (isSubmitted && serviceReservationForm.controls['billingTax'].value=='' && billingToCompany)">
             Adószám cég esetén kötelező!
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['billingTax'].hasError('pattern') && !billingForeignCountryTax && billingToCompany">
+          Nem megfelelő adószám formátum!
         </mat-error>
         <p></p>
       </div>
       <mat-checkbox
-        formControlName="billingForeignCountryTax" (change)="billingForeignCountryTax =!billingForeignCountryTax" [hidden]="!billingToCompany">Nemzetközi adószám
+        formControlName="billingForeignCountryTax" style="text-align: end;padding-right: 120px" (change)="billingForeignCountryTax =!billingForeignCountryTax; taxNumberValidator($event)" [hidden]="!billingToCompany">Nemzetközi adószám
       </mat-checkbox>
     </div>
     <div class="row">
@@ -327,11 +361,11 @@
       <h2>5. Szolgáltatások</h2>
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Autó átvizsgálás:</h5>
+        <h5 class="align-end">Autó átvizsgálás:</h5>
         </div>
         <ng-container *ngFor="let checkbox of carInspection; let i = index" formArrayName="carInspection">
           <div class="column checkbox-for-cycle">
-          <mat-checkbox style="margin-right: 5px;" [formControlName]="i">
+          <mat-checkbox style="margin-right: 5px;" [formControlName]="i" (change)="collectorSetter()">
             {{checkbox.name}}
           </mat-checkbox>
           </div>
@@ -340,11 +374,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Eredetiség vizsgálat:</h5>
+        <h5 class="align-end">Eredetiség vizsgálat:</h5>
         </div>
         <ng-container *ngFor="let checkbox1 of authenticityTest; let i1 = index" formArrayName="authenticityTest">
           <div class="column checkbox-for-cycle">
-          <mat-checkbox style="margin-right: 5px" [formControlName]="i1">
+          <mat-checkbox style="margin-right: 5px" [formControlName]="i1" (change)="collectorSetter()">
             {{checkbox1.name}}
           </mat-checkbox>
           </div>
@@ -353,11 +387,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Gumi:</h5>
+        <h5 class="align-end">Gumi:</h5>
         </div>
         <ng-container *ngFor="let checkbox2 of tyre; let i2 = index" formArrayName="tyre">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i2">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i2" (change)="collectorSetter()">
               {{checkbox2.name}}
             </mat-checkbox>
           </div>
@@ -366,11 +400,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Fék:</h5>
+        <h5 class="align-end">Fék:</h5>
         </div>
         <ng-container *ngFor="let checkbox3 of brake; let i3 = index" formArrayName="brake">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i3">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i3" (change)="collectorSetter()">
               {{checkbox3.name}}
             </mat-checkbox>
           </div>
@@ -379,11 +413,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Futómű:</h5>
+        <h5 class="align-end">Futómű:</h5>
         </div>
         <ng-container *ngFor="let checkbox4 of undercarriage; let i4 = index" formArrayName="undercarriage">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i4">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i4" (change)="collectorSetter()">
               {{checkbox4.name}}
             </mat-checkbox>
           </div>
@@ -392,11 +426,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Olaj:</h5>
+        <h5 class="align-end">Olaj:</h5>
         </div>
         <ng-container *ngFor="let checkbox5 of oil; let i5 = index" formArrayName="oil">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i5">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i5" (change)="collectorSetter()">
               {{checkbox5.name}}
             </mat-checkbox>
           </div>
@@ -405,11 +439,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Időszakos szervíz:</h5>
+        <h5 class="align-end">Időszakos szervíz:</h5>
         </div>
         <ng-container *ngFor="let checkbox6 of periodicService; let i6 = index" formArrayName="periodicService">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i6">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i6" (change)="collectorSetter()">
               {{checkbox6.name}}
             </mat-checkbox>
           </div>
@@ -418,11 +452,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Vezérműszíj:</h5>
+        <h5 class="align-end">Vezérműszíj:</h5>
         </div>
         <ng-container *ngFor="let checkbox7 of timingBelt; let i7 = index" formArrayName="timingBelt">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i7">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i7" (change)="collectorSetter()">
               {{checkbox7.name}}
             </mat-checkbox>
           </div>
@@ -431,11 +465,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Diagnosztika:</h5>
+        <h5 class="align-end">Diagnosztika:</h5>
         </div>
         <ng-container *ngFor="let checkbox8 of diagnostic; let i8 = index" formArrayName="diagnostic">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i8">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i8" (change)="collectorSetter()">
               {{checkbox8.name}}
             </mat-checkbox>
           </div>
@@ -444,11 +478,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Műszaki vizsga:</h5>
+        <h5 class="align-end">Műszaki vizsga:</h5>
         </div>
         <ng-container *ngFor="let checkbox9 of technicalExamination; let i9 = index" formArrayName="technicalExamination">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px;" [formControlName]="i9">
+            <mat-checkbox style="margin-right: 5px;" [formControlName]="i9" (change)="collectorSetter()">
               {{checkbox9.name}}
             </mat-checkbox>
           </div>
@@ -457,11 +491,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Klíma:</h5>
+        <h5 class="align-end">Klíma:</h5>
         </div>
         <ng-container *ngFor="let checkbox10 of clime; let i10 = index" formArrayName="clime">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i10">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i10" (change)="collectorSetter()">
               {{checkbox10.name}}
             </mat-checkbox>
           </div>
@@ -470,11 +504,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Akkumulátor:</h5>
+        <h5 class="align-end">Akkumulátor:</h5>
         </div>
         <ng-container *ngFor="let checkbox11 of accumulator; let i11 = index" formArrayName="accumulator">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i11">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i11" (change)="collectorSetter()">
               {{checkbox11.name}}
             </mat-checkbox>
           </div>
@@ -483,11 +517,11 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Karosszéria:</h5>
+        <h5 class="align-end">Karosszéria:</h5>
         </div>
         <ng-container *ngFor="let checkbox12 of bodywork; let i12 = index" formArrayName="bodywork">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i12">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i12" (change)="collectorSetter()">
               {{checkbox12.name}}
             </mat-checkbox>
           </div>
@@ -496,17 +530,17 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5>Egyéb:</h5>
+        <h5 class="align-end">Egyéb:</h5>
         </div>
         <ng-container *ngFor="let checkbox13 of other; let i13 = index" formArrayName="other">
           <div class="column checkbox-for-cycle">
-            <mat-checkbox style="margin-right: 5px" [formControlName]="i13">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i13" (change)="collectorSetter()">
               {{checkbox13.name}}
             </mat-checkbox>
           </div>
         </ng-container>
       </div>
-    <mat-error *ngIf="!atLeastOneServiceChecked && isSubmitted">
+    <mat-error *ngIf="!atLeastOneServiceChecked && isSubmitted || !atLeastOneServiceChecked && serviceReservationForm.controls['carInspection'].hasError('noServiceChecked')">
       Legalább egy szolgáltatást meg kell jelölnie!
   </mat-error>
 
@@ -533,6 +567,7 @@
       </mat-checkbox>
     </div>
     <mat-hint>A *-al jelölt mezők kitöltése kötelező!</mat-hint>
+    <mat-hint>Legalább egy szolgáltatás kiválasztása kötelező!</mat-hint>
     <mat-hint>Egyéb szolgáltatás kiválasztása esetén a megjegyzés mező kötelező!</mat-hint>
     <p></p>
   </div>
@@ -541,6 +576,9 @@
             class="btn btn-primary btn-block" style="float:right; width: 200px; margin-bottom:15px" [disabled]="data===false">Foglalás
     </button>
       <input class="hideIt" #hideIt>
+    </div>
+    <div>
+      <label></label>
     </div>
   </form>
 </div>

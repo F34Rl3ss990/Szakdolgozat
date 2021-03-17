@@ -82,3 +82,11 @@ h2{
 .mat-hint{
   font-size:14px;
 }
+
+.mat-option {
+  height: 2em!important;
+}
+
+.align-end{
+  text-align: end;
+}

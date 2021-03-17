@@ -59,13 +59,21 @@ public class UserServiceImpl implements UserService {
             userRepository.saveUser(mapDTOtoUser(unauthorizedUserReservationDTO), credentialId, email);
     }
 
+    private void mileageSetter(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
+        String mileageNum = (unauthorizedUserReservationDTO.getMileage() == null) ? "" : unauthorizedUserReservationDTO.getMileage();
+        if (mileageNum.equals("")) {
+            unauthorizedUserReservationDTO.setMileage(mileageNum);
+        }
+    }
+
     @Transactional
+    @Async
     @Override
     public void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
-            String services = servicesListToString(unauthorizedUserReservationDTO.getReservedServices());
+        mileageSetter(unauthorizedUserReservationDTO);
         userRepository.saveUnAuthorizedUser(mapDTOtoUser(unauthorizedUserReservationDTO),
                 mapDTOtoCar(unauthorizedUserReservationDTO),
-                mapDTOtoServiceReservation(unauthorizedUserReservationDTO), services);
+                mapDTOtoServiceReservation(unauthorizedUserReservationDTO));
         emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }
 
@@ -98,10 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public static String servicesListToString(List<String> reservedServiceLists){
-        return reservedServiceLists.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(", "));
-
+        return reservedServiceLists.toString();
     }
 
     private User mapDTOtoUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){

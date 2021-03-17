@@ -10,6 +10,7 @@ import {PasswordSuccessfullyChangedComponent} from '../components/global/authori
 import {PasswordResetDialogComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-dialog/password-reset-dialog.component';
 import {ExpiredResetPasswordTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
+import {SuccessfullyReservedUnauthorizedServiceComponent} from '../components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
 
 @Injectable({
   providedIn: 'root'
@@ -95,6 +96,6 @@ export class DialogService {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(PasswordTokenSentComponent, dialogConfig);
+    this.dialog.open(SuccessfullyReservedUnauthorizedServiceComponent, dialogConfig);
   }
 }

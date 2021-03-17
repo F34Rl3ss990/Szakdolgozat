@@ -27,7 +27,6 @@ public class ServiceReservationDTO {
     @FutureOrPresent
     private Date reservedDate;
 
-    @JsonProperty
     @NotNull
-    private List<String> reservedServices = new ArrayList<>();
+    private String reservedServices;
 }

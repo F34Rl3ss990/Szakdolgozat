@@ -62,8 +62,7 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
     @Transactional
     @Override
     public void saveService(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
-        String services  = UserServiceImpl.servicesListToString(serviceReservationDTO.getReservedServices());
-        serviceReservationRepository.saveService(mapDTOtoServiceReservation(serviceReservationDTO), services);
+        serviceReservationRepository.saveService(mapDTOtoServiceReservation(serviceReservationDTO));
         sendEmailAfterServiceReservation(serviceReservationDTO);
     }
 

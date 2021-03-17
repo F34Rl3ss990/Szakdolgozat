@@ -1,0 +1,146 @@
+<app-navigation-bar></app-navigation-bar>
+<div class="container">
+  <div class="column">
+  <h4>Személyes adatok:</h4>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Név: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['name'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Telefonszám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['phoneNumber'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Email: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['email'].value}}</mat-label>
+    </div>
+      <h4>Számlázási adatok:</h4>
+      <div fxLayout="row">
+        <div class="column test-box">
+          <mat-label class="align-end">Név: </mat-label>
+        </div>
+        <mat-label>{{serviceForm.controls['billingName'].value}}</mat-label>
+      </div>
+      <div fxLayout="row">
+        <div class="column test-box">
+          <mat-label class="align-end">Telefonszám: </mat-label>
+        </div>
+        <mat-label>{{serviceForm.controls['billingPhoneNumber'].value}}</mat-label>
+      </div>
+      <div fxLayout="row">
+        <div class="column test-box">
+          <mat-label class="align-end">Email: </mat-label>
+        </div>
+        <mat-label>{{serviceForm.controls['billingEmail'].value}}</mat-label>
+      </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['billingTax'].value!=''">
+      <div class="column test-box">
+        <mat-label class="align-end">Adószám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['billingTax'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Irányítószám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['billingZipCode'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Város: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['billingTown'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Utca, házszám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['billingStreet'].value}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['billingOtherAddressType'].value!=''">
+      <div class="column test-box">
+        <mat-label class="align-end">Emelet, ajtó: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['billingOtherAddressType'].value}}</mat-label>
+    </div>
+  <h4>Gépjármű adatok:</h4>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Márka: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['brand'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Típus: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['type'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Gyártási év: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['yearOfManufacture'].value}}</mat-label>
+    </div>
+    <div fxLayout="row">
+      <div class="column test-box">
+        <mat-label class="align-end">Motor típus: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['engineType'].value}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['mileage'].value!=''">
+      <div class="column test-box">
+        <mat-label class="align-end">Kilométeróra állása: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['mileage'].value}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['engineNumber'].value!=null">
+      <div class="column test-box">
+        <mat-label class="align-end">Motorkód: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['engineNumber'].value}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['chassisNumber'].value!=null">
+      <div class="column test-box">
+        <mat-label class="align-end">Alvázszám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['chassisNumber'].value}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['licensePlateNumber'].value!=''">
+      <div class="column test-box">
+        <mat-label class="align-end">Rendszám: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['licensePlateNumber'].value}}</mat-label>
+    </div>
+  <h4>Igényelt szolgáltatások:</h4>
+    <div fxLayout="row">
+      <div class="column test-box">
+  <mat-label class="align-end">Szolgáltatások: </mat-label>
+      </div>
+      <mat-label>{{collector}}</mat-label>
+    </div>
+    <div fxLayout="row" *ngIf="serviceForm.controls['comment'].value!=''">
+      <div class="column test-box">
+  <mat-label class="align-end">Megjegyzés: </mat-label>
+      </div>
+      <mat-label>{{serviceForm.controls['comment'].value}}</mat-label>
+    </div>
+  <h4>Lefoglalt időpnt: </h4>
+    <div fxLayout="row">
+      <div class="column test-box">
+  <mat-label class="align-end">Időpont: </mat-label>
+      </div>
+      <mat-label> {{serviceForm.value.reservedDate | date:'yyyy.MM.dd'}}</mat-label>
+    </div>
+    <div class="row">
+      <button type="submit" class="btn btn-primary btn-block" style="margin-left:50px; width: 120px; margin-top:15px" (click)="backClicked()">Módosítás</button>
+      <button type="submit" class="btn btn-primary btn-block" style="width: 120px; margin-top:15px;margin-left:35px" (click)="verify()">Foglalás véglegesítése</button>
+    </div>
+</div>
+</div>

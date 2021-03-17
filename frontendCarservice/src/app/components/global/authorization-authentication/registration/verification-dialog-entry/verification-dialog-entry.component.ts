@@ -27,7 +27,7 @@ export class VerificationDialogEntryComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
-    console.log('test')
+
     this.route.params.subscribe(params =>{
       let token = params['token'];
       this.authService.confirmRegistration(token).subscribe(message =>{

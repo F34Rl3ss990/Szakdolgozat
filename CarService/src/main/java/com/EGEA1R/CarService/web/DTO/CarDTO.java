@@ -44,10 +44,7 @@ public class CarDTO {
     @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String chassisNumber;
 
-    @Max(9999999)
-    @PositiveOrZero
-    @NotNull
-    private Integer mileage;
+    private String mileage;
 
     @Size(max = 10)
     @NotNull

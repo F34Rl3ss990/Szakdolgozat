@@ -21,7 +21,7 @@ public class ServiceReservationRepositoryImpl implements ServiceReservationRepos
 
     @Transactional
     @Override
-    public void saveService(ServiceReservation serviceReservation, String services) {
+    public void saveService(ServiceReservation serviceReservation) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SAVE_SERVICE_RESERVATION");
         query.registerStoredProcedureParameter(1, Date.class, ParameterMode.IN);
         query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
@@ -29,7 +29,7 @@ public class ServiceReservationRepositoryImpl implements ServiceReservationRepos
         query.registerStoredProcedureParameter(4, Long.class, ParameterMode.IN);
         query.setParameter(1, serviceReservation.getReservedDate());
         query.setParameter(2, serviceReservation.getComment());
-        query.setParameter(3, services);
+        query.setParameter(3, serviceReservation.getReservedServices());
         query.setParameter(4, serviceReservation.getFkServiceReservationCarId());
         query.executeUpdate();
     }

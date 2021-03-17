@@ -23,7 +23,7 @@ public class CarRepositoryImpl implements CarRepository {
              query.registerStoredProcedureParameter(i, String.class, ParameterMode.IN);
         }
         query.registerStoredProcedureParameter(8, Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter(9, Integer.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(9, String.class, ParameterMode.IN);
         query.setParameter(1, car.getBrand());
         query.setParameter(2, car.getType());
         query.setParameter(3, car.getEngineType());

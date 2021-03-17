@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Transactional
     @Override
-    public void saveUnAuthorizedUser(User user, Car car, ServiceReservation serviceReservation, String services) {
+    public void saveUnAuthorizedUser(User user, Car car, ServiceReservation serviceReservation) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SAVE_UNAUTHORIZED_USER");
                 query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
@@ -64,7 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
                 query.registerStoredProcedureParameter(15, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(16, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(17, String.class, ParameterMode.IN);
-                query.registerStoredProcedureParameter(18, Integer.class, ParameterMode.IN);
+                query.registerStoredProcedureParameter(18, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(19, String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(20, Date.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter(21, String.class, ParameterMode.IN);
@@ -90,7 +90,7 @@ public class UserRepositoryImpl implements UserRepository {
                 query.setParameter(19, car.getLicensePlateNumber());
                 query.setParameter(20, serviceReservation.getReservedDate());
                 query.setParameter(21, serviceReservation.getComment());
-                query.setParameter(22, services);
+                query.setParameter(22, serviceReservation.getReservedServices());
                 query.executeUpdate();
     }
 
