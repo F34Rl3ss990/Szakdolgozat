@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Car;
+import com.EGEA1R.CarService.persistance.entity.CarMileage;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceReservationRepository;
@@ -10,6 +11,7 @@ import com.EGEA1R.CarService.service.interfaces.ServiceReservationService;
 import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
+import com.EGEA1R.CarService.web.DTO.UserCarsDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -18,7 +20,11 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -83,6 +89,32 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
         pageHolder.setPage(page);
         pageHolder.setPageSize(size);
         return pageHolder;
+    }
+
+    @Override
+    public List<UserCarsDTO> getCarByCredentialId(Long credentialId) throws ParseException {
+        List<UserCarsDTO> userCars = new ArrayList<>();
+        String maxMileage = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.");
+        Date date;
+        date = sdf.parse("2000.01.01.");
+        for (Car car : serviceReservationRepository.getAllCarByCredentialId(credentialId)) {
+            for (CarMileage mileage : car.getCarMileages()) {
+                if (mileage.getDateOfSet().compareTo(date) > 0) {
+                    date = mileage.getDateOfSet();
+                    maxMileage = mileage.getMileage();
+                }
+            }
+            userCars.add(mapDTOtoUserCarsDTO(car, date, maxMileage));
+        }
+        return userCars;
+    }
+
+    private UserCarsDTO mapDTOtoUserCarsDTO(Car car, Date date, String maxMilege){
+        UserCarsDTO userCarsDTO = modelMapper.map(car, UserCarsDTO.class);
+        userCarsDTO.setMileage(maxMilege);
+        userCarsDTO.setDateOfSet(date);
+        return userCarsDTO;
     }
 
     private ServiceReservation mapDTOtoServiceReservation(ServiceReservationDTO serviceReservationDTO){

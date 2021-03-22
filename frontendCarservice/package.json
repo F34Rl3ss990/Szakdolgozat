@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~9.1.7",
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
+    "@angular/service-worker": "~9.1.7",
     "@fortawesome/fontawesome-free": "^5.6.3",
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
     "@types/chart.js": "^2.9.31",
@@ -61,6 +62,7 @@
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "webpack-bundle-analyzer": "^4.4.0"
   }
 }

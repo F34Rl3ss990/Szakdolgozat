@@ -97,6 +97,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUserId(Long userId) {
+        return userRepository.getUserByUserId(userId);
+    }
+
+    @Override
     public PagedListHolder<User> getAllUserPage(int page, int size) {
         List<User> users = userRepository.getAllUser();
         PagedListHolder<User> pageHolder = new PagedListHolder<>(users);
@@ -105,9 +110,6 @@ public class UserServiceImpl implements UserService {
         return pageHolder;
     }
 
-    public static String servicesListToString(List<String> reservedServiceLists){
-        return reservedServiceLists.toString();
-    }
 
     private User mapDTOtoUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         BillingInformation billingInformation = modelMapper.map(unauthorizedUserReservationDTO, BillingInformation.class);

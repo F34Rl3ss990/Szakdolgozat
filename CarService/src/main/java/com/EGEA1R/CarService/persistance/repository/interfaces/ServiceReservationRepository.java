@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.repository.interfaces;
 
+import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 
 import java.time.LocalDate;
@@ -12,4 +13,6 @@ public interface ServiceReservationRepository {
     List<ServiceReservation> getAllServiceByUser(Long userId);
 
     List<ServiceReservation> getAllServiceByTodayDate(LocalDate localDate);
+
+    List<Car> getAllCarByCredentialId(Long credentialId);
 }

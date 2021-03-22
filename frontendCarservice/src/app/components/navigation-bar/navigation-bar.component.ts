@@ -8,6 +8,7 @@ import {LoginDialogComponent} from '../global/authorization-authentication/login
 import {AuthService} from '../../services/auth.service';
 import {RegistrationSuccessfulComponent} from '../global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {DialogService} from '../../services/dialog.service';
+import {DataService} from '../../services/data.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -25,7 +26,8 @@ export class NavigationBarComponent implements OnInit {
   constructor(private loadingBar: SlimLoadingBarService, private router: Router,
               private tokenStorageService: TokenStorageService,
               private dialog: MatDialog, private authService: AuthService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private dataService: DataService) {
   }
 
   ngOnInit() {
@@ -44,6 +46,7 @@ export class NavigationBarComponent implements OnInit {
   logout() {
     this.tokenStorageService.signOutBackend().subscribe();
     this.tokenStorageService.signOutFrontEnd();
+    this.dataService.serviceReservationForm = null;
     window.location.reload();
   }
 

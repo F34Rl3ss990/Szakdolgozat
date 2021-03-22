@@ -6,6 +6,7 @@ import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/f
 import {DialogService} from '../../../../../services/dialog.service';
 import {ErrorMatcherDirective} from '../../../../validators/error-matcher.directive';
 import {DataService} from '../../../../../services/data.service';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -44,7 +45,8 @@ export class LoginDialogComponent implements OnInit {
               private fb: FormBuilder,
               private dialogService: DialogService,
               private dataService: DataService,
-              private el: ElementRef) {
+              private el: ElementRef,
+              private router: Router) {
     this.createForm();
   }
 
@@ -85,12 +87,14 @@ export class LoginDialogComponent implements OnInit {
     this.isSubmitted = true;
     this.authService.login(this.loginForm.value).subscribe(
       data => {
+        this.dataService.serviceReservationForm = null;
         this.tokenStorage.saveToken(data.token);
         this.tokenStorage.saveUser(data);
         this.roles = this.tokenStorage.getUser().roles;
         this.isLoggedIn = true;
+        this.router.navigate(['/home']);
+        this.reloadPage();
         this.dialogRef.close();
-        this.reloadPage()
       },
       err => {
         this.errorMessage = err.error.message;

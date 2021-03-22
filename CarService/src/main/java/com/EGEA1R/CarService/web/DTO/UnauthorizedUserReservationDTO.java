@@ -44,7 +44,6 @@ public class UnauthorizedUserReservationDTO {
     @Pattern(regexp = "^[A-Za-z0-9]+$")
     private String chassisNumber;
 
-    @Size(max = 10)
     private String licensePlateNumber;
 
     private Boolean foreignCountryPlate;

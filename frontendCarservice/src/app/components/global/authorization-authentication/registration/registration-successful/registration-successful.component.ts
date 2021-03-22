@@ -1,5 +1,6 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-registration-successful',
@@ -9,7 +10,8 @@ import {MatDialogRef} from '@angular/material/dialog';
 export class RegistrationSuccessfulComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<RegistrationSuccessfulComponent>,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private router: Router) {
   }
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
@@ -21,5 +23,6 @@ export class RegistrationSuccessfulComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+    this.router.navigate['/home'];
   }
 }

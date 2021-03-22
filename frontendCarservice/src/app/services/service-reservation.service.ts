@@ -8,8 +8,6 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
 
-const API_URL = 'http://localhost:8080/api/test/';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +16,29 @@ const API_URL = 'http://localhost:8080/api/test/';
 export class ServiceReservationService {
 
   constructor(private http: HttpClient) { }
+
+  reserveAuthorizedServiceValidation(authorizedService, collector, userId): Observable<any>{
+    return this.http.post(serviceReservationURL + 'serviceReservationAuthorizedValidation',{
+      fkServiceReservationCarId: authorizedService.car,
+      comment: authorizedService.comment,
+      reservedDate: authorizedService.reservedDate,
+      reservedServices: collector,
+      fkCarUserId: userId
+    })
+  }
+
+  reserveAuthorizedService(authorizedService, collector): Observable<any>{
+    return this.http.post(serviceReservationURL + 'reserveService',{
+      fkServiceReservationCarId: authorizedService.car,
+      comment: authorizedService.comment,
+      reservedDate: authorizedService.reservedDate,
+      reservedServices: authorizedService.collector
+    })
+  }
+
+  getUserCars(credentialId): Observable<any>{
+    return this.http.get(`${serviceReservationURL}getCarsByRegId?credentialId=${credentialId}`);
+  }
 
   reserveUnauthorizedServiceValidation(unauthorizedService, collector, foreignLicensePlate, billingToCompany): Observable<any> {
     return this.http.post(serviceReservationURL + 'serviceReservationUnauthorizedValidation', {

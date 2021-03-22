@@ -5,6 +5,7 @@ import {Location} from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from '../../../../services/dialog.service';
 import {ServiceReservationService} from '../../../../services/service-reservation.service';
+import {TokenStorageService} from '../../../../services/token-storage.service';
 
 @Component({
   selector: 'app-verify-service-reservation',
@@ -19,20 +20,19 @@ export class VerifyServiceReservationComponent implements OnInit {
   constructor(private dataService: DataService,
               private location: Location,
               private dialogService: DialogService,
-              private serviceReservation: ServiceReservationService) { }
+              private serviceReservation: ServiceReservationService,
+              private tokenStorageService: TokenStorageService) { }
   ngOnInit(): void {
     this.serviceForm = this.dataService.serviceReservationForm;
     this.collector = this.dataService.collector;
-    console.log(this.serviceForm)
   }
 
   backClicked() {
-   // this.dataService.serviceReservationForm = this.serviceForm;
-   // this.dataService.collector = this.collector;
     this.location.back();
   }
 
   verify(){
+
     this.serviceReservation.reserveUnauthorizedService(this.serviceForm.getRawValue(), this.collector).subscribe(data =>{
         this.dialogService.openSuccessfullyReservedUnauthorizedService();
       }, error => {

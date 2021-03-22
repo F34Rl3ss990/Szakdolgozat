@@ -21,4 +21,6 @@ public interface UserRepository {
     List<User> getAllUser();
 
     Optional<User> findUserByCarId(Long carId);
+
+    User getUserByUserId(Long userId);
 }

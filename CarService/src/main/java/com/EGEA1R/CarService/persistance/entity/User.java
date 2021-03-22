@@ -86,9 +86,6 @@ public class User {
     @JoinColumn(name = "fk_user_credential")
     private Credential credential;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonIgnore
     @OneToMany(
             mappedBy = "user",

@@ -45,6 +45,14 @@ import { SuccessfullyReservedUnauthorizedServiceComponent } from './components/g
 import {DateAdapterService} from './services/date-adapter.service';
 import {MatSelectModule} from '@angular/material/select';
 import { VerifyServiceReservationComponent } from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
+import { AuthServiceReservationComponent } from './components/authorizedUserComponents/serviceReservation/auth-service-reservation/auth-service-reservation.component';
+import { VerifyServiceComponent } from './components/authorizedUserComponents/serviceReservation/verify-service/verify-service.component';
+import { SideNavComponent } from './components/authorizedUserComponents/profile-nav/side-nav/side-nav.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import {APP_BASE_HREF} from '@angular/common';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -71,7 +79,10 @@ import { VerifyServiceReservationComponent } from './components/global/service-r
     EmailNotExistingValidatorDirective,
     ServiceReservationComponent,
     SuccessfullyReservedUnauthorizedServiceComponent,
-    VerifyServiceReservationComponent
+    VerifyServiceReservationComponent,
+    AuthServiceReservationComponent,
+    VerifyServiceComponent,
+    SideNavComponent
   ],
   imports: [
     BrowserModule,
@@ -107,14 +118,18 @@ import { VerifyServiceReservationComponent } from './components/global/service-r
         ]
       },
       {path: '**', redirectTo: 'home'}
-    ]),
+    ], {useHash: true}),
     MatDatepickerModule,
     FlexModule,
-    MatSelectModule
+    MatSelectModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule,
     {provide: MAT_DATE_LOCALE, useValue: 'hu'},
     {provide: DateAdapter, useClass: DateAdapterService},
+    { provide: APP_BASE_HREF, useValue: '/' }
     ],
   exports: [AppComponent],
   bootstrap: [AppComponent],

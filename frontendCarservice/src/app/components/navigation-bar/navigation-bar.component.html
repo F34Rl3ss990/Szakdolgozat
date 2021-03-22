@@ -46,7 +46,7 @@
     <!-- Navbar brand -->
     <mdb-navbar-brand>
       <a class="navbar-brand" href="#">
-        <img src="https://mdbootstrap.com/img/logo/mdb-transparent.png" height="30" class="d-inline-block align-top" alt="">
+        <img src="" height="30" class="d-inline-block align-top" alt="">
       </a>
     </mdb-navbar-brand>
 
@@ -64,11 +64,11 @@
       </ul>
 
       <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
-        <li class="nav-item active">
-          <a href="/profile" class="nav-link waves-light" routerLink="profile" mdbWavesEffect>Profil</a>
+        <li class="nav-item">
+          <a href="/profile" class="nav-link waves-light" routerLink="/profile" mdbWavesEffect><mdb-icon fas icon="user"></mdb-icon>Profil</a>
         </li>
         <li class="nav-item">
-          <a href class="nav-link waves-light" (click)="logout()" mdbWavesEffect>Kijelentkezés</a>
+          <a href="/logout" class="nav-link waves-light" (click)="logout()" mdbWavesEffect>Kijelentkezés</a>
         </li>
       </ul>
       <!-- Links -->
@@ -85,11 +85,14 @@
           <li class="nav-item">
             <a href="/src" class="nav-link" routerLink="">Test </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="!isLoggedIn">
             <a href="/service-reservation" class="nav-link" routerLink="/service-reservation">Időpontfoglalás </a>
           </li>
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a href="/service-reservation" class="nav-link" routerLink="/auth-service-reservation">Időpontfoglalás </a>
+          </li>
           <li class="nav-item">
-            <a href="/verif" class="nav-link" routerLink="/verif">Verif </a>
+            <a href="/src" class="nav-link" routerLink="">Test </a>
           </li>
           <li class="nav-item">
             <a href="/src" class="nav-link" routerLink="">Test </a>

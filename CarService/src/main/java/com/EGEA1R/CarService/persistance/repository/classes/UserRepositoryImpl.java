@@ -145,5 +145,13 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public User getUserByUserId(Long userId) {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("GET_USER_BY_USER_ID", "GetUserByFkId");
+        query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+        query.setParameter(1, userId);
+        return (User) query.getSingleResult();
+    }
+
 }
 

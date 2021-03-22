@@ -4,9 +4,7 @@ import {DataService} from '../../../../services/data.service';
 import {ServiceReservationService} from '../../../../services/service-reservation.service';
 import {Subscription} from 'rxjs';
 import {DialogService} from '../../../../services/dialog.service';
-import {Router} from '@angular/router';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {ActivatedRoute, Router} from '@angular/router';
 import {serviceableCarList} from '../../../../models/serviceableCarList';
 import {ErrorMatcherDirective} from '../../../validators/error-matcher.directive';
 
@@ -22,13 +20,11 @@ export class ServiceReservationComponent implements OnInit {
   data: boolean = false;
   billingToCompany = false;
   billingSameAsUserData = true;
-  serviceIsChecked: boolean;
   billingForeignCountryTax = false;
   otherChecked = false;
   atLeastOneServiceChecked = false;
   collector: any = [];
   subscription: Subscription;
-  submittedValue: any;
   dateFieldValue: boolean;
   isSubmitted: boolean;
   errorMessage = ''
@@ -43,137 +39,24 @@ export class ServiceReservationComponent implements OnInit {
   selectedType = '';
   selectedYearOfManufacture = '';
   selectedEngineType = '';
-  errorMatcher = new ErrorMatcherDirective();
-
-  @ViewChild('hideIt') hideIt: ElementRef;
-
-  carInspection = [{
-    name: 'Minimalista csomag',
-    value: 'minimalista csomag'
-  }, {
-    name: 'Közepes csomag',
-    value: 'közepes csomag'
-  }, {
-    name: 'Maximalista csomag',
-    value: 'maximalista csomag'
-  }]
-
-  authenticityTest = [{
-    name: 'Eredetiség vizsgálat',
-    value: 'eredetiség vizsgálat'
-  }]
-
-  tyre = [{
-    name: 'Gumicsere',
-    value: 'gumicsere'
-  }, {
-    name: 'Kerékcentírozás',
-    value: 'kerékcentírozás'
-  }, {
-    name: 'Defektjavítás',
-    value: 'defektjavítás'
-  },{
-    name: 'Egyéb',
-    value: 'gumi egyéb'
-  }];
-
-  brake = [{
-    name: 'Fékbetét csere',
-    value: 'fékbetét csere'
-  }, {
-    name: 'Féktárcsa csere',
-    value: 'féktárcsa csere'
-  }, {
-    name: 'Fékfolyadék csere',
-    value: 'fékfolyadék csere'
-  }, {
-    name: 'Fékrendszer csere',
-    value: 'fékrendszer csere'
-  }, {
-    name: 'Egyéb',
-    value: 'fék egyéb'
-  }
-  ];
-
-  undercarriage = [{
-    name: 'Futóműellenőrzés',
-    value: 'futóműellenőrzés'
-  }, {
-    name: 'Futóműállítás',
-    value: 'futóműállítás'
-  }, {
-    name: 'Egyéb',
-    value: 'futómű egyéb'
-  }];
-
-  oil = [{
-    name: 'Olajcsere',
-    value: 'olajcsere'
-  }]
-
-  periodicService = [{
-    name: 'Kisszervíz',
-    value: 'kiszervíz'
-  }, {
-    name: 'Nagyszervíz',
-    value: 'nagyszervíz'
-  }];
-
-  timingBelt = [{
-    name: 'Vezérműszíjcsere',
-    value: 'vezérműszíjcsere'
-  }];
-
-  diagnostic = [{
-    name: 'Hibakód kiolvasás',
-    value: 'hibakód kiolvasás'
-  }]
-
-  technicalExamination = [{
-    name: 'Műszaki vizsgáztatás',
-    value: 'műszaki vizsgáztatás'
-  }, {
-    name: 'Műszaki vizsga felkészítés',
-    value: 'műszaki vizsga felkészítés'
-  }];
-
-  clime = [{
-    name: 'Klímatöltés',
-    value: 'klmíatöltés'
-  }, {
-    name: 'Klíma fertőtlenítés',
-    value: 'klíma fertőtlenítés'
-  }, {
-    name: 'Nyomás ellenőrzés',
-    value: 'klíma nyomás ellenőrzés'
-  }, {
-    name: 'Egyéb',
-    value: 'klíma egyéb'
-  }]
-
-  accumulator = [{
-    name: 'Akkumulátor csere',
-    value: 'akkumulátor csere'
-  }, {
-    name: 'Egyéb',
-    value: 'akkumulátor egyéb'
-  }]
-
-  bodywork = [{
-    name: 'Karosszéria javítás',
-    value: 'karosszéria javítás'
-  }, {
-    name: 'Fényezés',
-    value: 'fényezés'
-  }]
-
-  other = [{
-    name: 'Egyéb',
-    value: ' egyéb'
-  }]
-
+  carInspection = []
+  tyre = []
+  brake = []
+  undercarriage = []
+  periodicService = []
+  timingBelt = []
+  diagnostic = []
+  technicalExamination  = []
+  clime = []
+  accumulator = []
+  bodywork = []
+  other = []
+  authenticityTest = []
+  oil = []
   holidayList=[
   ]
+
+  @ViewChild('hideIt') hideIt: ElementRef;
 
   submit(){
     this.hideIt.nativeElement.focus();
@@ -183,11 +66,11 @@ export class ServiceReservationComponent implements OnInit {
               private dataService: DataService,
               private serviceReservation: ServiceReservationService,
               private el: ElementRef,
-              private dialogService: DialogService,
               private router: Router) {
-    this.listSetter();
     const currentYear = Date.now();
     this.minDate = new Date(currentYear);
+    this.listSetter();
+    this.checkboxSetter();
     this.createForm();
     if(this.dataService.serviceReservationForm != undefined) {
       this.serviceReservationForm = this.dataService.serviceReservationForm;
@@ -200,9 +83,11 @@ export class ServiceReservationComponent implements OnInit {
       this.billingForeignCountryTax = this.dataService.foreignCountryTax;
       this.data = this.dataService.data;
     }
+
   }
 
    ngOnInit(): void {
+
   }
 
   listSetter(): void {
@@ -218,10 +103,9 @@ export class ServiceReservationComponent implements OnInit {
   }
 
   createForm() {
-    const patternEmail = '^[a-zA-Z0-9_.+-]+@+[a-zA-Z-09-]+\\.[a-zA-Z0-9-.]{2,}';
     this.serviceReservationForm = this.fb.group({
       name: this.fb.control('',  {updateOn: 'blur', validators: [Validators.required, Validators.pattern(this.dataService.negatedSet)]}),
-      email: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern(patternEmail), Validators.required]}),
+      email: this.fb.control('', {updateOn: 'blur', validators: [Validators.pattern(this.dataService.patternEmail), Validators.required]}),
       phoneNumber: this.fb.control('',{updateOn: 'blur', validators: [Validators.required, Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]}),
       brand: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
       type: this.fb.control('',{updateOn: 'blur', validators: [Validators.required]}),
@@ -362,6 +246,23 @@ export class ServiceReservationComponent implements OnInit {
     });
   }
 
+  checkboxSetter(){
+    this.carInspection = this.dataService.carInspection;
+    this.tyre = this.dataService.tyre;
+    this.brake = this.dataService.brake;
+    this.undercarriage = this.dataService.undercarriage;
+    this.periodicService = this.dataService.periodicService;
+    this.timingBelt = this.dataService.timingBelt;
+    this.diagnostic = this.dataService.diagnostic;
+    this.technicalExamination  = this.dataService.technicalExamination;
+    this.clime = this.dataService.clime;
+    this.accumulator = this.dataService.accumulator;
+    this.bodywork = this.dataService.bodywork;
+    this.other = this.dataService.other;
+    this.oil = this.dataService.oil;
+    this.authenticityTest = this.dataService.authenticityTest;
+  }
+
   licensePlateValidator(event){
         if(!event.checked) {
           this.serviceReservationForm.controls['licensePlateNumber'].setValidators(Validators.pattern('^[a-zA-Z]{3}[-][0-9]{3}$|[a-zA-Z]{2}[-][0-9]{2}[-][0-9]{2}$|[/p/P][-][0-9]{5}$|^[a-zA-z]{3}[0-9]{5}'))
@@ -443,7 +344,7 @@ export class ServiceReservationComponent implements OnInit {
     }
   }
 
-  myFilter2 = (d: Date): boolean => {
+  myFilter = (d: Date): boolean => {
     this.dataService.goodFridayAndEasterAndPentecostCalculator(d.getFullYear())
     this.dateSetter()
     const time = d.getTime();
@@ -584,12 +485,10 @@ export class ServiceReservationComponent implements OnInit {
     } else {
     this.serviceReservation.reserveUnauthorizedServiceValidation(this.serviceReservationForm.getRawValue(), this.collector, this.foreignCountryPlate, this.billingToCompany).subscribe(data =>{
       console.log(data)
-      this.router.navigate(['/verif'])
+      this.router.navigate(['/service-reservation/verify'])
     },
       err => {
-      console.log(err)
         this.errorMessage = err.error.message;
-      console.log(err.error.message)
         if(this.errorMessage.includes('Tax number is inc')){
           this.serviceReservationForm.controls['billingTax'].setErrors({'badTaxPattern' : true});
         }

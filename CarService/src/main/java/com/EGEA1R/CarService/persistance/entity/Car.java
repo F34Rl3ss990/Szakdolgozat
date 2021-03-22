@@ -68,8 +68,6 @@ public class Car {
     @Column(name = "chassis_number")
     private String chassisNumber;
 
-
-    @Size(max = 10)
     @Column(name = "license_plate_number")
     private String licensePlateNumber;
 
@@ -89,4 +87,13 @@ public class Car {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_car_user")
     private User user;
+
+    public Car(String brand, String type, String yearOfManufacture, String engineType, String licensePlateNumber, Long carId){
+        this.brand = brand;
+        this.type = type;
+        this.yearOfManufacture = yearOfManufacture;
+        this.engineType = engineType;
+        this.licensePlateNumber = licensePlateNumber;
+        this.carId = carId;
+    }
 }

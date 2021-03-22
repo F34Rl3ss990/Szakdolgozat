@@ -45,8 +45,7 @@ public class CarDTO {
     private String chassisNumber;
 
     private String mileage;
-
-    @Size(max = 10)
+    
     @NotNull
     private String licensePlateNumber;
 

@@ -21,4 +21,6 @@ public interface UserService {
     PagedListHolder<User> getAllUserPage(int page, int size);
 
     User getUserDetailsByCarId(Long carId);
+
+    User getUserByUserId(Long userId);
 }

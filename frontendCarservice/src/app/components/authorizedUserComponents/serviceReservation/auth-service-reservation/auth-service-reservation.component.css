@@ -1,0 +1,88 @@
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.check-box-column{
+  min-width: 188px;
+  max-width: 188px;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+.checkbox-for-cycle{
+  min-width:178px;
+  max-width: 178px;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+h5{
+  font-size:18px;
+}
+
+.column-check-box{
+  min-width:40px;
+}
+
+.billing-box{
+  max-width:230px
+}
+
+.billing-check-box{
+  max-width:300px
+}
+
+h2{
+  padding-bottom: 15px;
+}
+
+.mat-form-field{
+  width: 470px;
+  height: 30px;
+  margin-bottom: 16px;
+}
+
+::ng-deep .mat-form-field-infix{
+  padding: 7px 0px 7px 0px !important;
+  margin-bottom: 0px;
+}
+
+.mat-form-field-flex{
+  height: 10px;
+}
+
+.mat-error{
+  margin-left:10px;
+}
+
+.billing-mat-form-field{
+  width:220px;
+}
+
+::ng-deep .mat-form-field-wrapper{
+  margin-bottom:0px;
+}
+
+.textarea-row-class{
+  justify-content: center;
+}
+
+.textarea-class{
+  width:1000px;
+  height:130px;
+  min-height: 100px;
+}
+
+.mat-hint{
+  font-size:14px;
+}
+
+.align-end{
+  text-align: end;
+}

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {userCarList} from '../models/userCarList';
+import {user} from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +26,142 @@ export class DataService {
   pentecostMonth;
   goodFridayMonth;
 
+  user: user;
+  selectedCar: userCarList;
   serviceReservationForm: FormGroup;
   collector: [];
   foreignCountryPlate;
   foreignCountryTax;
   data;
   billingToCompany;
+
+  carInspection = [{
+    name: 'Minimalista csomag',
+    value: 'minimalista csomag'
+  }, {
+    name: 'Közepes csomag',
+    value: 'közepes csomag'
+  }, {
+    name: 'Maximalista csomag',
+    value: 'maximalista csomag'
+  }]
+
+  authenticityTest = [{
+    name: 'Eredetiség vizsgálat',
+    value: 'eredetiség vizsgálat'
+  }]
+
+  tyre = [{
+    name: 'Gumicsere',
+    value: 'gumicsere'
+  }, {
+    name: 'Kerékcentírozás',
+    value: 'kerékcentírozás'
+  }, {
+    name: 'Defektjavítás',
+    value: 'defektjavítás'
+  },{
+    name: 'Egyéb',
+    value: 'gumi egyéb'
+  }];
+
+  brake = [{
+    name: 'Fékbetét csere',
+    value: 'fékbetét csere'
+  }, {
+    name: 'Féktárcsa csere',
+    value: 'féktárcsa csere'
+  }, {
+    name: 'Fékfolyadék csere',
+    value: 'fékfolyadék csere'
+  }, {
+    name: 'Fékrendszer csere',
+    value: 'fékrendszer csere'
+  }, {
+    name: 'Egyéb',
+    value: 'fék egyéb'
+  }
+  ];
+
+  undercarriage = [{
+    name: 'Futóműellenőrzés',
+    value: 'futóműellenőrzés'
+  }, {
+    name: 'Futóműállítás',
+    value: 'futóműállítás'
+  }, {
+    name: 'Egyéb',
+    value: 'futómű egyéb'
+  }];
+
+  oil = [{
+    name: 'Olajcsere',
+    value: 'olajcsere'
+  }]
+
+  periodicService = [{
+    name: 'Kisszervíz',
+    value: 'kiszervíz'
+  }, {
+    name: 'Nagyszervíz',
+    value: 'nagyszervíz'
+  }];
+
+  timingBelt = [{
+    name: 'Vezérműszíjcsere',
+    value: 'vezérműszíjcsere'
+  }];
+
+  diagnostic = [{
+    name: 'Hibakód kiolvasás',
+    value: 'hibakód kiolvasás'
+  }]
+
+  technicalExamination = [{
+    name: 'Műszaki vizsgáztatás',
+    value: 'műszaki vizsgáztatás'
+  }, {
+    name: 'Műszaki vizsga felkészítés',
+    value: 'műszaki vizsga felkészítés'
+  }];
+
+  clime = [{
+    name: 'Klímatöltés',
+    value: 'klmíatöltés'
+  }, {
+    name: 'Klíma fertőtlenítés',
+    value: 'klíma fertőtlenítés'
+  }, {
+    name: 'Nyomás ellenőrzés',
+    value: 'klíma nyomás ellenőrzés'
+  }, {
+    name: 'Egyéb',
+    value: 'klíma egyéb'
+  }]
+
+  accumulator = [{
+    name: 'Akkumulátor csere',
+    value: 'akkumulátor csere'
+  }, {
+    name: 'Egyéb',
+    value: 'akkumulátor egyéb'
+  }]
+
+  bodywork = [{
+    name: 'Karosszéria javítás',
+    value: 'karosszéria javítás'
+  }, {
+    name: 'Fényezés',
+    value: 'fényezés'
+  }]
+
+  other = [{
+    name: 'Egyéb',
+    value: ' egyéb'
+  }]
+
+  holidayList=[
+  ]
 
   constructor() { }
 

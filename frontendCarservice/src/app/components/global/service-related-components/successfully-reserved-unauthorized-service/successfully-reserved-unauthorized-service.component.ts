@@ -24,6 +24,8 @@ export class SuccessfullyReservedUnauthorizedServiceComponent implements OnInit 
   }
 
   close() {
+    this.dataService.user = null
+    this.dataService.selectedCar = null;
     this.dataService.serviceReservationForm = null;
     this.dataService.collector = null;
     this.dataService.billingToCompany = null;

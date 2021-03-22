@@ -1,5 +1,7 @@
 package com.EGEA1R.CarService.web.controller;
 
+import com.EGEA1R.CarService.persistance.entity.Car;
+import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.service.classes.ExcelServiceImpl;
 import com.EGEA1R.CarService.service.interfaces.ExcelService;
 import com.EGEA1R.CarService.service.interfaces.ServiceReservationService;
@@ -7,6 +9,7 @@ import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.ExcelCarDTO;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
+import com.EGEA1R.CarService.web.DTO.UserCarsDTO;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -51,6 +55,12 @@ public class ServiceReservationController {
         return ResponseEntity.ok(new MessageResponse("Valid!"));
     }
 
+    @PostMapping("/serviceReservationAuthorizedValidation")
+    @PreAuthorize("hasRole('USER')")
+    public User authorizedUserReservationValidation(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) {
+        return userService.getUserByUserId(serviceReservationDTO.getFkCarUserId());
+    }
+
     @PostMapping("/serviceReservationUnauthorized")
     public ResponseEntity<?> unauthorizedUserReservation(@RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
@@ -59,13 +69,13 @@ public class ServiceReservationController {
 
     @PostMapping("/reserveService")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> reserveService(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> reserveService(@RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         serviceReservationService.saveService(serviceReservationDTO);
         return ResponseEntity.ok("Successfully reserved!");
     }
 
     @GetMapping("/getServicesByUser")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getServicesByUser(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestBody Long userId){
@@ -83,6 +93,12 @@ public class ServiceReservationController {
     public List<ExcelCarDTO> test() throws IOException {
         return excelService.getExcelData();
     }
+
+    @GetMapping("/getCarsByRegId")
+    public List<UserCarsDTO> getCarsByCredentialId(@RequestParam ("credentialId") Long credentialId) throws ParseException {
+        return serviceReservationService.getCarByCredentialId(credentialId);
+    }
+
 
 
 }

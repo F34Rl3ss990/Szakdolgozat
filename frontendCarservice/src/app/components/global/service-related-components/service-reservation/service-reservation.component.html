@@ -1,9 +1,8 @@
-<app-navigation-bar></app-navigation-bar>
 <div class="container" style="border: 1px solid black; border-radius:10px; margin-bottom:10px">
   <form
-  [formGroup]="serviceReservationForm"
-  (ngSubmit)="onSubmit()">
-  <div class="row">
+    [formGroup]="serviceReservationForm"
+    (ngSubmit)="onSubmit()">
+    <div class="row">
       <div class="column">
         <h2>1. Gépjármű adatok</h2>
         <mat-form-field appearance="outline">
@@ -89,7 +88,7 @@
           >
         </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['engineNumber'].hasError('pattern')">
-            Érvénytelen karakterek a motorkód mezőben!
+          Érvénytelen karakterek a motorkód mezőben!
         </mat-error>
         <p></p>
         <mat-form-field appearance="outline">
@@ -118,122 +117,122 @@
         <mat-checkbox
           formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate; licensePlateValidator($event)">Nemzetközi rendszám
         </mat-checkbox>
-    </div>
-    <div class="column">
-      <h2>2. Személyes adatok</h2>
+      </div>
+      <div class="column">
+        <h2>2. Személyes adatok</h2>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Név*</mat-label>
-        <input type="text" matInput formControlName="name" #name
-               placeholder="Név"
-        >
-      </mat-form-field>
-      <mat-error *ngIf="serviceReservationForm.controls['name'].hasError('required') && serviceReservationForm.controls['name'].touched
+        <mat-form-field appearance="outline">
+          <mat-label>Név*</mat-label>
+          <input type="text" matInput formControlName="name" #name
+                 placeholder="Név"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['name'].hasError('required') && serviceReservationForm.controls['name'].touched
                    || serviceReservationForm.controls['name'].hasError('required') && serviceReservationForm.controls['name'].dirty
                    || serviceReservationForm.controls['name'].hasError('required') && serviceReservationForm.controls['name'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['name'].value==''">
           Név megadása kötelező!
-      </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['name'].hasError('pattern') && !serviceReservationForm.controls['name'].hasError('required')">
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['name'].hasError('pattern') && !serviceReservationForm.controls['name'].hasError('required')">
           Érvénytelen karakterek a név mezőben!
-      </mat-error>
-      <p></p>
-      <mat-form-field appearance="outline">
-        <mat-label>Telefonszám*</mat-label>
-        <input type="text" matInput formControlName="phoneNumber" #phoneNumber
-               placeholder="Telefonszám"
-        >
-      </mat-form-field>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('required') && serviceReservationForm.controls['phoneNumber'].touched
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefonszám*</mat-label>
+          <input type="text" matInput formControlName="phoneNumber" #phoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('required') && serviceReservationForm.controls['phoneNumber'].touched
                    || serviceReservationForm.controls['phoneNumber'].hasError('required') && serviceReservationForm.controls['phoneNumber'].dirty
                    || serviceReservationForm.controls['phoneNumber'].hasError('required') && serviceReservationForm.controls['phoneNumber'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['phoneNumber'].value==''">
           Telefonszám megadása kötelező!
-      </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('pattern') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('pattern') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           Érvénytelen karakterek a telefonszám mezőben!
-      </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('minlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('minlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           A telefonszámnak legalább 8 számból kell állnia!
-      </mat-error>
-      <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('maxlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
+        </mat-error>
+        <mat-error *ngIf="serviceReservationForm.controls['phoneNumber'].hasError('maxlength') && !serviceReservationForm.controls['phoneNumber'].hasError('required')">
           A telefonszám legfeljebb 14 számból állhat!
-      </mat-error>
-      <p></p>
-      <mat-form-field appearance="outline">
-        <mat-label>Email*</mat-label>
-        <input type="email" matInput formControlName="email" #email
-               placeholder="Email"
-        >
-      </mat-form-field>
-      <mat-error *ngIf="serviceReservationForm.controls['email'].hasError('required') && serviceReservationForm.controls['email'].touched
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Email*</mat-label>
+          <input type="email" matInput formControlName="email" #email
+                 placeholder="Email"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['email'].hasError('required') && serviceReservationForm.controls['email'].touched
                    || serviceReservationForm.controls['email'].hasError('required') && serviceReservationForm.controls['email'].dirty
                    || serviceReservationForm.controls['email'].hasError('required') && serviceReservationForm.controls['email'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['email'].value==''">
-            Email cím megadása kötelező!
-      </mat-error>
-      <mat-error
-        *ngIf="serviceReservationForm.controls['email'].hasError('pattern') && !serviceReservationForm.controls['email'].hasError('required')">
-        Érvénytelen e-mail formátum!
-      </mat-error>
-      <p></p>
-      <h2>3. Időpont foglalás</h2>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Válasszon egy időpontot*</mat-label>
-        <input matInput [errorStateMatcher]="errorMatcher" [disabled]="true" [min]="minDate" [matDatepickerFilter]="myFilter2" formControlName="reservedDate" [matDatepicker]="reservedDate">
-        <mat-datepicker-toggle matSuffix [for]="reservedDate"></mat-datepicker-toggle>
-        <mat-datepicker #reservedDate disabled="false"></mat-datepicker>
-      </mat-form-field>
-      <mat-error *ngIf="serviceReservationForm.controls['reservedDate'].value.value =='' && serviceReservationForm.controls['reservedDate'].touched
+          Email cím megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="serviceReservationForm.controls['email'].hasError('pattern') && !serviceReservationForm.controls['email'].hasError('required')">
+          Érvénytelen e-mail formátum!
+        </mat-error>
+        <p></p>
+        <h2>3. Időpont foglalás</h2>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Válasszon egy időpontot*</mat-label>
+          <input matInput [disabled]="true" [min]="minDate" [matDatepickerFilter]="myFilter" formControlName="reservedDate" [matDatepicker]="reservedDate">
+          <mat-datepicker-toggle matSuffix [for]="reservedDate"></mat-datepicker-toggle>
+          <mat-datepicker #reservedDate disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-error *ngIf="serviceReservationForm.controls['reservedDate'].value.value =='' && serviceReservationForm.controls['reservedDate'].touched
                    || isSubmitted && serviceReservationForm.controls['reservedDate'].value.value==''">
-        Időpont megadása kötelező!
-      </mat-error>
-      <p></p>
+          Időpont megadása kötelező!
+        </mat-error>
+        <p></p>
+      </div>
     </div>
-  </div>
     <div class="row">
       <div class="column billing-box">
-      <h2 style="padding-bottom: 0px; margin-bottom: 0px">4. Számlázási adatok</h2>
+        <h2 style="padding-bottom: 0px; margin-bottom: 0px">4. Számlázási adatok</h2>
       </div>
       <div class="column billing-check-box">
-      <mat-checkbox
-        formControlName="billingToCompany" (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)">Cég nevére kérem a számlát
-      </mat-checkbox>
+        <mat-checkbox
+          formControlName="billingToCompany" (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)">Cég nevére kérem a számlát
+        </mat-checkbox>
       </div>
       <div class="column billing-box">
-      <mat-checkbox
-        formControlName="billingSameAsUserData" (change)="billingDataSetter();billingSameAsUserData = !billingSameAsUserData">Megegyezik a személyes adatokkal
-      </mat-checkbox>
+        <mat-checkbox
+          formControlName="billingSameAsUserData" (change)="billingDataSetter();billingSameAsUserData = !billingSameAsUserData">Megegyezik a személyes adatokkal
+        </mat-checkbox>
       </div>
-      </div>
+    </div>
     <div class="row">
       <div class="column" style="max-width: 310px">
-      <mat-form-field appearance="outline" style="width:300px">
-        <mat-label>Számlázási név*</mat-label>
-        <input type="text" matInput formControlName="billingName" #billingName
-               placeholder="Számlázási név"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" style="width:300px">
+          <mat-label>Számlázási név*</mat-label>
+          <input type="text" matInput formControlName="billingName" #billingName
+                 placeholder="Számlázási név"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingName'].hasError('required') && serviceReservationForm.controls['billingName'].touched
                    || serviceReservationForm.controls['billingName'].hasError('required') && serviceReservationForm.controls['billingName'].dirty
                    || serviceReservationForm.controls['billingName'].hasError('required') && serviceReservationForm.controls['billingName'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingName'].value==''">
-            Számlázási név megadása kötelező!
+          Számlázási név megadása kötelező!
         </mat-error>
         <p></p>
       </div>
       <div class="column" style="max-width: 150px">
-      <mat-form-field appearance="outline" style="width: 140px">
-        <mat-label>Telefonszám*</mat-label>
-        <input type="text" matInput formControlName="billingPhoneNumber" #billingPhoneNumber
-               placeholder="Telefonszám"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 140px">
+          <mat-label>Telefonszám*</mat-label>
+          <input type="text" matInput formControlName="billingPhoneNumber" #billingPhoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingPhoneNumber'].hasError('required') && serviceReservationForm.controls['billingPhoneNumber'].touched
                    || serviceReservationForm.controls['billingPhoneNumber'].hasError('required') && serviceReservationForm.controls['billingPhoneNumber'].dirty
                    || serviceReservationForm.controls['billingPhoneNumber'].hasError('required') && serviceReservationForm.controls['billingPhoneNumber'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingPhoneNumber'].value==''">
-            Telefonszám megadása kötelező!
+          Telefonszám megadása kötelező!
         </mat-error>
         <mat-error *ngIf="serviceReservationForm.controls['billingPhoneNumber'].hasError('pattern') && !serviceReservationForm.controls['billingPhoneNumber'].hasError('required')">
           Érvénytelen karakterek a telefonszám mezőben!
@@ -247,17 +246,17 @@
         <p></p>
       </div>
       <div class="column billing-box">
-      <mat-form-field appearance="outline" class="billing-mat-form-field">
-        <mat-label>Email*</mat-label>
-        <input type="text" matInput formControlName="billingEmail" #billingEmail
-               placeholder="Email"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Email*</mat-label>
+          <input type="text" matInput formControlName="billingEmail" #billingEmail
+                 placeholder="Email"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingEmail'].hasError('required') && serviceReservationForm.controls['billingEmail'].touched
                    || serviceReservationForm.controls['billingEmail'].hasError('required') && serviceReservationForm.controls['billingEmail'].dirty
                    || serviceReservationForm.controls['billingEmail'].hasError('required') && serviceReservationForm.controls['billingEmail'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingEmail'].value==''">
-            Email cím megadása kötelező!
+          Email cím megadása kötelező!
         </mat-error>
         <mat-error
           *ngIf="serviceReservationForm.controls['billingEmail'].hasError('pattern') && !serviceReservationForm.controls['billingEmail'].hasError('required')">
@@ -276,7 +275,7 @@
                    || (serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].dirty) && billingToCompany
                    || (serviceReservationForm.controls['billingTax'].hasError('required') && serviceReservationForm.controls['billingTax'].hasError('pristine')) && billingToCompany
                    || (isSubmitted && serviceReservationForm.controls['billingTax'].value=='' && billingToCompany)">
-            Adószám cég esetén kötelező!
+          Adószám cég esetén kötelező!
         </mat-error>
         <mat-error *ngIf="serviceReservationForm.controls['billingTax'].hasError('pattern') && !billingForeignCountryTax && billingToCompany">
           Nem megfelelő adószám formátum!
@@ -292,17 +291,17 @@
     </div>
     <div class="row">
       <div class="column billing-box">
-      <mat-form-field appearance="outline" class="billing-mat-form-field">
-        <mat-label>Irányítószám*</mat-label>
-        <input type="text" matInput formControlName="billingZipCode" #billingZipCode
-               placeholder="Irányítószám"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Irányítószám*</mat-label>
+          <input type="text" matInput formControlName="billingZipCode" #billingZipCode
+                 placeholder="Irányítószám"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingZipCode'].hasError('required') && serviceReservationForm.controls['billingZipCode'].touched
                    || serviceReservationForm.controls['billingZipCode'].hasError('required') && serviceReservationForm.controls['billingZipCode'].dirty
                    || serviceReservationForm.controls['billingZipCode'].hasError('required') && serviceReservationForm.controls['billingZipCode'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingZipCode'].value==''">
-            Az irányítószám kötelező!
+          Az irányítószám kötelező!
         </mat-error>
         <mat-error *ngIf="serviceReservationForm.controls['billingZipCode'].hasError('pattern')">
           Érvénytelen karakterek az iránytószám mezőben!
@@ -313,17 +312,17 @@
         <p></p>
       </div>
       <div class="column billing-box">
-      <mat-form-field appearance="outline" class="billing-mat-form-field">
-        <mat-label>Város*</mat-label>
-        <input type="text" matInput formControlName="billingTown" #billingTown
-               placeholder="Város"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Város*</mat-label>
+          <input type="text" matInput formControlName="billingTown" #billingTown
+                 placeholder="Város"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingTown'].hasError('required') && serviceReservationForm.controls['billingTown'].touched
                    || serviceReservationForm.controls['billingTown'].hasError('required') && serviceReservationForm.controls['billingTown'].dirty
                    || serviceReservationForm.controls['billingTown'].hasError('required') && serviceReservationForm.controls['billingTown'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingTown'].value==''">
-            Város megadása kötelező!
+          Város megadása kötelező!
         </mat-error>
         <mat-error *ngIf="serviceReservationForm.controls['billingTown'].hasError('pattern') && !serviceReservationForm.controls['billingTown'].hasError('required')">
           Érvénytelen karakterek a név mezőben!
@@ -331,63 +330,63 @@
         <p></p>
       </div>
       <div class="column billing-box">
-      <mat-form-field appearance="outline" class="billing-mat-form-field">
-        <mat-label>Utca, házszám*</mat-label>
-        <input type="text" matInput formControlName="billingStreet" #billingStreet
-               placeholder="Utca, házszám"
-        >
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Utca, házszám*</mat-label>
+          <input type="text" matInput formControlName="billingStreet" #billingStreet
+                 placeholder="Utca, házszám"
+          >
+        </mat-form-field>
         <mat-error *ngIf="serviceReservationForm.controls['billingStreet'].hasError('required') && serviceReservationForm.controls['billingStreet'].touched
                    || serviceReservationForm.controls['billingStreet'].hasError('required') && serviceReservationForm.controls['billingStreet'].dirty
                    || serviceReservationForm.controls['billingStreet'].hasError('required') && serviceReservationForm.controls['billingStreet'].hasError('pristine')
                    || isSubmitted && serviceReservationForm.controls['billingStreet'].value==''">
-            Utca, házszám megadása kötelező!
+          Utca, házszám megadása kötelező!
         </mat-error>
         <p></p>
       </div>
       <div class="column billing-box">
-      <mat-form-field appearance="outline" class="billing-mat-form-field">
-        <mat-label>Emelet, ajtó</mat-label>
-        <input type="text" matInput formControlName="billingOtherAddressType" #billingOtherAddressType
-               placeholder="Emelet, ajtó"
-        >
-      </mat-form-field>
-      <mat-error>
-      </mat-error>
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Emelet, ajtó</mat-label>
+          <input type="text" matInput formControlName="billingOtherAddressType" #billingOtherAddressType
+                 placeholder="Emelet, ajtó"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
         <p></p>
       </div>
     </div>
-  <div class="row">
+    <div class="row">
       <h2>5. Szolgáltatások</h2>
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Autó átvizsgálás:</h5>
+          <h5 class="align-end">Autó átvizsgálás:</h5>
         </div>
         <ng-container *ngFor="let checkbox of carInspection; let i = index" formArrayName="carInspection">
           <div class="column checkbox-for-cycle">
-          <mat-checkbox style="margin-right: 5px;" [formControlName]="i" (change)="collectorSetter()">
-            {{checkbox.name}}
-          </mat-checkbox>
+            <mat-checkbox style="margin-right: 5px;" [formControlName]="i" (change)="collectorSetter()">
+              {{checkbox.name}}
+            </mat-checkbox>
           </div>
         </ng-container>
       </div>
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Eredetiség vizsgálat:</h5>
+          <h5 class="align-end">Eredetiség vizsgálat:</h5>
         </div>
         <ng-container *ngFor="let checkbox1 of authenticityTest; let i1 = index" formArrayName="authenticityTest">
           <div class="column checkbox-for-cycle">
-          <mat-checkbox style="margin-right: 5px" [formControlName]="i1" (change)="collectorSetter()">
-            {{checkbox1.name}}
-          </mat-checkbox>
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i1" (change)="collectorSetter()">
+              {{checkbox1.name}}
+            </mat-checkbox>
           </div>
         </ng-container>
       </div>
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Gumi:</h5>
+          <h5 class="align-end">Gumi:</h5>
         </div>
         <ng-container *ngFor="let checkbox2 of tyre; let i2 = index" formArrayName="tyre">
           <div class="column checkbox-for-cycle">
@@ -400,7 +399,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Fék:</h5>
+          <h5 class="align-end">Fék:</h5>
         </div>
         <ng-container *ngFor="let checkbox3 of brake; let i3 = index" formArrayName="brake">
           <div class="column checkbox-for-cycle">
@@ -413,7 +412,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Futómű:</h5>
+          <h5 class="align-end">Futómű:</h5>
         </div>
         <ng-container *ngFor="let checkbox4 of undercarriage; let i4 = index" formArrayName="undercarriage">
           <div class="column checkbox-for-cycle">
@@ -426,7 +425,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Olaj:</h5>
+          <h5 class="align-end">Olaj:</h5>
         </div>
         <ng-container *ngFor="let checkbox5 of oil; let i5 = index" formArrayName="oil">
           <div class="column checkbox-for-cycle">
@@ -439,7 +438,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Időszakos szervíz:</h5>
+          <h5 class="align-end">Időszakos szervíz:</h5>
         </div>
         <ng-container *ngFor="let checkbox6 of periodicService; let i6 = index" formArrayName="periodicService">
           <div class="column checkbox-for-cycle">
@@ -452,7 +451,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Vezérműszíj:</h5>
+          <h5 class="align-end">Vezérműszíj:</h5>
         </div>
         <ng-container *ngFor="let checkbox7 of timingBelt; let i7 = index" formArrayName="timingBelt">
           <div class="column checkbox-for-cycle">
@@ -465,7 +464,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Diagnosztika:</h5>
+          <h5 class="align-end">Diagnosztika:</h5>
         </div>
         <ng-container *ngFor="let checkbox8 of diagnostic; let i8 = index" formArrayName="diagnostic">
           <div class="column checkbox-for-cycle">
@@ -478,7 +477,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Műszaki vizsga:</h5>
+          <h5 class="align-end">Műszaki vizsga:</h5>
         </div>
         <ng-container *ngFor="let checkbox9 of technicalExamination; let i9 = index" formArrayName="technicalExamination">
           <div class="column checkbox-for-cycle">
@@ -491,7 +490,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Klíma:</h5>
+          <h5 class="align-end">Klíma:</h5>
         </div>
         <ng-container *ngFor="let checkbox10 of clime; let i10 = index" formArrayName="clime">
           <div class="column checkbox-for-cycle">
@@ -504,7 +503,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Akkumulátor:</h5>
+          <h5 class="align-end">Akkumulátor:</h5>
         </div>
         <ng-container *ngFor="let checkbox11 of accumulator; let i11 = index" formArrayName="accumulator">
           <div class="column checkbox-for-cycle">
@@ -517,7 +516,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Karosszéria:</h5>
+          <h5 class="align-end">Karosszéria:</h5>
         </div>
         <ng-container *ngFor="let checkbox12 of bodywork; let i12 = index" formArrayName="bodywork">
           <div class="column checkbox-for-cycle">
@@ -530,7 +529,7 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-        <h5 class="align-end">Egyéb:</h5>
+          <h5 class="align-end">Egyéb:</h5>
         </div>
         <ng-container *ngFor="let checkbox13 of other; let i13 = index" formArrayName="other">
           <div class="column checkbox-for-cycle">
@@ -540,41 +539,41 @@
           </div>
         </ng-container>
       </div>
-    <mat-error *ngIf="!atLeastOneServiceChecked && isSubmitted || !atLeastOneServiceChecked && serviceReservationForm.controls['carInspection'].hasError('noServiceChecked')">
-      Legalább egy szolgáltatást meg kell jelölnie!
-  </mat-error>
+      <mat-error *ngIf="!atLeastOneServiceChecked && isSubmitted || !atLeastOneServiceChecked && serviceReservationForm.controls['carInspection'].hasError('noServiceChecked')">
+        Legalább egy szolgáltatást meg kell jelölnie!
+      </mat-error>
 
-  </div>
+    </div>
     <div class="row textarea-row-class">
       <h2>6. Megjegyzés</h2>
-    <mat-form-field appearance="outline" class="textarea-class">
-      <mat-label>Megjegyzés</mat-label>
-      <textarea matInput  formControlName="comment" #comment cdkTextareaAutosize cdkAutosizeMinRows="7" cdkAutosizeMaxRows="7"></textarea>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="textarea-class">
+        <mat-label>Megjegyzés</mat-label>
+        <textarea matInput  formControlName="comment" #comment cdkTextareaAutosize cdkAutosizeMinRows="7" cdkAutosizeMaxRows="7"></textarea>
+      </mat-form-field>
       <p></p>
       <mat-error *ngIf="serviceReservationForm.controls['comment'].hasError('required') && serviceReservationForm.controls['comment'].touched && otherChecked
                    || serviceReservationForm.controls['comment'].hasError('required') && serviceReservationForm.controls['comment'].dirty && otherChecked
                    || serviceReservationForm.controls['comment'].hasError('required') && serviceReservationForm.controls['comment'].hasError('pristine') && otherChecked
                    || isSubmitted && serviceReservationForm.controls['comment'].value=='' && otherChecked">
-            Egyéb mező kiválasztása esetén a megjegyzés kötelező!
+        Egyéb mező kiválasztása esetén a megjegyzés kötelező!
       </mat-error>
     </div>
-  <div class="row">
-    <div class="col-xs-12" style="padding-top: 15px">
-      <mat-checkbox formControlName="data" (change)="data =!data">A <a href="" routerLink="">Felhasználói szabályzatot</a>
-        és az <a href="" routerLink="">
-          Adatvédelmi tájékoztatót</a> elolvastam és elfogadom.
-      </mat-checkbox>
+    <div class="row">
+      <div class="col-xs-12" style="padding-top: 15px">
+        <mat-checkbox formControlName="data" (change)="data =!data">A <a href="" routerLink="">Felhasználói szabályzatot</a>
+          és az <a href="" routerLink="">
+            Adatvédelmi tájékoztatót</a> elolvastam és elfogadom.
+        </mat-checkbox>
+      </div>
+      <mat-hint>A *-al jelölt mezők kitöltése kötelező!</mat-hint>
+      <mat-hint>Legalább egy szolgáltatás kiválasztása kötelező!</mat-hint>
+      <mat-hint>Egyéb szolgáltatás kiválasztása esetén a megjegyzés mező kötelező!</mat-hint>
+      <p></p>
     </div>
-    <mat-hint>A *-al jelölt mezők kitöltése kötelező!</mat-hint>
-    <mat-hint>Legalább egy szolgáltatás kiválasztása kötelező!</mat-hint>
-    <mat-hint>Egyéb szolgáltatás kiválasztása esetén a megjegyzés mező kötelező!</mat-hint>
-    <p></p>
-  </div>
     <div class="row textarea-row-class">
-    <button type="submit"
-            class="btn btn-primary btn-block" style="float:right; width: 200px; margin-bottom:15px" [disabled]="data===false">Foglalás
-    </button>
+      <button type="submit"
+              class="btn btn-primary btn-block" style="float:right; width: 200px; margin-bottom:15px" [disabled]="data===false">Foglalás
+      </button>
       <input class="hideIt" #hideIt>
     </div>
     <div>

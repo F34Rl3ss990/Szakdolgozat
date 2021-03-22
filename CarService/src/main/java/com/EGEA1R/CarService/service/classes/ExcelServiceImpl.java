@@ -20,9 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ExcelServiceImpl implements ExcelService {
 
-    private List<ExcelCarDTO> excelToCarDTO() throws FileNotFoundException {
+    @Async
+    public List<ExcelCarDTO> excelToCarDTO() throws IOException {
         String SHEET = "Munka1";
-        FileInputStream fin = new FileInputStream("D:\\PROGRAMMING\\Szakdolgozat\\CarService\\src\\main\\resources\\templates\\mnk.xlsx");
+        FileInputStream fin = new FileInputStream("D:\\PROGRAMMING\\Szakdolgozat\\CarService\\src\\main\\resources\\serviceableCars.xlsx");
         try {
             Workbook workbook = new XSSFWorkbook(fin);
             Sheet sheet = workbook.getSheet(SHEET);
@@ -78,6 +79,7 @@ public class ExcelServiceImpl implements ExcelService {
                 carDTOS.add(excelCarDTO);
             }
             workbook.close();
+            fin.close();
             return carDTOS;
         } catch (IOException e) {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
