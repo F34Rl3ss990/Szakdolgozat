@@ -47,12 +47,13 @@ import {MatSelectModule} from '@angular/material/select';
 import { VerifyServiceReservationComponent } from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
 import { AuthServiceReservationComponent } from './components/authorizedUserComponents/serviceReservation/auth-service-reservation/auth-service-reservation.component';
 import { VerifyServiceComponent } from './components/authorizedUserComponents/serviceReservation/verify-service/verify-service.component';
-import { SideNavComponent } from './components/authorizedUserComponents/profile-nav/side-nav/side-nav.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
+import { MenuListItemComponent } from './components/authorizedUserComponents/profile/side-nav/menu-list-item/menu-list-item.component';
+import { NavComponent } from './components/authorizedUserComponents/profile/side-nav/nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import {MatListModule} from '@angular/material/list';
     VerifyServiceReservationComponent,
     AuthServiceReservationComponent,
     VerifyServiceComponent,
-    SideNavComponent
+    MenuListItemComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,

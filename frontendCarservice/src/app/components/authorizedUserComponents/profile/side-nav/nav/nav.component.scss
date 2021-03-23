@@ -1,0 +1,27 @@
+@import '../../../../../../breakpoint';
+@import '../../../../../../theme';
+
+.mat-sidenav {
+  width: 255px;
+}
+.mat-sidenav-container {
+  background-color: white !important;
+  .mat-sidenav-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.mat-nav-list {
+  padding-top: 0;
+}
+
+::ng-deep .menu-list-item.mat-list-item {
+ ::ng-deep .mat-list-item-content {
+    flex: 1 1 100%;
+    width: 100%;
+    height: 48px!important;
+  }
+}
+
+

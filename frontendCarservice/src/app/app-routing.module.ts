@@ -7,7 +7,8 @@ import {ServiceReservationComponent} from './components/global/service-related-c
 import {VerifyServiceReservationComponent} from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
 import {AuthServiceReservationComponent} from './components/authorizedUserComponents/serviceReservation/auth-service-reservation/auth-service-reservation.component';
 import {VerifyServiceComponent} from './components/authorizedUserComponents/serviceReservation/verify-service/verify-service.component';
-import {SideNavComponent} from './components/authorizedUserComponents/profile-nav/side-nav/side-nav.component';
+import {NavComponent} from './components/authorizedUserComponents/profile/side-nav/nav/nav.component';
+
 
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'service-reservation/verify', component: VerifyServiceReservationComponent},
   { path: 'auth-service-reservation', component: AuthServiceReservationComponent},
   { path: 'auth-service-reservation/verify', component: VerifyServiceComponent},
-  { path: 'profile', component: SideNavComponent}
+  { path: 'profile', component: NavComponent},
+
 ];
 
 @NgModule({
