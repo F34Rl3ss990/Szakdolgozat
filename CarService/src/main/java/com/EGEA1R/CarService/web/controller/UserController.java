@@ -1,8 +1,11 @@
 package com.EGEA1R.CarService.web.controller;
 
+import com.EGEA1R.CarService.persistance.entity.Credential;
+import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
+import com.EGEA1R.CarService.web.DTO.payload.request.EmailChangeRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -31,9 +35,9 @@ public class UserController {
 
     @GetMapping("/getUser")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getUserInformation(){
+    public User getUserInformation(){
         AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(userService.getUserDetailsByCredentialId(credentialDetails.getCredentialId()));
+        return userService.getUserDetailsByCredentialId(credentialDetails.getCredentialId());
     }
 
     @PostMapping("/addUser")

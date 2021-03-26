@@ -44,12 +44,17 @@ public class CredentialRepositoryImpl implements CredentialRepository {
 
     @Transactional
     @Override
-    public void changeEmail(String email, Long credentialId){
+    public void changeEmail(String email, Long credentialId, Long userId){
         em.createNativeQuery("update credential c" +
                 " set c.email = ? " +
                 "where c.credential_id = ?")
                 .setParameter(1, email)
                 .setParameter(2, credentialId)
+                .executeUpdate();
+
+        em.createNativeQuery("update user set e_mail = ? where user_id = ?")
+                .setParameter(1, email)
+                .setParameter(2, userId )
                 .executeUpdate();
     }
 

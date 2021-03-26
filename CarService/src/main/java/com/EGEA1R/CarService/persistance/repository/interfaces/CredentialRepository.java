@@ -11,7 +11,7 @@ public interface CredentialRepository {
 
     Optional<Credential> findByEmailForMFA(String email);
 
-    void changeEmail(String email, Long credentialId);
+    void changeEmail(String email, Long credentialId, Long userId);
 
     Optional<Credential> findById (Long credentialId);
 

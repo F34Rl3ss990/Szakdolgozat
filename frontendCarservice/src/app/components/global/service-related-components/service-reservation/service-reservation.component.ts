@@ -53,8 +53,8 @@ export class ServiceReservationComponent implements OnInit {
   other = []
   authenticityTest = []
   oil = []
-  holidayList=[
-  ]
+  capture = []
+  holidayList=[]
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
@@ -142,6 +142,7 @@ export class ServiceReservationComponent implements OnInit {
       clime: this.fb.array(this.clime.map(x => false), {updateOn: 'change'}),
       accumulator: this.fb.array(this.accumulator.map(x => false), {updateOn: 'change'}),
       bodywork: this.fb.array(this.bodywork.map(x => false), {updateOn: 'change'}),
+      capture: this.fb.array(this.capture.map(x => false), {updateOn: 'change'}),
       other: this.fb.array(this.other.map(x => false), {updateOn: 'change'}),
       comment: this.fb.control('', {updateOn: 'blur'})
     }, {updateOn: 'submit'});
@@ -237,6 +238,13 @@ export class ServiceReservationComponent implements OnInit {
         { emitEvent: false }
       );
     });
+    const captureControl = (this.serviceReservationForm.controls.capture as FormArray);
+    this.subscription = captureControl.valueChanges.subscribe(checkbox => {
+      captureControl.setValue(
+        captureControl.value.map((value, i) => value ? this.capture[i].value : false),
+        { emitEvent: false }
+      );
+    });
     const otherControl = (this.serviceReservationForm.controls.other as FormArray);
     this.subscription = otherControl.valueChanges.subscribe(checkbox => {
       otherControl.setValue(
@@ -260,6 +268,7 @@ export class ServiceReservationComponent implements OnInit {
     this.bodywork = this.dataService.bodywork;
     this.other = this.dataService.other;
     this.oil = this.dataService.oil;
+    this.capture = this.dataService.capture;
     this.authenticityTest = this.dataService.authenticityTest;
   }
 
@@ -345,6 +354,9 @@ export class ServiceReservationComponent implements OnInit {
   }
 
   myFilter = (d: Date): boolean => {
+    if(d==undefined){
+      return;
+    }
     this.dataService.goodFridayAndEasterAndPentecostCalculator(d.getFullYear())
     this.dateSetter()
     const time = d.getTime();
@@ -398,6 +410,7 @@ export class ServiceReservationComponent implements OnInit {
       .concat(this.serviceReservationForm.controls['clime'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['accumulator'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['bodywork'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['capture'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['other'].value.filter(value=> !!value));
 
     this.atLeastOneServiceChecked = false;

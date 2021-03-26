@@ -44,4 +44,9 @@ public interface CredentialService {
 
     void saveBlockedToken(HttpServletRequest request);
 
+    void changeEmailAndBlockToken(HttpServletRequest request, Long credentialId, String email);
+
+    void generateOtpNum(String email);
+
+    Boolean verifyDataChange(String code, String email);
 }

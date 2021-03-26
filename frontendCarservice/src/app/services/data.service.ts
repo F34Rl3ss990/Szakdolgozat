@@ -160,6 +160,14 @@ export class DataService {
     value: ' egyéb'
   }]
 
+  capture = [{
+    name: 'Videó rögzítés',
+    value: 'videó rögzítés'
+  },{
+    name: 'Kép rögzítés',
+    value: 'kép rögzítés'
+  }]
+
   holidayList=[
   ]
 

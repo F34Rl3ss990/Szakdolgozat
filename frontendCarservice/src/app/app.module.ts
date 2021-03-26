@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { authInterceptorProviders } from './helpers/auth.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -48,12 +48,28 @@ import { VerifyServiceReservationComponent } from './components/global/service-r
 import { AuthServiceReservationComponent } from './components/authorizedUserComponents/serviceReservation/auth-service-reservation/auth-service-reservation.component';
 import { VerifyServiceComponent } from './components/authorizedUserComponents/serviceReservation/verify-service/verify-service.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
 import {APP_BASE_HREF} from '@angular/common';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { MenuListItemComponent } from './components/authorizedUserComponents/profile/side-nav/menu-list-item/menu-list-item.component';
 import { NavComponent } from './components/authorizedUserComponents/profile/side-nav/nav/nav.component';
+import { GeneralComponent } from './components/authorizedUserComponents/profile/personal/general/general.component';
+import { ChangePasswordComponent } from './components/authorizedUserComponents/profile/personal/change-password/change-password.component';
+import { ChangeBillingDataComponent } from './components/authorizedUserComponents/profile/personal/change-billing-data/change-billing-data.component';
+import { CarDataComponent } from './components/authorizedUserComponents/profile/cars/car-data/car-data.component';
+import { AddCarComponent } from './components/authorizedUserComponents/profile/cars/add-car/add-car.component';
+import { ServicesComponent } from './components/authorizedUserComponents/profile/personal/services/services.component';
+import { FilesComponent } from './components/authorizedUserComponents/profile/files/files.component';
+import { SuccessfullyChangedPasswordComponent } from './components/authorizedUserComponents/profile/personal/change-password/successfully-changed-password/successfully-changed-password.component';
+import { ChangePhoneNumberComponent } from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
+import {UserService} from './services/user.service';
+import {TokenStorageService} from './services/token-storage.service';
+import {ServiceReservationService} from './services/service-reservation.service';
+import {NavService} from './services/nav.service';
+import {ProfileService} from './services/profile.service';
+import {DialogService} from './services/dialog.service';
+import {DataService} from './services/data.service';
+import {AuthService} from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -84,7 +100,16 @@ import { NavComponent } from './components/authorizedUserComponents/profile/side
     AuthServiceReservationComponent,
     VerifyServiceComponent,
     MenuListItemComponent,
-    NavComponent
+    NavComponent,
+    GeneralComponent,
+    ChangePasswordComponent,
+    ChangeBillingDataComponent,
+    CarDataComponent,
+    AddCarComponent,
+    ServicesComponent,
+    FilesComponent,
+    SuccessfullyChangedPasswordComponent,
+    ChangePhoneNumberComponent
   ],
   imports: [
     BrowserModule,
@@ -120,18 +145,28 @@ import { NavComponent } from './components/authorizedUserComponents/profile/side
         ]
       },
       {path: '**', redirectTo: 'home'}
-    ], {useHash: true}),
+    ], ),
     MatDatepickerModule,
     FlexModule,
     MatSelectModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     MatSidenavModule,
     MatListModule
   ],
-  providers: [SlimLoadingBarService, authInterceptorProviders, MatDatepickerModule,
+  providers: [SlimLoadingBarService,
+    UserService,
+    TokenStorageService,
+    ServiceReservationService,
+    NavService,
+    ProfileService,
+    FilterPipe,
+    DialogService,
+    DateAdapterService,
+    DataService,
+    AuthService,
+    authInterceptorProviders,
+    MatDatepickerModule,
     {provide: MAT_DATE_LOCALE, useValue: 'hu'},
     {provide: DateAdapter, useClass: DateAdapterService},
-    { provide: APP_BASE_HREF, useValue: '/' }
     ],
   exports: [AppComponent],
   bootstrap: [AppComponent],

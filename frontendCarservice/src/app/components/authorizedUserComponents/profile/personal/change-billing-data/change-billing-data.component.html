@@ -1,1 +1,181 @@
-<p>change-billing-data works!</p>
+<form
+  [formGroup]="changeBillingDataForm"
+  (ngSubmit)="onSubmit();">
+  <div class="container">
+    <p style="font-size:22px; font-weight: 400;padding-top:8px">Amennyiben szeretnéd megváltoztatni a számlázási adataidat, azt itt teheted meg.</p>
+    <div class="row">
+      <div class="column billing-check-box">
+        <mat-checkbox
+          [checked]="billingToCompany"
+          (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)" >Számlázási adatok céghez kapcsolódnak
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column" style="max-width: 310px">
+        <mat-form-field appearance="outline" style="width:300px">
+          <mat-label>Számlázási név*</mat-label>
+          <input type="text" matInput formControlName="billingName"
+                 placeholder="Számlázási név"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingName'].hasError('required') && changeBillingDataForm.controls['billingName'].touched
+                   || changeBillingDataForm.controls['billingName'].hasError('required') && changeBillingDataForm.controls['billingName'].dirty
+                   || changeBillingDataForm.controls['billingName'].hasError('required') && changeBillingDataForm.controls['billingName'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingName'].value==''">
+          Számlázási név megadása kötelező!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column" style="max-width: 150px">
+        <mat-form-field appearance="outline" style="width: 140px">
+          <mat-label>Telefonszám*</mat-label>
+          <input type="text" matInput formControlName="billingPhoneNumber"
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingPhoneNumber'].hasError('required') && changeBillingDataForm.controls['billingPhoneNumber'].touched
+                   || changeBillingDataForm.controls['billingPhoneNumber'].hasError('required') && changeBillingDataForm.controls['billingPhoneNumber'].dirty
+                   || changeBillingDataForm.controls['billingPhoneNumber'].hasError('required') && changeBillingDataForm.controls['billingPhoneNumber'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingPhoneNumber'].value==''">
+          Telefonszám megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingPhoneNumber'].hasError('pattern') && !changeBillingDataForm.controls['billingPhoneNumber'].hasError('required')">
+          Érvénytelen karakterek a telefonszám mezőben!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingPhoneNumber'].hasError('minLength') && !changeBillingDataForm.controls['billingPhoneNumber'].hasError('required')">
+          A telefonszámnak legalább 8 számból kell állnia!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingPhoneNumber'].hasError('maxLength') && !changeBillingDataForm.controls['billingPhoneNumber'].hasError('required')">
+          A telefonszám legfeljebb 14 számból állhat!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Email*</mat-label>
+          <input type="text" matInput formControlName="billingEmail"
+                 placeholder="Email"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingEmail'].hasError('required') && changeBillingDataForm.controls['billingEmail'].touched
+                   || changeBillingDataForm.controls['billingEmail'].hasError('required') && changeBillingDataForm.controls['billingEmail'].dirty
+                   || changeBillingDataForm.controls['billingEmail'].hasError('required') && changeBillingDataForm.controls['billingEmail'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingEmail'].value==''">
+          Email cím megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingEmail'].hasError('pattern') && !changeBillingDataForm.controls['billingEmail'].hasError('required')">
+          Érvénytelen e-mail formátum!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field" [hidden]="!billingToCompany">
+          <mat-label>Adószám*</mat-label>
+          <input matInput formControlName="billingTax"
+                 placeholder="Adószám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="(changeBillingDataForm.controls['billingTax'].hasError('required') && changeBillingDataForm.controls['billingTax'].touched) && billingToCompany
+                   || (changeBillingDataForm.controls['billingTax'].hasError('required') && changeBillingDataForm.controls['billingTax'].dirty) && billingToCompany
+                   || (changeBillingDataForm.controls['billingTax'].hasError('required') && changeBillingDataForm.controls['billingTax'].hasError('pristine')) && billingToCompany
+                   || (isSubmitted && changeBillingDataForm.controls['billingTax'].value=='' && billingToCompany)">
+          Adószám cég esetén kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingTax'].hasError('pattern') && !billingForeignCountryTax && billingToCompany">
+          Nem megfelelő adószám formátum!
+        </mat-error>
+        <p></p>
+      </div>
+      <mat-checkbox
+        formControlName="billingForeignCountryTax" style="text-align: end;padding-right: 120px"
+        (change)="billingForeignCountryTax =!billingForeignCountryTax; taxNumberValidator($event)"
+        [hidden]="!billingToCompany">Nemzetközi adószám
+      </mat-checkbox>
+    </div>
+    <div class="row">
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Irányítószám*</mat-label>
+          <input type="text" matInput formControlName="billingZipCode"
+                 placeholder="Irányítószám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingZipCode'].hasError('required') && changeBillingDataForm.controls['billingZipCode'].touched
+                   || changeBillingDataForm.controls['billingZipCode'].hasError('required') && changeBillingDataForm.controls['billingZipCode'].dirty
+                   || changeBillingDataForm.controls['billingZipCode'].hasError('required') && changeBillingDataForm.controls['billingZipCode'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingZipCode'].value==''">
+          Az irányítószám kötelező!
+        </mat-error>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingZipCode'].hasError('pattern')">
+          Érvénytelen karakterek az iránytószám mezőben!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingZipCode'].hasError('minlength') || changeBillingDataForm.controls['billingZipCode'].hasError('maxlength')">
+          Az irányítószámnak 4 számból kell állnia!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Város*</mat-label>
+          <input type="text" matInput formControlName="billingTown"
+                 placeholder="Város"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingTown'].hasError('required') && changeBillingDataForm.controls['billingTown'].touched
+                   || changeBillingDataForm.controls['billingTown'].hasError('required') && changeBillingDataForm.controls['billingTown'].dirty
+                   || changeBillingDataForm.controls['billingTown'].hasError('required') && changeBillingDataForm.controls['billingTown'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingTown'].value==''">
+          Város megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="changeBillingDataForm.controls['billingTown'].hasError('pattern') && !changeBillingDataForm.controls['billingTown'].hasError('required')">
+          Érvénytelen karakterek a név mezőben!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Utca, házszám*</mat-label>
+          <input type="text" matInput formControlName="billingStreet"
+                 placeholder="Utca, házszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changeBillingDataForm.controls['billingStreet'].hasError('required') && changeBillingDataForm.controls['billingStreet'].touched
+                   || changeBillingDataForm.controls['billingStreet'].hasError('required') && changeBillingDataForm.controls['billingStreet'].dirty
+                   || changeBillingDataForm.controls['billingStreet'].hasError('required') && changeBillingDataForm.controls['billingStreet'].hasError('pristine')
+                   || isSubmitted && changeBillingDataForm.controls['billingStreet'].value==''">
+          Utca, házszám megadása kötelező!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Emelet, ajtó</mat-label>
+          <input type="text" matInput formControlName="billingOtherAddressType"
+                 placeholder="Emelet, ajtó"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <p></p>
+      </div>
+    </div>
+    <div class="row textarea-row-class" style="padding-top: 15px">
+      <div class="column" style="text-align: right;padding-left:15px ">
+        <button type="submit"
+                class="btn btn-primary btn-block" style="width:200px; float:left;position:fixed">Számlázási adatok
+          megváltoztatása
+        </button>
+      </div>
+      <input class="hideIt" #hideIt>
+    </div>
+
+  </div>
+</form>

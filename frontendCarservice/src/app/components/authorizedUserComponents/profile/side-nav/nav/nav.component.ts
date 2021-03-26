@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {NavItem} from '../../../../../models/NavItem';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -24,14 +25,14 @@ export class NavComponent implements AfterViewInit {
           route: 'profile/personal/changePassword'
         },
         {
-          displayName: 'Email módosítás',
+          displayName: 'Telefonszám módosítás',
           iconName: 'settings',
-          route: 'profile/personal/changeEmail'
+          route: 'profile/personal/changePhoneNumber'
         },
         {
           displayName: 'Számlázási adatok módosítása',
           iconName: 'settings',
-          route: 'profile/personal/billingDataChange'
+          route: 'profile/personal/changeBillingData'
         }]
     },
     {
@@ -63,6 +64,7 @@ export class NavComponent implements AfterViewInit {
   ]
 
   constructor() {
+
   }
 
   ngAfterViewInit() {

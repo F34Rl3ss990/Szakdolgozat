@@ -209,12 +209,25 @@
 
       <div fxLayout="row">
         <div class="column check-box-column">
-          <h5 class="align-end">Egyéb:</h5>
+          <h5 class="align-end">Felvétel:</h5>
         </div>
-        <ng-container *ngFor="let checkbox13 of other; let i13 = index" formArrayName="other">
+        <ng-container *ngFor="let checkbox13 of capture; let i13 = index" formArrayName="capture">
           <div class="column checkbox-for-cycle">
             <mat-checkbox style="margin-right: 5px" [formControlName]="i13" (change)="collectorSetter()">
               {{checkbox13.name}}
+            </mat-checkbox>
+          </div>
+        </ng-container>
+      </div>
+
+      <div fxLayout="row">
+        <div class="column check-box-column">
+          <h5 class="align-end">Egyéb:</h5>
+        </div>
+        <ng-container *ngFor="let checkbox14 of other; let i14 = index" formArrayName="other">
+          <div class="column checkbox-for-cycle">
+            <mat-checkbox style="margin-right: 5px" [formControlName]="i14" (change)="collectorSetter()">
+              {{checkbox14.name}}
             </mat-checkbox>
           </div>
         </ng-container>

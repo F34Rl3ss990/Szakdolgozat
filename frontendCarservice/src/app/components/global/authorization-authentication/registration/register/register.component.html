@@ -75,10 +75,8 @@
         <input matInput [type]="hide ? 'password' : 'text'" formControlName="matchingPassword" #matchingPassword
                [errorStateMatcher]="CrossFieldErrorMatcher"
                placeholder="Megerősítés">
-        <mat-icon *ngIf="(registerForm.controls['matchingPassword'].hasError('minlength'))
-             || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched || registerForm.hasError('passwordDoNotMatch'))
-             || (registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].dirty || registerForm.hasError('passwordDoNotMatch'))
-             || registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].hasError('pristine')
+        <mat-icon *ngIf="
+                 registerForm.hasError('passwordDoNotMatch') && !registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].value.length >= registerForm.controls['password'].value.length
              || isSubmitted && registerForm.controls['matchingPassword'].value==''"
                   matSuffix>error
         </mat-icon>
@@ -88,7 +86,7 @@
         </mat-icon>
       </mat-form-field>
       <mat-error
-        *ngIf="registerForm.hasError('passwordDoNotMatch') && !registerForm.controls['matchingPassword'].hasError('required')">
+        *ngIf="registerForm.hasError('passwordDoNotMatch') && !registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].value.length >= registerForm.controls['password'].value.length">
         A jelszavak nem egyeznek
       </mat-error>
       <mat-error *ngIf="(registerForm.controls['matchingPassword'].hasError('required') && registerForm.controls['matchingPassword'].touched)

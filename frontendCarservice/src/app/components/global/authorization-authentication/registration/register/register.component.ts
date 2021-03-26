@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
       }),
-      matchingPassword: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.minLength(8)]}),
+      matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
       data: this.fb.control(''),
       hide: this.fb.control('')
     }, {validator: matchingPasswordValidator},);
@@ -94,8 +94,8 @@ export class RegisterComponent implements OnInit {
         if (this.registerForm.controls['password'].value === '') {
           this.registerForm.controls['password'].setErrors({'required': true, 'pristine': true});
         }
-        if (this.registerForm.controls['matchingPassword'].value === '') {
-          this.registerForm.controls['matchingPassword'].setErrors({'required': true, 'pristine': true});
+        if (this.registerForm.controls['matchingPassword'].value == '') {
+          this.registerForm.controls['matchingPassword'].setErrors({'required': true});
         }
         this.isSignUpFailed = true;
         for (const key of Object.keys(this.registerForm.controls)) {

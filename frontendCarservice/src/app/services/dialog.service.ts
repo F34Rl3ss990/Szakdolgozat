@@ -11,6 +11,7 @@ import {PasswordResetDialogComponent} from '../components/global/authorization-a
 import {ExpiredResetPasswordTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
 import {SuccessfullyReservedUnauthorizedServiceComponent} from '../components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
+import {SuccessfullyChangedPasswordComponent} from '../components/authorizedUserComponents/profile/personal/change-password/successfully-changed-password/successfully-changed-password.component';
 
 @Injectable({
   providedIn: 'root'
@@ -97,5 +98,13 @@ export class DialogService {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
     this.dialog.open(SuccessfullyReservedUnauthorizedServiceComponent, dialogConfig);
+  }
+
+  openSuccessfullyChangedPassword() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(SuccessfullyChangedPasswordComponent, dialogConfig);
   }
 }

@@ -5,6 +5,7 @@ import com.EGEA1R.CarService.validation.annotation.ValidPassword;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -22,6 +23,9 @@ public class ChangePasswordRequest {
 
     @NotBlank
     private String oldPassword;
+
+    @NotNull
+    private String otpNum;
 
 
 }

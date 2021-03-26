@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../../services/data.service';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,8 @@ import {TokenStorageService} from '../../../../services/token-storage.service';
 @Component({
   selector: 'app-auth-service-reservation',
   templateUrl: './auth-service-reservation.component.html',
-  styleUrls: ['./auth-service-reservation.component.css']
+  styleUrls: ['./auth-service-reservation.component.scss'],
+
 })
 export class AuthServiceReservationComponent implements OnInit {
 
@@ -41,6 +42,7 @@ export class AuthServiceReservationComponent implements OnInit {
   other = []
   authenticityTest = []
   oil = []
+  capture = []
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
@@ -88,6 +90,7 @@ export class AuthServiceReservationComponent implements OnInit {
       clime: this.fb.array(this.clime.map(x => false), {updateOn: 'change'}),
       accumulator: this.fb.array(this.accumulator.map(x => false), {updateOn: 'change'}),
       bodywork: this.fb.array(this.bodywork.map(x => false), {updateOn: 'change'}),
+      capture: this.fb.array(this.capture.map(x => false), {updateOn: 'change'}),
       other: this.fb.array(this.other.map(x => false), {updateOn: 'change'}),
       comment: this.fb.control('', {updateOn: 'blur'})
     }, {updateOn: 'submit'});
@@ -183,6 +186,13 @@ export class AuthServiceReservationComponent implements OnInit {
         { emitEvent: false }
       );
     });
+    const captureControl = (this.serviceReservationForm.controls.capture as FormArray);
+    this.subscription = captureControl.valueChanges.subscribe(checkbox => {
+      captureControl.setValue(
+        captureControl.value.map((value, i) => value ? this.capture[i].value : false),
+        { emitEvent: false }
+      );
+    });
     const otherControl = (this.serviceReservationForm.controls.other as FormArray);
     this.subscription = otherControl.valueChanges.subscribe(checkbox => {
       otherControl.setValue(
@@ -233,9 +243,13 @@ export class AuthServiceReservationComponent implements OnInit {
     this.other = this.dataService.other;
     this.oil = this.dataService.oil;
     this.authenticityTest = this.dataService.authenticityTest;
+    this.capture = this.dataService.capture;
   }
 
   myFilter = (d: Date): boolean => {
+    if(d==undefined){
+      return;
+    }
     this.dataService.goodFridayAndEasterAndPentecostCalculator(d.getFullYear())
     this.dateSetter()
     const time = d.getTime();
@@ -253,7 +267,6 @@ export class AuthServiceReservationComponent implements OnInit {
     }
     return !this.holidayList.find(x=>x.getTime()==time) && (day !== 0 && day !==6) && (day !== y)
   }
-
   collectorSetter(){
     this.collector = [''];
     this.collector = this.serviceReservationForm.controls['carInspection'].value.filter(value => !!value)
@@ -269,6 +282,7 @@ export class AuthServiceReservationComponent implements OnInit {
       .concat(this.serviceReservationForm.controls['clime'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['accumulator'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['bodywork'].value.filter(value=> !!value))
+      .concat(this.serviceReservationForm.controls['capture'].value.filter(value=> !!value))
       .concat(this.serviceReservationForm.controls['other'].value.filter(value=> !!value));
 
     this.atLeastOneServiceChecked = false;

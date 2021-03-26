@@ -1,1 +1,55 @@
-<p>general works!</p>
+<div class="container">
+  <div class="row">
+    <div class="column">
+      <h3>Személyes adatok</h3>
+      <b>Név</b>
+      <br>
+      <label>{{user?.name}}</label>
+      <br>
+      <b>Telefonszám</b>
+      <br>
+      <label>{{user?.phoneNumber}}</label>
+      <br>
+      <b>Email</b>
+      <br>
+      <label>{{user?.email}}</label>
+      <br>
+    </div>
+    <div class="column">
+      <h3>Számlázási adatok</h3>
+      <b>Számlázási név</b>
+      <br>
+      <label>{{user.billingInformation?.billingName}}</label>
+      <br>
+      <b>Telefonszám</b>
+      <br>
+      <label>{{user.billingInformation?.billingPhoneNumber}}</label>
+      <br>
+      <b>Email</b>
+      <br>
+      <label>{{user.billingInformation?.billingPhoneNumber}}</label>
+      <br>
+      <b *ngIf="user.billingInformation?.billingTaxNumber!=null">Adószám</b>
+      <br *ngIf="user.billingInformation?.billingTaxNumber!=null">
+      <label *ngIf="user.billingInformation?.billingTaxNumber!= null">{{user.billingInformation?.billingTaxNumber}}</label>
+    </div>
+    </div>
+  <div class="row">
+    <h3>Számlázási cím</h3>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <b>Irányítószám</b>
+      <b>Város</b>
+      <b>Utca, házszám</b>
+      <b *ngIf="user.billingInformation?.billingOtherAddressType!=''">Emelet, ajtó</b>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <label>{{user.billingInformation?.billingZipCode}}</label>
+      <label>{{user.billingInformation?.billingTown}}</label>
+      <label>{{user.billingInformation?.billingStreet}}</label>
+      <label *ngIf="user.billingInformation?.billingOtherAddressType!=''">{{user.billingInformation?.billingOtherAddressType}}</label>
+  </div>
+</div>
+
+
+

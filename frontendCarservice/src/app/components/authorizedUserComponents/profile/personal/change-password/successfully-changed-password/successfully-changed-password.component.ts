@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Renderer2} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-successfully-changed-password',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SuccessfullyChangedPasswordComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private dialogRef: MatDialogRef<SuccessfullyChangedPasswordComponent>,
+              private renderer: Renderer2,
+              private router: Router) {
+  }
   ngOnInit(): void {
+    this.renderer.listen(document, 'keydown', event => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    });
+  }
+
+  close() {
+    this.dialogRef.close();
+    this.router.navigate['/profile'];
   }
 
 }

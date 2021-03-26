@@ -61,7 +61,7 @@ export class PasswordResetDialogComponent implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
       }),
-      matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
+      matchingPassword: this.fb.control('', {updateOn: 'change', validators: []}),
       hide: this.fb.control('')
     }, {validator: matchingPasswordValidator});
   }
@@ -81,6 +81,9 @@ export class PasswordResetDialogComponent implements OnInit {
       err => {
         this.errorMessage = err.error.errors;
         this.isResetFailed = true;
+        if (this.resetPasswordForm.controls['matchingPassword'].value == '') {
+          this.resetPasswordForm.controls['matchingPassword'].setErrors({'required': true});
+        }
         for (const key of Object.keys(this.resetPasswordForm.controls)) {
           if (this.resetPasswordForm.controls[key].invalid) {
             const invalidControl = this.el.nativeElement.querySelector('[formcontrolname="' + key + '"]');

@@ -1,0 +1,35 @@
+<form
+  [formGroup]="changePhoneNumberForm"
+  (ngSubmit)="onSubmit();">
+  <div class="container">
+    <p style="font-size:22px; font-weight: 400;padding-top:8px">Amennyiben szeretnéd megváltoztatni a jelszavad, azt itt teheted meg.</p>
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Telefonszám</mat-label>
+          <input type="text" matInput formControlName="phoneNumber" #phoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="changePhoneNumberForm.controls['phoneNumber'].hasError('pattern')">
+          Érvénytelen karakterek a telefonszám mezőben!
+        </mat-error>
+        <mat-error *ngIf="changePhoneNumberForm.controls['phoneNumber'].hasError('minlength')">
+          A telefonszámnak legalább 8 számból kell állnia!
+        </mat-error>
+        <mat-error *ngIf="changePhoneNumberForm.controls['phoneNumber'].hasError('maxlength')">
+          A telefonszám legfeljebb 14 számból állhat!
+        </mat-error>
+        <p></p>
+    </div>
+    </div>
+    <div class="row textarea-row-class" style="padding-top: 15px">
+      <div class="column" style="text-align: right;padding-left:15px ">
+        <button type="submit"
+                class="btn btn-primary btn-block" style="width:200px; float:left;position:fixed" >Telefonszám megváltoztatása
+        </button>
+      </div>
+      <input class="hideIt" #hideIt>
+    </div>
+  </div>
+</form>
