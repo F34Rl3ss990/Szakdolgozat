@@ -55,9 +55,13 @@ h2{
   margin-bottom: 16px;
 }
 
-::ng-deep .mat-form-field-infix{
+:host ::ng-deep .mat-form-field-infix{
   padding: 7px 0px 7px 0px !important;
-  margin-bottom: 0px;
+  margin-bottom: 0px!important;
+}
+
+:host ::ng-deep .mat-form-field-wrapper{
+  margin-bottom:0px!important;
 }
 
 .mat-form-field-flex{
@@ -72,9 +76,6 @@ h2{
   width:220px;
 }
 
-::ng-deep .mat-form-field-wrapper{
-  margin-bottom:0px;
-}
 
 .textarea-row-class{
   justify-content: center;
