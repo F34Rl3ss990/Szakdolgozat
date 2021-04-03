@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.persistance.entity;
 
-import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -39,18 +38,14 @@ public class Car {
     private Long carId;
 
     @NotNull
-    @Size(max = 30)
-    @ValidAccentAndWhitespace
     @Column(name = "brand")
     private String brand;
 
     @NotNull
-    @Size(max = 30)
     @Column(name = "type")
     private String type;
 
     @NotNull
-    @Size(max = 30)
     @Column(name = "engine_type")
     private String engineType;
 

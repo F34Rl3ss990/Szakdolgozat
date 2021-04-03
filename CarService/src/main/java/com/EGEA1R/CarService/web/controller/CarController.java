@@ -2,8 +2,6 @@ package com.EGEA1R.CarService.web.controller;
 
 import com.EGEA1R.CarService.service.interfaces.CarService;
 import com.EGEA1R.CarService.web.DTO.CarDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,12 +41,12 @@ public class CarController {
         carService.deleteCar(carId);
         return ResponseEntity.ok("Car successfully deleted!");
     }
-
-    @GetMapping("/getEveryCarByUser")
+/*
+     @GetMapping("/getEveryCarByUser")
      @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOSS')")
-    public ResponseEntity<?> getAllCarByUser(@RequestBody Long userId){
-      return  ResponseEntity.ok(carService.getAllCarListByUser(userId));
-    }
+    public Car getAllCarByUser(@RequestBody Long userId){
+      return  carService.getAllCarListByUser();
+    }*/
 
     @GetMapping("/getCarById")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOSS')")

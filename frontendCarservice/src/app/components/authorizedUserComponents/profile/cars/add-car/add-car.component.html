@@ -1,1 +1,130 @@
-<p>add-car works!</p>
+<div class="container">
+  <form
+    [formGroup]="addCarForm"
+    (ngSubmit)="onSubmit()">
+    <div class="row">
+      <h4>Amennyiben szeretnél hozzáadni a profilidhoz egy gépjárművet, azt itt teheted meg</h4>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon gépjármű márkát*</mat-label>
+          <mat-select [(value)]="selectedBrand" (selectionChange)="typeSetter($event)" formControlName="brand">
+            <ng-container *ngFor="let brand of brandSet; let i = index">
+              <mat-option value="{{this.brand}}">{{this.brand}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['brand'].hasError('required') && addCarForm.controls['brand'].touched
+                   || addCarForm.controls['brand'].hasError('required') && addCarForm.controls['brand'].dirty
+                   || addCarForm.controls['brand'].hasError('required') && addCarForm.controls['brand'].hasError('pristine')
+                   || isSubmitted && addCarForm.controls['brand'].hasError('required')">
+          Márka megadása kötelező!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon típust*</mat-label>
+          <mat-select [(value)]="selectedType" (selectionChange)="yearOfManufactureSetter($event)" formControlName="type">
+            <ng-container *ngFor="let type of typeSet; let i = index">
+              <mat-option value="{{this.type}}">{{this.type}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['type'].hasError('required') && addCarForm.controls['type'].touched
+                   || addCarForm.controls['type'].hasError('required') && addCarForm.controls['type'].dirty
+                   || addCarForm.controls['type'].hasError('required') && addCarForm.controls['type'].hasError('pristine')
+                   || isSubmitted && addCarForm.controls['type'].hasError('required')">
+          Típus megadása kötelező!
+        </mat-error>
+        <p></p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon gyártási évet*</mat-label>
+          <mat-select [(value)]="selectedYearOfManufacture" (selectionChange)="engineTypeSetter($event)" formControlName="yearOfManufacture">
+            <ng-container *ngFor="let yearOfManufacture of yearOfManufactureSet; let i = index">
+              <mat-option value="{{this.yearOfManufacture}}">{{this.yearOfManufacture}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['yearOfManufacture'].hasError('required') && addCarForm.controls['yearOfManufacture'].touched
+                   || addCarForm.controls['yearOfManufacture'].hasError('required') && addCarForm.controls['yearOfManufacture'].dirty
+                   || addCarForm.controls['yearOfManufacture'].hasError('required') && addCarForm.controls['yearOfManufacture'].hasError('pristine')
+                   || isSubmitted && addCarForm.controls['yearOfManufacture'].hasError('required')">
+          Gyártási év megadása kötelező!
+        </mat-error>
+        <p></p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon motor típust*</mat-label>
+          <mat-select [(value)]="selectedEngineType" formControlName="engineType">
+            <ng-container *ngFor="let engineType of engineTypeSet; let i = index">
+              <mat-option value="{{this.engineType}}">{{this.engineType}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['engineType'].hasError('required') && addCarForm.controls['engineType'].touched
+                   || addCarForm.controls['engineType'].hasError('required') && addCarForm.controls['engineType'].dirty
+                   || addCarForm.controls['engineType'].hasError('required') && addCarForm.controls['engineType'].hasError('pristine')
+                   || isSubmitted && addCarForm.controls['engineType'].hasError('required')">
+          Motor típus megadása kötelező!
+        </mat-error>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Kilométeróra állása</mat-label>
+          <input type="text" matInput formControlName="mileage" #mileage
+                 placeholder="Kilométeróra állása"
+          >
+          <span matSuffix>km</span>
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['mileage'].hasError('pattern')">
+          A mező csak számokat tartalmazhat!
+        </mat-error>
+        <mat-error *ngIf="addCarForm.controls['mileage'].hasError('max')">
+          A megengedett maximális méret 999999!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Motorkód</mat-label>
+          <input type="text" matInput formControlName="engineNumber" #engineNumber
+                 placeholder="Motorkód"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['engineNumber'].hasError('pattern')">
+          Érvénytelen karakterek a motorkód mezőben!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Alvázszám</mat-label>
+          <input type="text" matInput formControlName="chassisNumber" #chassisNumber
+                 placeholder="Alvázszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['chassisNumber'].hasError('pattern')">
+          Érvénytelen karakterek a motorkód mezőben!
+        </mat-error>
+        <mat-error *ngIf="addCarForm.controls['chassisNumber'].hasError('minlength') || addCarForm.controls['chassisNumber'].hasError('maxlength')">
+          Az alvázszámnak 17 karakterből kell állnia!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Rendszám</mat-label>
+          <input type="text" matInput formControlName="licensePlateNumber" #licensePlateNumber
+                 placeholder="Rendszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="addCarForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && !foreignCountryPlate
+                        || addCarForm.controls['licensePlateNumber'].hasError('pattern') && !foreignCountryPlate">
+          Ilyen rendszám formátum nem létezik Magyarországon!
+        </mat-error>
+        <mat-checkbox
+          formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate; licensePlateValidator($event)">Nemzetközi rendszám
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="row textarea-row-class">
+      <button type="submit"
+              class="btn btn-primary btn-block" style="float:right; width: 150px; margin-bottom:15px">Foglalás
+      </button>
+      <input class="hideIt" #hideIt>
+    </div>
+  </form>
+</div>

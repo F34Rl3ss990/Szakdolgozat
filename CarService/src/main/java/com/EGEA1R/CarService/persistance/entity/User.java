@@ -1,11 +1,9 @@
 package com.EGEA1R.CarService.persistance.entity;
 
-import com.EGEA1R.CarService.validation.annotation.ValidAccentLetters;
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.validation.annotation.ValidName;
 import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;

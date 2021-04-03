@@ -1,17 +1,22 @@
 package com.EGEA1R.CarService.service.interfaces;
 
 import com.EGEA1R.CarService.persistance.entity.Document;
+import com.EGEA1R.CarService.web.DTO.payload.response.FileAndCarResponse;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.stream.Stream;
+import java.util.List;
 
 public interface DocumentService {
 
-    Document store(MultipartFile fileToStore) throws IOException;
+    void storeServiceFiles(List<MultipartFile> fileToStore) throws Exception;
 
-    Document getFile(Long id);
+    void storeClientFiles(List<MultipartFile> fileToStore, Long fkCarId, String email, Long fkServiceDataId) throws Exception;
 
-    Stream<Document> getAllFiles();
+    FileSystemResource findDocument(Long documentId);
+
+    List<FileAndCarResponse> getAllFilesByUser(Long credentialId);
+
+    List<FileAndCarResponse> getAllFilesByCar(Long carId);
 
 }

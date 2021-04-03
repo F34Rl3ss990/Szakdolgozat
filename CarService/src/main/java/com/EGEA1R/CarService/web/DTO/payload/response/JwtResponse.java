@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,11 +16,13 @@ public class JwtResponse {
     private Long id;
     private String email;
     private String roles;
+    private Long date;
 
     public JwtResponse(String accessToken, Long id, String email, String roles) {
         this.id = id;
         this.email = email;
         this.roles = roles;
         this.token = accessToken;
+        this.date = (new Date((new Date()).getTime() + 86400000)).getTime();
     }
 }

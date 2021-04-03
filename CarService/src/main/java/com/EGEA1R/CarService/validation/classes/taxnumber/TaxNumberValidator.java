@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.validation.classes.taxnumber;
 
-import com.EGEA1R.CarService.validation.annotation.PasswordMatches;
 import com.EGEA1R.CarService.validation.annotation.ValidTaxNumber;
 
 import javax.validation.ConstraintValidator;

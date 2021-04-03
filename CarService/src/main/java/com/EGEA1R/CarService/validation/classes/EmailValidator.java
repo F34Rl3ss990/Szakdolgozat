@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.validation.classes;
 
 import com.EGEA1R.CarService.validation.annotation.ValidEmail;
-import com.EGEA1R.CarService.validation.annotation.ValidPassword;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

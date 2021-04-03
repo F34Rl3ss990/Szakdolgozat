@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.persistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,7 +26,6 @@ public class Finance {
     @Column(name = "finance_id", insertable = false, updatable = false)
     private Long financeId;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "payday")
     private LocalDate payday;
@@ -33,13 +33,19 @@ public class Finance {
     @NotNull
     @Pattern(regexp = "^[-][0-9]+$")
     @Column(name = "amount")
-    private Integer amount;
+    private String amount;
 
 
     @Size(max = 80)
     @Pattern(regexp = "[\\sa-zA-Z]")
     @Column(name = "account_name")
     private String accountName;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "is_paid")
+    private Boolean isPaid;
 
     @Size(max = 26)
     @Pattern(regexp = "^[0-9]{8}[-][0-9]{8}[-][0-9]{8}$")
@@ -50,7 +56,6 @@ public class Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_finance_employee")
     private Employee employee;
-
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_finance_order")

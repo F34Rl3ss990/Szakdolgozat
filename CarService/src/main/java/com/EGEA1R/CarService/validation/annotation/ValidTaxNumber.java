@@ -1,13 +1,8 @@
 package com.EGEA1R.CarService.validation.annotation;
 
-import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesAddAdminRequest;
-import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesChangePasswordValidator;
-import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesPasswordresetValidator;
-import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesSignupValidator;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUnauthorizedUserReservation;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUserAdd;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUserModify;
-import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,8 +1,5 @@
 package com.EGEA1R.CarService.validation.classes.taxnumber;
 
-import com.EGEA1R.CarService.validation.classes.passwordmatches.PasswordMatchesValidator;
-import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
-import com.EGEA1R.CarService.web.DTO.payload.request.AddAdminRequest;
 import com.EGEA1R.CarService.web.DTO.payload.request.UserAddRequest;
 
 import java.util.regex.Pattern;

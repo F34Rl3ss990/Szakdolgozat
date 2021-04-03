@@ -4,6 +4,9 @@
       <app-menu-list-item *ngFor="let item of navItems" [item]="item"></app-menu-list-item>
     </mat-nav-list>
   </mat-sidenav>
+  <mat-sidenav-content style="margin-left: 0px">
   <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>
+
 

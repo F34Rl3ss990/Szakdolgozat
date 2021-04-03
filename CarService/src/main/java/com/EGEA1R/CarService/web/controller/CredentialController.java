@@ -7,11 +7,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.EGEA1R.CarService.validation.annotation.ValidEmail;
 import com.EGEA1R.CarService.web.DTO.payload.request.*;
-import com.EGEA1R.CarService.web.DTO.payload.response.ErrorResponse;
-import com.EGEA1R.CarService.web.DTO.payload.response.ResponseMessage;
-import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.service.interfaces.*;
 import com.EGEA1R.CarService.persistance.entity.Credential;
@@ -24,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -94,7 +89,7 @@ public class CredentialController {
         String role = credentialDetails.getAuthorities().toString();
             if(role.equals("[ROLE_ADMIN]") || role.equals("[ROLE_BOSS]")){
                 return credentialService.authenticationChoose(credentialDetails.getUsername(), loginRequest);
-        } else if(role.equals("[ROLE_DISABLED]")){
+            } else if(role.equals("[ROLE_DISABLED]")){
                 return ResponseEntity.badRequest().body(new MessageResponse("Account is not verified"));
             } else if (role.equals("[ROLE_0]")){
                 return ResponseEntity.badRequest().body(new MessageResponse("Account is banned or disabled"));
@@ -136,8 +131,8 @@ public class CredentialController {
         }
         Calendar cal = Calendar.getInstance();
         if ((verification.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-                verificationTokenService.generateNewTokenAndSendItViaEmail(verificationToken);
-                return ResponseEntity.ok(new MessageResponse("Verification token resent"));
+            verificationTokenService.generateNewTokenAndSendItViaEmail(verificationToken);
+            return ResponseEntity.ok(new MessageResponse("Verification token resent"));
         }
         verificationTokenService.modifyPermissionOnVerifiedUser(verification.getFkVerificationId());
         return ResponseEntity.ok(new MessageResponse("Successfully verified"));
@@ -155,11 +150,7 @@ public class CredentialController {
     public Boolean validatePasswordResetToken(
                                          @RequestParam("token") String passwordResetToken) {
         String result = passwordresetTokenService.validatePasswordResetToken(passwordResetToken);
-        if(result != null) {
-            return false;
-        } else {
-            return true;
-        }
+         return result != null;
     }
 
     @PostMapping("/savePassword")
@@ -190,33 +181,10 @@ public class CredentialController {
                 return ResponseEntity.badRequest().body(new MessageResponse("Incorrect old password " + changePasswordRequest.getOldPassword()));
             }
             if (Boolean.FALSE.equals(verify)) {
-               return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired otp number" + changePasswordRequest.getOtpNum()));
-           }
+                return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired otp number" + changePasswordRequest.getOtpNum()));
+            }
             credentialService.changePasswordAndBlockToken(request, credential.getCredentialId(), changePasswordRequest.getPassword());
             AuthCredentialDetailsImpl credentialDetails = setAuthentication(SecurityContextHolder.getContext().getAuthentication().getName(), changePasswordRequest.getPassword());
-            return responseLoginInformation(credentialDetails);
-        }
-        else {
-            return ResponseEntity.badRequest().body(new MessageResponse("User cannot be found"));
-        }
-    }
-
-    @PostMapping("/changeEmail")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> changeEmail(@Valid @RequestBody EmailChangeRequest emailChangeRequest, HttpServletRequest request) {
-        Credential credential = credentialService.getByEmail(
-                SecurityContextHolder.getContext().getAuthentication().getName());
-        Boolean exist = credentialService.credentialExistByEmail(credential.getEmail());
-        Boolean verify = credentialService.verifyDataChange(emailChangeRequest.getOtpNum(), credential.getEmail());
-        if(credential!= null) {
-            if (Boolean.TRUE.equals(exist)){
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-            }
-            if (Boolean.FALSE.equals(verify)) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired otp number" + emailChangeRequest.getOtpNum()));
-            }
-            credentialService.changeEmailAndBlockToken(request, credential.getCredentialId(), emailChangeRequest.getEmail());
-            AuthCredentialDetailsImpl credentialDetails = setAuthentication(SecurityContextHolder.getContext().getAuthentication().getName(), ((AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPassword());
             return responseLoginInformation(credentialDetails);
         }
         else {

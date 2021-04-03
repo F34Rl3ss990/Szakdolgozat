@@ -6,11 +6,9 @@ import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceReservatio
 import com.EGEA1R.CarService.web.DTO.UserCarsDTO;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
-import javax.persistence.PersistenceContext;
-import javax.persistence.StoredProcedureQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -59,4 +57,18 @@ public class ServiceReservationRepositoryImpl implements ServiceReservationRepos
         query.setParameter(1, credentialId);
         return query.getResultList();
     }
+
+    @Transactional
+    @Override
+    public void setServiceDataFk(Long serviceDataFk, Long carId) {
+        Query query = em.createNativeQuery("select service_reservation_id from service_reservation inner join car on service_reservation.fk_service_reservation_car = car.car_id where service_reservation.fk_service_reservation_service_data is null and fk_service_reservation_car = ? ")
+                .setParameter(1, carId);
+        Long serviceReservationId = ((BigInteger) query.getSingleResult()).longValue();
+        em.createNativeQuery("update service_reservation set fk_service_reservation_service_data = ? where service_reservation_id = ? ")
+                .setParameter(1, serviceDataFk)
+                .setParameter(2, serviceReservationId)
+                .executeUpdate();
+    }
+
+
 }

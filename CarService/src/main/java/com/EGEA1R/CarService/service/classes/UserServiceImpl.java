@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
@@ -20,8 +19,6 @@ import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @Service

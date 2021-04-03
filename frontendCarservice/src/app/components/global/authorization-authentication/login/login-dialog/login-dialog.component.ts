@@ -89,6 +89,7 @@ export class LoginDialogComponent implements OnInit {
       data => {
         this.dataService.serviceReservationForm = null;
         this.tokenStorage.saveToken(data.token);
+        this.tokenStorage.saveExp(data.date)
         this.tokenStorage.saveUser(data);
         this.roles = this.tokenStorage.getUser().roles;
         this.isLoggedIn = true;
@@ -97,6 +98,7 @@ export class LoginDialogComponent implements OnInit {
         this.dialogRef.close();
       },
       err => {
+        console.log(err)
         this.errorMessage = err.error.message;
         if(!this.loginForm.controls['email'].valid){
           this.loginForm.controls['email'].setErrors({'pattern': true});

@@ -63,8 +63,6 @@ public class CarRepositoryImpl implements CarRepository {
         em.createNativeQuery("delete from car where car_id = ?")
                 .setParameter(1, carId)
                 .executeUpdate();
-
-
     }
 
     @Override

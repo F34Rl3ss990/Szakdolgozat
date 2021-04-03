@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.validation.classes.licenseplate;
 
-import com.EGEA1R.CarService.validation.annotation.PasswordMatches;
 import com.EGEA1R.CarService.validation.annotation.ValidLicensePlateNumber;
 
 import javax.validation.ConstraintValidator;

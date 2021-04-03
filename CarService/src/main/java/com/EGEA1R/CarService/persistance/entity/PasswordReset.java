@@ -1,13 +1,13 @@
 package com.EGEA1R.CarService.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
 
@@ -37,7 +37,7 @@ public class PasswordReset {
     private Long passwordResetId;
 
     @Column(name = "token")
-    @NotNull
+    @javax.validation.constraints.NotNull
     private String token;
 
     @Column(name = "expiry_date")

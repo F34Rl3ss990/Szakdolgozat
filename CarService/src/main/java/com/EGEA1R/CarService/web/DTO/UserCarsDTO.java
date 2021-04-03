@@ -1,15 +1,10 @@
 package com.EGEA1R.CarService.web.DTO;
 
-import com.EGEA1R.CarService.validation.annotation.ValidAccentAndWhitespace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.SqlResultSetMapping;
 import java.util.Date;
 
 @Data

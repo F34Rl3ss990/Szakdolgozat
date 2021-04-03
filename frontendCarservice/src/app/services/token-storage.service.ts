@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
+const EXP_DATE = 'auth-exp';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,17 @@ export class TokenStorageService {
     window.localStorage.setItem(TOKEN_KEY, token);
   }
 
+  public saveExp(date: string) {
+    window.localStorage.removeItem(EXP_DATE);
+    window.localStorage.setItem(EXP_DATE, date);
+  }
+
   public getToken(): string {
     return localStorage.getItem(TOKEN_KEY);
+  }
+
+  public getExpDate(): string {
+    return localStorage.getItem(EXP_DATE);
   }
 
   public saveUser(user){

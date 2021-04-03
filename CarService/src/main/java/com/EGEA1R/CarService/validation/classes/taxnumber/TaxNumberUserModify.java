@@ -1,8 +1,6 @@
 package com.EGEA1R.CarService.validation.classes.taxnumber;
 
-import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
-import com.EGEA1R.CarService.web.DTO.payload.request.UserAddRequest;
 
 import java.util.regex.Pattern;
 

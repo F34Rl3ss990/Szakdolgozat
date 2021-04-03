@@ -15,4 +15,6 @@ public interface ServiceReservationRepository {
     List<ServiceReservation> getAllServiceByTodayDate(LocalDate localDate);
 
     List<Car> getAllCarByCredentialId(Long credentialId);
+
+    void setServiceDataFk(Long serviceDataFk, Long carId);
 }

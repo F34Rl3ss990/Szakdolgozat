@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Car;

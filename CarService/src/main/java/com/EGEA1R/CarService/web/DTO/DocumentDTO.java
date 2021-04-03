@@ -1,18 +1,46 @@
 package com.EGEA1R.CarService.web.DTO;
 
+import javassist.bytecode.ByteArray;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.SqlResultSetMapping;
 import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
+@Data
+@NoArgsConstructor
 public class DocumentDTO {
+    private Long fileId;
+    private String documentType;
+    private Date uploadTime;
+    private String name;
+    private String size;
+    private String location;
+    private Long carId;
+    private Long serviceDataId;
+    private String brand;
+    private String carType;
+    private String licensePlateNumber;
+    private String mileage;
 
-    private Integer file_id;
-
-    private String type;
-
-    private LocalDate upload_time;
-
-    private byte[] data;
+    public DocumentDTO(Long fileId, String documentType, Date uploadTime, String name, String size, String location, Long carId, Long serviceDataId, String brand, String carType, String licensePlateNumber, String mileage){
+        this.fileId = fileId;
+        this.documentType = documentType;
+        this.uploadTime = uploadTime;
+        this.name = name;
+        this.size = size;
+        this.location = location;
+        this.carId = carId;
+        this.brand = brand;
+        this.carType = carType;
+        this.serviceDataId = serviceDataId;
+        this.licensePlateNumber = licensePlateNumber;
+        this.mileage = mileage;
+    }
 }

@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
 const USER_API = 'http://localhost:8080/api/test/user/';
+const CAR_API = 'http://localhost:8080/api/test/car/';
 
 const httpOptions = {
 
@@ -18,8 +19,6 @@ export class ProfileService {
   constructor(private http: HttpClient) {
 
   }
-
-
 
   generateOtpNumber(): Observable<any>{
     return this.http.get(`${AUTH_API}generateOtpNumber`);
@@ -57,5 +56,23 @@ export class ProfileService {
 
   getUserData(): Observable<any>{
    return this.http.get(USER_API + 'getUser');
+  }
+
+  addCar(addCarForm, foreignLicensePlate): Observable<any> {
+    return this.http.post(CAR_API + 'addCar', {
+      brand: addCarForm.brand,
+      type: addCarForm.type,
+      yearOfManufacture: addCarForm.yearOfManufacture,
+      engineType: addCarForm.engineType,
+      mileage: addCarForm.mileage,
+      engineNumber: addCarForm.engineNumber,
+      chassisNumber: addCarForm.chassisNumber,
+      licensePlateNumber: addCarForm.licensePlateNumber,
+      foreignCountryPlate: foreignLicensePlate,
+    }, httpOptions);
+  }
+
+  getCarsData(): Observable<any>{
+    return this.http.get(CAR_API + 'getUser');
   }
 }

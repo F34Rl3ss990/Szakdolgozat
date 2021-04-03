@@ -1,9 +1,7 @@
 package com.EGEA1R.CarService.service.classes;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +10,8 @@ import com.EGEA1R.CarService.service.interfaces.ExcelService;
 import com.EGEA1R.CarService.web.DTO.ExcelCarDTO;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ExcelServiceImpl implements ExcelService {

@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Builder
 @Data
@@ -19,17 +17,12 @@ import java.util.List;
 @ValidLicensePlateNumber
 public class UnauthorizedUserReservationDTO {
 
-
-    @Size(max = 30)
-    @ValidAccentAndWhitespace
     @NotNull
     private String brand;
 
-    @Size(max = 30)
     @NotNull
     private String type;
 
-    @Size(max = 30)
     @NotNull
     private String engineType;
 

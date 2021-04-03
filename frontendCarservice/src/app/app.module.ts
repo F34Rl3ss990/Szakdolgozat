@@ -47,8 +47,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { VerifyServiceReservationComponent } from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
 import { AuthServiceReservationComponent } from './components/authorizedUserComponents/serviceReservation/auth-service-reservation/auth-service-reservation.component';
 import { VerifyServiceComponent } from './components/authorizedUserComponents/serviceReservation/verify-service/verify-service.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import {APP_BASE_HREF} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { MenuListItemComponent } from './components/authorizedUserComponents/profile/side-nav/menu-list-item/menu-list-item.component';
@@ -58,7 +57,7 @@ import { ChangePasswordComponent } from './components/authorizedUserComponents/p
 import { ChangeBillingDataComponent } from './components/authorizedUserComponents/profile/personal/change-billing-data/change-billing-data.component';
 import { CarDataComponent } from './components/authorizedUserComponents/profile/cars/car-data/car-data.component';
 import { AddCarComponent } from './components/authorizedUserComponents/profile/cars/add-car/add-car.component';
-import { ServicesComponent } from './components/authorizedUserComponents/profile/personal/services/services.component';
+import { ServicesComponent } from './components/authorizedUserComponents/profile/services/services.component';
 import { FilesComponent } from './components/authorizedUserComponents/profile/files/files.component';
 import { SuccessfullyChangedPasswordComponent } from './components/authorizedUserComponents/profile/personal/change-password/successfully-changed-password/successfully-changed-password.component';
 import { ChangePhoneNumberComponent } from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
@@ -70,6 +69,8 @@ import {ProfileService} from './services/profile.service';
 import {DialogService} from './services/dialog.service';
 import {DataService} from './services/data.service';
 import {AuthService} from './services/auth.service';
+import {MatSortModule} from '@angular/material/sort';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -123,6 +124,7 @@ import {AuthService} from './services/auth.service';
     BrowserAnimationsModule,
     HttpClientModule,
     MatDialogModule,
+    MatTableModule,
     MatFormFieldModule,
     MatCheckboxModule,
     MatInputModule,
@@ -145,12 +147,14 @@ import {AuthService} from './services/auth.service';
         ]
       },
       {path: '**', redirectTo: 'home'}
-    ], ),
+    ],),
     MatDatepickerModule,
     FlexModule,
     MatSelectModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatSortModule,
+    MatButtonModule
   ],
   providers: [SlimLoadingBarService,
     UserService,

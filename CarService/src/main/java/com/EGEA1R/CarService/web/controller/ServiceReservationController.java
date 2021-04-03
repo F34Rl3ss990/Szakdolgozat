@@ -1,8 +1,6 @@
 package com.EGEA1R.CarService.web.controller;
 
-import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.User;
-import com.EGEA1R.CarService.service.classes.ExcelServiceImpl;
 import com.EGEA1R.CarService.service.interfaces.ExcelService;
 import com.EGEA1R.CarService.service.interfaces.ServiceReservationService;
 import com.EGEA1R.CarService.service.interfaces.UserService;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -75,7 +72,7 @@ public class ServiceReservationController {
     }
 
     @GetMapping("/getServicesByUser")
-    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getServicesByUser(@RequestParam(name = "page", defaultValue = "0") int page,
                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                @RequestBody Long userId){

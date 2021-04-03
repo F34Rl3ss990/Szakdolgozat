@@ -12,7 +12,7 @@ import {ChangePasswordComponent} from './components/authorizedUserComponents/pro
 import {ChangeBillingDataComponent} from './components/authorizedUserComponents/profile/personal/change-billing-data/change-billing-data.component';
 import {CarDataComponent} from './components/authorizedUserComponents/profile/cars/car-data/car-data.component';
 import {AddCarComponent} from './components/authorizedUserComponents/profile/cars/add-car/add-car.component';
-import {ServicesComponent} from './components/authorizedUserComponents/profile/personal/services/services.component';
+import {ServicesComponent} from './components/authorizedUserComponents/profile/services/services.component';
 import {FilesComponent} from './components/authorizedUserComponents/profile/files/files.component';
 import {ChangePhoneNumberComponent} from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
 
@@ -38,9 +38,13 @@ const routes: Routes = [
           {path: 'addCar', component: AddCarComponent}
         ]},
       {path: 'service', component: ServicesComponent},
-      {path: 'files', component: FilesComponent}
+      {path: 'services/:id', component: ServicesComponent},
+      {path: 'files/:id', component: ServicesComponent},
+      {path: 'files', component: FilesComponent},
+
     ]},
   {path: 'changePassword', component: ChangePasswordComponent},
+
 ];
 
 @NgModule({

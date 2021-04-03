@@ -1,7 +1,6 @@
 package com.EGEA1R.CarService.validation.classes.licenseplate;
 
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
-import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 
 import java.util.regex.Pattern;
 
