@@ -1,21 +1,16 @@
 package com.EGEA1R.CarService.web.controller;
 
-import com.EGEA1R.CarService.persistance.entity.Document;
+import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import com.EGEA1R.CarService.service.interfaces.ServiceDataService;
-import com.EGEA1R.CarService.web.DTO.FinanceDTO;
 import com.EGEA1R.CarService.web.DTO.ServiceDataDTO;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.ServiceByUserResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,25 +19,32 @@ public class ServiceDataController {
 
     private ServiceDataService serviceDataService;
 
+    private DocumentService documentService;
+
     @Autowired
     public void setServiceDataService(ServiceDataService serviceDataService){
         this.serviceDataService = serviceDataService;
     }
 
-    @PostMapping(value = "/save", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<?> saveServiceData(@RequestPart("file") List<MultipartFile> fileList,  @RequestPart ServiceDataDTO serviceDataDTO, @RequestPart FinanceDTO financeDTO, String email) throws Exception {
-        serviceDataService.saveDataAndFinance(fileList, serviceDataDTO, financeDTO, email);
-        return ResponseEntity.ok(new MessageResponse("Kérés teljesítve"));
+    @Autowired
+    public void setDocumentService(DocumentService documentService){
+        this.documentService = documentService;
+    }
+
+    @PostMapping(value = "/save")
+    public MessageResponse saveServiceData(HttpServletRequest request){
+        String message =  documentService.storeClientBigFiles(request);
+        return new MessageResponse(message);
     }
 
     @GetMapping("/serviceDataByUser")
-    public List<ServiceByUserResponse> getServiceDataByUser(@RequestBody Long credentialId){
+    public List<ServiceByUserResponse> getServiceDataByUser(@RequestParam Long credentialId){
        return serviceDataService.getServiceDataListByUser(credentialId);
     }
 
     @GetMapping("/serviceDataByCar")
-    public List<ServiceDataDTO> getServiceDataByCar(@RequestBody Long carId){
-        return serviceDataService.getServiceDataListByCar(carId);
+    public List<ServiceDataDTO> getServiceDataByCar(@RequestParam Long carId, @RequestParam Long credentialId){
+        return serviceDataService.getServiceDataListByCar(carId, credentialId);
     }
 
 }

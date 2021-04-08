@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {AuthService} from '../../../../../services/auth.service';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -82,7 +82,7 @@ export class RegisterComponent implements OnInit {
         this.isSuccessful = true;
         this.isSignUpFailed = false;
         this.dialogRef.close();
-        this.dialogService.openSuccessfulRegisterDialog();
+        this.dialogService.openSuccessDialog('registration-successful.component.html');
       },
       err => {
         if (!this.registerForm.controls['email'].valid) {

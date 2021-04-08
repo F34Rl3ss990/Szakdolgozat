@@ -1,6 +1,5 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {NavItem} from '../../../../../models/NavItem';
-import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -11,54 +10,54 @@ export class NavComponent implements AfterViewInit {
   navItems: NavItem[] = [
     {
       displayName: 'Személyes adatok',
-      iconName: 'manage_accounts',
+      iconName: 'user-cog',
       route: 'profile/personal',
       children: [
         {
           displayName: 'Általános',
-          iconName: 'account_circle',
+          iconName: 'user-alt',
           route: 'profile/personal/general'
         },
         {
           displayName: 'Jelszó módosítás',
-          iconName: 'settings',
+          iconName: 'cog',
           route: 'profile/personal/changePassword'
         },
         {
           displayName: 'Telefonszám módosítás',
-          iconName: 'settings',
+          iconName: 'cog',
           route: 'profile/personal/changePhoneNumber'
         },
         {
           displayName: 'Számlázási adatok módosítása',
-          iconName: 'settings',
+          iconName: 'cog',
           route: 'profile/personal/changeBillingData'
         }]
     },
     {
       displayName: 'Jármű',
-      iconName: 'toys',
+      iconName: 'car-side',
       route: 'profile/car',
       children: [
         {
           displayName: 'Jármű adatok',
-          iconName: 'directions_car',
+          iconName: 'car',
           route: 'profile/car/carData'
         },
         {
           displayName: 'Jármű hozzáadása',
-          iconName: 'add_circle',
+          iconName: 'car',
           route: 'profile/car/addCar'
         }]
     },
     {
       displayName: 'Szervizek',
-      iconName: 'build',
+      iconName: 'file-alt',
       route: 'profile/service'
     },
     {
       displayName: 'Dokumentumok',
-      iconName: 'document_scanner',
+      iconName: 'file-alt',
       route: 'profile/files'
     }
   ]

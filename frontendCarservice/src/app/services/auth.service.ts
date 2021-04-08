@@ -35,8 +35,8 @@ export class AuthService {
     }, httpOptions);
   }
 
-  getUserByEmail(userEmail: string): Promise<Boolean> {
-    return this.http.get<Boolean>(AUTH_API + 'emailValid?email=' + userEmail).toPromise();
+  getUserByEmail(userEmail: string): Promise<boolean> {
+    return this.http.get<boolean>(AUTH_API + 'emailValid?email=' + userEmail).toPromise();
   }
 
   confirmRegistration(token: string): Observable<any>{

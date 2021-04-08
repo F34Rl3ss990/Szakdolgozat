@@ -2,7 +2,6 @@ package com.EGEA1R.CarService.persistance.repository.classes;
 
 import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceDataRepository;
 import com.EGEA1R.CarService.web.DTO.ServiceDataDTO;
-import com.EGEA1R.CarService.web.DTO.payload.response.ServiceByUserResponse;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -10,7 +9,6 @@ import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
 import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -37,20 +35,18 @@ public class ServiceDataRepositoryImpl implements ServiceDataRepository {
     @Override
     public Long saveServiceData(ServiceDataDTO serviceDataDTO, Long financeId) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SAVE_SERVICE_DATA_OUT_ID");
-        query.registerStoredProcedureParameter(1, Date.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter(3, String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter(4, String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter(5, String.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter(6, Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter(7, Long.class, ParameterMode.OUT);
-        query.setParameter(1, serviceDataDTO.getDate());
-        query.setParameter(2, serviceDataDTO.getBillNum());
-        query.setParameter(3, serviceDataDTO.getServicesDone());
-        query.setParameter(4, serviceDataDTO.getComment());
-        query.setParameter(5, serviceDataDTO.getMileage());
-        query.setParameter(6, financeId);
-        Long serviceDataId = (Long) query.getOutputParameterValue(7);
+        query.registerStoredProcedureParameter(5, Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(6, Long.class, ParameterMode.OUT);
+        query.setParameter(1, serviceDataDTO.getBillNum());
+        query.setParameter(2, serviceDataDTO.getServicesDone());
+        query.setParameter(3, serviceDataDTO.getComment());
+        query.setParameter(4, serviceDataDTO.getMileage());
+        query.setParameter(5, financeId);
+        Long serviceDataId = (Long) query.getOutputParameterValue(6);
         query.executeUpdate();
         return serviceDataId;
     }
@@ -65,10 +61,12 @@ public class ServiceDataRepositoryImpl implements ServiceDataRepository {
     }
 
     @Override
-    public List<ServiceDataDTO> getAllServiceByCar(Long carId) {
+    public List<ServiceDataDTO> getAllServiceByCar(Long carId, Long credentialId) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_SERVICE_DATA_BY_CAR_ORDER_BY_DATE", "GetServiceData");
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(2, Long.class, ParameterMode.IN);
         query.setParameter(1, carId);
+        query.setParameter(2, credentialId);
         return query.getResultList();
     }
 }

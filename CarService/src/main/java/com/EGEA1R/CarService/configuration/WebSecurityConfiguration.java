@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AuthCredentialServiceImpl credentialService;
 
     private CustomAccessDeniedHandler accessDeniedHandler;
+
 
 
     @Autowired
@@ -53,7 +55,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
-
+/*
+    @Bean
+    public CommonsMultipartResolver canBeCalledAnything(){
+        return new CommonsMultipartResolver();
+    }
+*/
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(credentialService).passwordEncoder(passwordEncoder());

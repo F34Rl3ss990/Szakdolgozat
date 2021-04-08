@@ -1,6 +1,5 @@
-import {Component, Input, OnInit, Renderer2} from '@angular/core';
+import {Component, OnInit, Renderer2} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {VerificationDialogEntryComponent} from '../verification-dialog-entry/verification-dialog-entry.component';
 import {DataService} from '../../../../../services/data.service';
 import {Router} from '@angular/router';
 

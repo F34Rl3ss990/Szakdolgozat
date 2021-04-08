@@ -17,5 +17,5 @@ public interface DocumentRepository {
 
     List<DocumentDTO> findAllByUser(Long credentialId);
 
-    List<DocumentDTO> findAllByCar(Long carId);
+    List<DocumentDTO> findAllByCar(Long carId, Long credentialId);
 }

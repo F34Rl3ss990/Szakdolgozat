@@ -1,0 +1,359 @@
+<div class="container">
+
+  <form
+    [formGroup]="userAndCarSaverForm"
+    (ngSubmit)="onSubmit()">
+    <div class="row">
+      <h4>Amennyiben szeretnél hozzáférni a profilodhoz vagy szeretnél valamilyen szolgáltatást igényelni, ahhoz első lépésként meg kell adnod a saját és gépjárműved adatait, amit itt tehetsz meg.</h4>
+      <div class="column">
+        <h2>1. Gépjármű adatok</h2>
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon gépjármű márkát*</mat-label>
+          <mat-select [(value)]="selectedBrand" (selectionChange)="typeSetter($event)" formControlName="brand">
+            <ng-container *ngFor="let brand of brandSet; let i = index">
+              <mat-option value="{{this.brand}}">{{this.brand}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['brand'].hasError('required') && userAndCarSaverForm.controls['brand'].touched
+                   || userAndCarSaverForm.controls['brand'].hasError('required') && userAndCarSaverForm.controls['brand'].dirty
+                   || userAndCarSaverForm.controls['brand'].hasError('required') && userAndCarSaverForm.controls['brand'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['brand'].hasError('required')">
+          Márka megadása kötelező!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon típust*</mat-label>
+          <mat-select [(value)]="selectedType" (selectionChange)="yearOfManufactureSetter($event)" formControlName="type">
+            <ng-container *ngFor="let type of typeSet; let i = index">
+              <mat-option value="{{this.type}}">{{this.type}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['type'].hasError('required') && userAndCarSaverForm.controls['type'].touched
+                   || userAndCarSaverForm.controls['type'].hasError('required') && userAndCarSaverForm.controls['type'].dirty
+                   || userAndCarSaverForm.controls['type'].hasError('required') && userAndCarSaverForm.controls['type'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['type'].hasError('required')">
+          Típus megadása kötelező!
+        </mat-error>
+        <p></p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon gyártási évet*</mat-label>
+          <mat-select [(value)]="selectedYearOfManufacture" (selectionChange)="engineTypeSetter($event)" formControlName="yearOfManufacture">
+            <ng-container *ngFor="let yearOfManufacture of yearOfManufactureSet; let i = index">
+              <mat-option value="{{this.yearOfManufacture}}">{{this.yearOfManufacture}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['yearOfManufacture'].hasError('required') && userAndCarSaverForm.controls['yearOfManufacture'].touched
+                   || userAndCarSaverForm.controls['yearOfManufacture'].hasError('required') && userAndCarSaverForm.controls['yearOfManufacture'].dirty
+                   || userAndCarSaverForm.controls['yearOfManufacture'].hasError('required') && userAndCarSaverForm.controls['yearOfManufacture'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['yearOfManufacture'].hasError('required')">
+          Gyártási év megadása kötelező!
+        </mat-error>
+        <p></p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Kérem válasszon motor típust*</mat-label>
+          <mat-select [(value)]="selectedEngineType" formControlName="engineType">
+            <ng-container *ngFor="let engineType of engineTypeSet; let i = index">
+              <mat-option value="{{this.engineType}}">{{this.engineType}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['engineType'].hasError('required') && userAndCarSaverForm.controls['engineType'].touched
+                   || userAndCarSaverForm.controls['engineType'].hasError('required') && userAndCarSaverForm.controls['engineType'].dirty
+                   || userAndCarSaverForm.controls['engineType'].hasError('required') && userAndCarSaverForm.controls['engineType'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['engineType'].hasError('required')">
+          Motor típus megadása kötelező!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Kilométeróra állása</mat-label>
+          <input type="text" matInput formControlName="mileage" #mileage
+                 placeholder="Kilométeróra állása"
+          >
+          <span matSuffix>km</span>
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['mileage'].hasError('pattern')">
+          A mező csak számokat tartalmazhat!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['mileage'].hasError('max')">
+          A megengedett maximális méret 999999!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Motorkód</mat-label>
+          <input type="text" matInput formControlName="engineNumber" #engineNumber
+                 placeholder="Motorkód"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['engineNumber'].hasError('pattern')">
+          Érvénytelen karakterek a motorkód mezőben!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Alvázszám</mat-label>
+          <input type="text" matInput formControlName="chassisNumber" #chassisNumber
+                 placeholder="Alvázszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['chassisNumber'].hasError('pattern')">
+          Érvénytelen karakterek a motorkód mezőben!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['chassisNumber'].hasError('minlength') || userAndCarSaverForm.controls['chassisNumber'].hasError('maxlength')">
+          Az alvázszámnak 17 karakterből kell állnia!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Rendszám</mat-label>
+          <input type="text" matInput formControlName="licensePlateNumber" #licensePlateNumber
+                 placeholder="Rendszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && !foreignCountryPlate
+                        || userAndCarSaverForm.controls['licensePlateNumber'].hasError('pattern') && !foreignCountryPlate">
+          Ilyen rendszám formátum nem létezik Magyarországon!
+        </mat-error>
+        <mat-checkbox
+          formControlName="foreignCountryPlate" style="margin-top:6px" (change)="foreignCountryPlate = !foreignCountryPlate; licensePlateValidator($event)">Nemzetközi rendszám
+        </mat-checkbox>
+      </div>
+      <div class="column">
+        <h2>2. Személyes adatok</h2>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Név*</mat-label>
+          <input type="text" matInput formControlName="name" #name
+                 placeholder="Név"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['name'].hasError('required') && userAndCarSaverForm.controls['name'].touched
+                   || userAndCarSaverForm.controls['name'].hasError('required') && userAndCarSaverForm.controls['name'].dirty
+                   || userAndCarSaverForm.controls['name'].hasError('required') && userAndCarSaverForm.controls['name'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['name'].value==''">
+          Név megadása kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['name'].hasError('pattern') && !userAndCarSaverForm.controls['name'].hasError('required')">
+          Érvénytelen karakterek a név mezőben!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefonszám*</mat-label>
+          <input type="text" matInput formControlName="phoneNumber" #phoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['phoneNumber'].hasError('required') && userAndCarSaverForm.controls['phoneNumber'].touched
+                   || userAndCarSaverForm.controls['phoneNumber'].hasError('required') && userAndCarSaverForm.controls['phoneNumber'].dirty
+                   || userAndCarSaverForm.controls['phoneNumber'].hasError('required') && userAndCarSaverForm.controls['phoneNumber'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['phoneNumber'].value==''">
+          Telefonszám megadása kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['phoneNumber'].hasError('pattern') && !userAndCarSaverForm.controls['phoneNumber'].hasError('required')">
+          Érvénytelen karakterek a telefonszám mezőben!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['phoneNumber'].hasError('minlength') && !userAndCarSaverForm.controls['phoneNumber'].hasError('required')">
+          A telefonszámnak legalább 8 számból kell állnia!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['phoneNumber'].hasError('maxlength') && !userAndCarSaverForm.controls['phoneNumber'].hasError('required')">
+          A telefonszám legfeljebb 14 számból állhat!
+        </mat-error>
+        <p></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Email*</mat-label>
+          <input type="email" matInput formControlName="email" #email
+                 placeholder="Email"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].touched
+                   || userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].dirty
+                   || userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['email'].value==''">
+          Email cím megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="userAndCarSaverForm.controls['email'].hasError('pattern') && !userAndCarSaverForm.controls['email'].hasError('required')">
+          Érvénytelen e-mail formátum!
+        </mat-error>
+        <p></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column billing-box">
+        <h2 style="padding-bottom: 0px; margin-bottom: 0px">4. Számlázási adatok</h2>
+      </div>
+      <div class="column billing-check-box">
+        <mat-checkbox
+          formControlName="billingToCompany" (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)">Cég nevére kérem a számlát
+        </mat-checkbox>
+      </div>
+      <div class="column billing-box">
+        <mat-checkbox
+          formControlName="billingSameAsUserData" (change)="billingDataSetter();billingSameAsUserData = !billingSameAsUserData">Megegyezik a személyes adatokkal
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column" style="max-width: 310px">
+        <mat-form-field appearance="outline" style="width:300px">
+          <mat-label>Számlázási név*</mat-label>
+          <input type="text" matInput formControlName="billingName" #billingName
+                 placeholder="Számlázási név"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingName'].hasError('required') && userAndCarSaverForm.controls['billingName'].touched
+                   || userAndCarSaverForm.controls['billingName'].hasError('required') && userAndCarSaverForm.controls['billingName'].dirty
+                   || userAndCarSaverForm.controls['billingName'].hasError('required') && userAndCarSaverForm.controls['billingName'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingName'].value==''">
+          Számlázási név megadása kötelező!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column" style="max-width: 150px">
+        <mat-form-field appearance="outline" style="width: 140px">
+          <mat-label>Telefonszám*</mat-label>
+          <input type="text" matInput formControlName="billingPhoneNumber" #billingPhoneNumber
+                 placeholder="Telefonszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required') && userAndCarSaverForm.controls['billingPhoneNumber'].touched
+                   || userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required') && userAndCarSaverForm.controls['billingPhoneNumber'].dirty
+                   || userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required') && userAndCarSaverForm.controls['billingPhoneNumber'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingPhoneNumber'].value==''">
+          Telefonszám megadása kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingPhoneNumber'].hasError('pattern') && !userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required')">
+          Érvénytelen karakterek a telefonszám mezőben!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingPhoneNumber'].hasError('minLength') && !userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required')">
+          A telefonszámnak legalább 8 számból kell állnia!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingPhoneNumber'].hasError('maxLength') && !userAndCarSaverForm.controls['billingPhoneNumber'].hasError('required')">
+          A telefonszám legfeljebb 14 számból állhat!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Email*</mat-label>
+          <input type="text" matInput formControlName="billingEmail" #billingEmail
+                 placeholder="Email"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingEmail'].hasError('required') && userAndCarSaverForm.controls['billingEmail'].touched
+                   || userAndCarSaverForm.controls['billingEmail'].hasError('required') && userAndCarSaverForm.controls['billingEmail'].dirty
+                   || userAndCarSaverForm.controls['billingEmail'].hasError('required') && userAndCarSaverForm.controls['billingEmail'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingEmail'].value==''">
+          Email cím megadása kötelező!
+        </mat-error>
+        <mat-error
+          *ngIf="userAndCarSaverForm.controls['billingEmail'].hasError('pattern') && !userAndCarSaverForm.controls['billingEmail'].hasError('required')">
+          Érvénytelen e-mail formátum!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field" [hidden]="!billingToCompany">
+          <mat-label>Adószám*</mat-label>
+          <input  matInput formControlName="billingTax" #billingTax
+                  placeholder="Adószám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="(userAndCarSaverForm.controls['billingTax'].hasError('required') && userAndCarSaverForm.controls['billingTax'].touched) && billingToCompany
+                   || (userAndCarSaverForm.controls['billingTax'].hasError('required') && userAndCarSaverForm.controls['billingTax'].dirty) && billingToCompany
+                   || (userAndCarSaverForm.controls['billingTax'].hasError('required') && userAndCarSaverForm.controls['billingTax'].hasError('pristine')) && billingToCompany
+                   || (isSubmitted && userAndCarSaverForm.controls['billingTax'].value=='' && billingToCompany)">
+          Adószám cég esetén kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingTax'].hasError('pattern') && !billingForeignCountryTax && billingToCompany">
+          Nem megfelelő adószám formátum!
+        </mat-error>
+        <p></p>
+      </div>
+      <mat-checkbox
+        formControlName="billingForeignCountryTax" style="text-align: end;padding-right: 120px" (change)="billingForeignCountryTax =!billingForeignCountryTax; taxNumberValidator($event)" [hidden]="!billingToCompany">Nemzetközi adószám
+      </mat-checkbox>
+    </div>
+    <div class="row">
+      <h4>Számlázási cím</h4>
+    </div>
+    <div class="row">
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Irányítószám*</mat-label>
+          <input type="text" matInput formControlName="billingZipCode" #billingZipCode
+                 placeholder="Irányítószám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingZipCode'].hasError('required') && userAndCarSaverForm.controls['billingZipCode'].touched
+                   || userAndCarSaverForm.controls['billingZipCode'].hasError('required') && userAndCarSaverForm.controls['billingZipCode'].dirty
+                   || userAndCarSaverForm.controls['billingZipCode'].hasError('required') && userAndCarSaverForm.controls['billingZipCode'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingZipCode'].value==''">
+          Az irányítószám kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingZipCode'].hasError('pattern')">
+          Érvénytelen karakterek az iránytószám mezőben!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingZipCode'].hasError('minlength') || userAndCarSaverForm.controls['billingZipCode'].hasError('maxlength')">
+          Az irányítószámnak 4 számból kell állnia!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Város*</mat-label>
+          <input type="text" matInput formControlName="billingTown" #billingTown
+                 placeholder="Város"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingTown'].hasError('required') && userAndCarSaverForm.controls['billingTown'].touched
+                   || userAndCarSaverForm.controls['billingTown'].hasError('required') && userAndCarSaverForm.controls['billingTown'].dirty
+                   || userAndCarSaverForm.controls['billingTown'].hasError('required') && userAndCarSaverForm.controls['billingTown'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingTown'].value==''">
+          Város megadása kötelező!
+        </mat-error>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingTown'].hasError('pattern') && !userAndCarSaverForm.controls['billingTown'].hasError('required')">
+          Érvénytelen karakterek a név mezőben!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Utca, házszám*</mat-label>
+          <input type="text" matInput formControlName="billingStreet" #billingStreet
+                 placeholder="Utca, házszám"
+          >
+        </mat-form-field>
+        <mat-error *ngIf="userAndCarSaverForm.controls['billingStreet'].hasError('required') && userAndCarSaverForm.controls['billingStreet'].touched
+                   || userAndCarSaverForm.controls['billingStreet'].hasError('required') && userAndCarSaverForm.controls['billingStreet'].dirty
+                   || userAndCarSaverForm.controls['billingStreet'].hasError('required') && userAndCarSaverForm.controls['billingStreet'].hasError('pristine')
+                   || isSubmitted && userAndCarSaverForm.controls['billingStreet'].value==''">
+          Utca, házszám megadása kötelező!
+        </mat-error>
+        <p></p>
+      </div>
+      <div class="column billing-box">
+        <mat-form-field appearance="outline" class="billing-mat-form-field">
+          <mat-label>Emelet, ajtó</mat-label>
+          <input type="text" matInput formControlName="billingOtherAddressType" #billingOtherAddressType
+                 placeholder="Emelet, ajtó"
+          >
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+        <p></p>
+      </div>
+    </div>
+    <div class="row textarea-row-class">
+      <button type="submit"
+              class="btn btn-primary btn-block" style="float:right; width: 200px; margin-bottom:15px">Mentés
+      </button>
+      <input class="hideIt" #hideIt>
+    </div>
+    <div>
+      <label></label>
+    </div>
+  </form>
+</div>

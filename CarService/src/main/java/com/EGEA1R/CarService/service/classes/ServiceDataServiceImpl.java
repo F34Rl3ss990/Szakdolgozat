@@ -1,22 +1,16 @@
 package com.EGEA1R.CarService.service.classes;
 
-import com.EGEA1R.CarService.persistance.entity.Document;
-import com.EGEA1R.CarService.persistance.entity.ServiceData;
 import com.EGEA1R.CarService.persistance.repository.interfaces.*;
 import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import com.EGEA1R.CarService.service.interfaces.ServiceDataService;
-import com.EGEA1R.CarService.web.DTO.FinanceDTO;
 import com.EGEA1R.CarService.web.DTO.ServiceDataDTO;
-import com.EGEA1R.CarService.web.DTO.payload.request.DocumentRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.ServiceByUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,23 +19,9 @@ import java.util.Set;
 @Service
 public class ServiceDataServiceImpl implements ServiceDataService {
 
-    private ServiceReservationRepository serviceReservationRepository;
-
-    private FinanceRepository financeRepository;
-
     private ServiceDataRepository serviceDataRepository;
 
     private DocumentService documentService;
-
-    @Autowired
-    public void setServiceReservationRepository(ServiceReservationRepository serviceReservationRepository) {
-        this.serviceReservationRepository = serviceReservationRepository;
-    }
-
-    @Autowired
-    public void setFinanceRepository(FinanceRepository financeRepository) {
-        this.financeRepository = financeRepository;
-    }
 
     @Autowired
     public void setServiceDataRepository(ServiceDataRepository serviceDataRepository) {
@@ -56,11 +36,8 @@ public class ServiceDataServiceImpl implements ServiceDataService {
     @Async
     @Transactional
     @Override
-    public void saveDataAndFinance(List<MultipartFile> fileList, ServiceDataDTO serviceDataDTO, FinanceDTO financeDTO, String email) throws Exception {
-        Long financeId = financeRepository.saveFinanceByServiceData(financeDTO);
-        Long serviceDataId = serviceDataRepository.saveServiceData(serviceDataDTO, financeId);
-        serviceReservationRepository.setServiceDataFk(serviceDataId, serviceDataDTO.getFkCarId());
-        documentService.storeClientFiles(fileList, serviceDataDTO.getFkCarId(), email, serviceDataId);
+    public String saveDataAndFinance(HttpServletRequest request) {
+       return documentService.storeClientBigFiles(request);
     }
 
     @Override
@@ -99,8 +76,8 @@ public class ServiceDataServiceImpl implements ServiceDataService {
     }
 
     @Override
-    public List<ServiceDataDTO> getServiceDataListByCar(Long carId) {
-        return serviceDataRepository.getAllServiceByCar(carId);
+    public List<ServiceDataDTO> getServiceDataListByCar(Long carId, Long credentialId) {
+        return serviceDataRepository.getAllServiceByCar(carId, credentialId);
     }
 /*
     @Override
@@ -145,6 +122,6 @@ public class ServiceDataServiceImpl implements ServiceDataService {
         }
         return response;
     }
-*/
 
+ */
 }

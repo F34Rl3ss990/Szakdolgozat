@@ -87,7 +87,7 @@ public class ServiceReservationController {
     }
 
     @GetMapping("/reserveDataGetter")
-    public List<ExcelCarDTO> test() throws IOException {
+    public List<ExcelCarDTO> test() {
         return excelService.getExcelData();
     }
 

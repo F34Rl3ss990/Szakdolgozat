@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {DataService} from '../../../../services/data.service';
 import {FormGroup} from '@angular/forms';
 import {Location} from '@angular/common';
-import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from '../../../../services/dialog.service';
 import {ServiceReservationService} from '../../../../services/service-reservation.service';
 import {TokenStorageService} from '../../../../services/token-storage.service';
@@ -34,7 +33,7 @@ export class VerifyServiceReservationComponent implements OnInit {
   verify(){
 
     this.serviceReservation.reserveUnauthorizedService(this.serviceForm.getRawValue(), this.collector).subscribe(data =>{
-        this.dialogService.openSuccessfullyReservedUnauthorizedService();
+        this.dialogService.openSuccessDialog('successfully-reserved-service.html');
       }, error => {
 
     })

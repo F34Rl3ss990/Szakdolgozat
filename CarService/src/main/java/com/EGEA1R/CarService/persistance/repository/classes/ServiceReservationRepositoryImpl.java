@@ -3,7 +3,6 @@ package com.EGEA1R.CarService.persistance.repository.classes;
 import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.repository.interfaces.ServiceReservationRepository;
-import com.EGEA1R.CarService.web.DTO.UserCarsDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;

@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
-import {Event, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {TokenStorageService} from '../../services/token-storage.service';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {RegisterComponent} from '../global/authorization-authentication/registration/register/register.component';
-import {LoginDialogComponent} from '../global/authorization-authentication/login/login-dialog/login-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../../services/auth.service';
-import {RegistrationSuccessfulComponent} from '../global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {DialogService} from '../../services/dialog.service';
 import {DataService} from '../../services/data.service';
 
@@ -53,6 +50,7 @@ export class NavigationBarComponent implements OnInit {
   openRegistrationDialog(){
     this.dialogService.openRegistrationDialog();
   }
+
 
   openLoginDialog(){
     this.dialogService.openLoginDialog();

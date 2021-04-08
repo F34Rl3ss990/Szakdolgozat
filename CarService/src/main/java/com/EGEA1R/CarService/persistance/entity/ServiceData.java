@@ -61,7 +61,6 @@ public class ServiceData {
     @Column(name = "service_data_id", insertable = false, updatable = false)
     private Long serviceDataId;
 
-    @NotNull
     @Column(name = "date")
     private Date date;
 

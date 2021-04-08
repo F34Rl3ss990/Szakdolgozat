@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.SqlResultSetMapping;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -23,7 +19,6 @@ public class ServiceDataDTO {
 
     private String licensePlateNumber;
 
-    @NotNull
     private Date date;
 
     @NotNull

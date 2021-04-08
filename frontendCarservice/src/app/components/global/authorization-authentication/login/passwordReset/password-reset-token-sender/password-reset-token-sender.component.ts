@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../../../../services/auth.service';
@@ -65,7 +65,7 @@ export class PasswordResetTokenSenderComponent implements OnInit {
     this.authService.resetPassword(this.resetPasswordForm.value.email).subscribe(
       data => {
         this.isSendFailed = false;
-        this.dialogService.openPasswordTokenSent();
+        this.dialogService.openSuccessDialog('password-token-sent.html');
         this.dialogRef.close();
       },
       err => {

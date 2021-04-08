@@ -1,11 +1,7 @@
 package com.EGEA1R.CarService.persistance.repository.classes;
 
-import com.EGEA1R.CarService.persistance.entity.Document;
 import com.EGEA1R.CarService.persistance.repository.interfaces.FileSystemRepository;
 import com.EGEA1R.CarService.web.DTO.payload.request.DocumentRequest;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Repository;
 
@@ -49,10 +45,11 @@ public class FileSystemRepositoryImpl implements FileSystemRepository {
     @Override
     public String saveClientDocument(DocumentRequest document, String email) throws Exception {
         Date date = new Date();
+        String directory = "/files/client";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
-        new File(FileSystemRepositoryImpl.class.getResource("/files/client/").getPath(), email).mkdir();
-        new File(FileSystemRepositoryImpl.class.getResource("/files/client/" + email + "/").getPath(), sdf.format(date)).mkdir();
-        RESOURCES_DIR = FileSystemRepositoryImpl.class.getResource("/files/client/" + email + "/" + sdf.format(date) + "/").getPath().substring(1);
+        new File(FileSystemRepositoryImpl.class.getResource(directory).getPath(), email).mkdir();
+        new File(FileSystemRepositoryImpl.class.getResource(directory + email + "/").getPath(), sdf.format(date)).mkdir();
+        RESOURCES_DIR = FileSystemRepositoryImpl.class.getResource(directory + email + "/" + sdf.format(date) + "/").getPath().substring(1);
         Path newFile = Paths.get(RESOURCES_DIR + document.getName());
         Files.createDirectories(newFile.getParent());
 

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
-import {TokenStorageService} from './services/token-storage.service';
 import {
   NavigationCancel,
   Event,

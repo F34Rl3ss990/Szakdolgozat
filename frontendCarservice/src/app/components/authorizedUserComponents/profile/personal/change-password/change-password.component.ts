@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ErrorMatcherDirective} from '../../../../validators/error-matcher.directive';
 import {TokenStorageService} from '../../../../../services/token-storage.service';
@@ -81,7 +81,7 @@ export class ChangePasswordComponent implements OnInit {
     this.isSubmitted = true;
     this.profileService.changePassword(this.changePasswordForm.value).subscribe(
       data => {
-        this.dialogService.openSuccessfullyChangedPassword();
+        this.dialogService.openSuccessDialog('successfully-reserved-service.html');
       },
       err => {
         this.errorMessage = err.message;

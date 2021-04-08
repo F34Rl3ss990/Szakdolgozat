@@ -2,7 +2,6 @@
   background: green;
 }
 
-
 h2{
   text-align: center;
   border-bottom: 3px solid blue;
@@ -41,7 +40,10 @@ h2{
 
 p{
   padding-top:10px;
-  color: white;
+  padding-top:10px;
+  color: green;
+  font-weight: bold;
+  text-align:center
 }
 .btn-primary{
   color: green;

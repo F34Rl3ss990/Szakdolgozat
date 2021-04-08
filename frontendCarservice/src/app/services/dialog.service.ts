@@ -1,17 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AuthService} from './auth.service';
-import {TokenStorageService} from './token-storage.service';
 import {LoginDialogComponent} from '../components/global/authorization-authentication/login/login-dialog/login-dialog.component';
 import {RegisterComponent} from '../components/global/authorization-authentication/registration/register/register.component';
-import {RegistrationSuccessfulComponent} from '../components/global/authorization-authentication/registration/registration-successful/registration-successful.component';
-import {PasswordTokenSentComponent} from '../components/global/authorization-authentication/login/passwordReset/password-token-sent/password-token-sent.component';
-import {PasswordSuccessfullyChangedComponent} from '../components/global/authorization-authentication/login/passwordReset/password-successfully-changed/password-successfully-changed.component';
 import {PasswordResetDialogComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-dialog/password-reset-dialog.component';
 import {ExpiredResetPasswordTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
-import {SuccessfullyReservedUnauthorizedServiceComponent} from '../components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
-import {SuccessfullyChangedPasswordComponent} from '../components/authorizedUserComponents/profile/personal/change-password/successfully-changed-password/successfully-changed-password.component';
+import {DynamicViewDialogComponent} from '../components/dynamic-view-dialog/dynamic-view-dialog.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,58 +16,29 @@ export class DialogService {
   isLoggedIn = false;
   constructor(private dialog: MatDialog) { }
 
-  openRegistrationDialog() {
+  openSuccessDialog(viewName: string){
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
-    dialogConfig.panelClass = 'my-dialog';
-    dialogConfig.autoFocus = false;
-
-    this.dialog.open(RegisterComponent, dialogConfig);
-
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    dialogConfig.data = viewName
+    this.dialog.open(DynamicViewDialogComponent, dialogConfig);
   }
+
   openLoginDialog() {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.panelClass = 'login-dialog';
     dialogConfig.autoFocus = false;
-
     this.dialog.open(LoginDialogComponent, dialogConfig);
   }
 
   openPasswordResetTokenSenderDialog(){
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.panelClass = 'my-dialog';
     dialogConfig.autoFocus = false;
-
     this.dialog.open(PasswordResetTokenSenderComponent, dialogConfig);
-  }
-
-  openSuccessfulRegisterDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(RegistrationSuccessfulComponent, dialogConfig);
-  }
-
-  openPasswordTokenSent(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(PasswordTokenSentComponent, dialogConfig);
-  }
-
-  openSuccessPasswordChange(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(PasswordSuccessfullyChangedComponent, dialogConfig);
   }
 
   openPasswordResetDialog(): void {
@@ -83,28 +49,19 @@ export class DialogService {
     this.dialog.open(PasswordResetDialogComponent, dialogConfig);
   }
 
+  openRegistrationDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.panelClass = 'my-dialog';
+    dialogConfig.autoFocus = false;
+    this.dialog.open(RegisterComponent, dialogConfig);
+  }
+
   openExpiredTokenDialog(): void {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
     this.dialog.open(ExpiredResetPasswordTokenComponent, dialogConfig);
-  }
-
-  openSuccessfullyReservedUnauthorizedService(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(SuccessfullyReservedUnauthorizedServiceComponent, dialogConfig);
-  }
-
-  openSuccessfullyChangedPassword() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'custom-dialog-container';
-    this.dialog.open(SuccessfullyChangedPasswordComponent, dialogConfig);
   }
 }

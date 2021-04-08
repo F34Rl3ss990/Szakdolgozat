@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProfileService} from '../../../../../services/profile.service';
 import {userCarList} from '../../../../../models/userCarList';
 import {ServiceReservationService} from '../../../../../services/service-reservation.service';

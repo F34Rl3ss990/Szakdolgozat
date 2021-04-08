@@ -4,6 +4,7 @@ import {serviceableCarList} from '../../../../../models/serviceableCarList';
 import {ServiceReservationService} from '../../../../../services/service-reservation.service';
 import {DataService} from '../../../../../services/data.service';
 import {ProfileService} from '../../../../../services/profile.service';
+import {DialogService} from '../../../../../services/dialog.service';
 
 @Component({
   selector: 'app-add-car',
@@ -38,7 +39,8 @@ export class AddCarComponent implements OnInit {
               private serviceReservation: ServiceReservationService,
               private el: ElementRef,
               private dataService: DataService,
-              private profileService: ProfileService) {
+              private profileService: ProfileService,
+              private dialogService: DialogService) {
     this.listSetter();
     this.createForm();
   }
@@ -157,7 +159,7 @@ export class AddCarComponent implements OnInit {
       return;
     } else {
       this.profileService.addCar(this.addCarForm.value, this.foreignCountryPlate).subscribe(data =>{
-
+          this.dialogService.openSuccessDialog('car-added-successfully.html')
         },
         err => {
           this.errorMessage = err.error.message;

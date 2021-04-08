@@ -1,12 +1,11 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../../services/data.service';
 import {ServiceReservationService} from '../../../../services/service-reservation.service';
 import {Subscription} from 'rxjs';
-import {DialogService} from '../../../../services/dialog.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {serviceableCarList} from '../../../../models/serviceableCarList';
-import {ErrorMatcherDirective} from '../../../validators/error-matcher.directive';
+
 
 @Component({
   selector: 'app-service-reservation',

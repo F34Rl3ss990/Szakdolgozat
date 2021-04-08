@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TokenStorageService} from '../../../../../services/token-storage.service';
 import {DataService} from '../../../../../services/data.service';
@@ -45,7 +45,7 @@ export class ChangePhoneNumberComponent implements OnInit {
     this.isSubmitted = true;
     this.profileService.changePhoneNumber(this.changePhoneNumberForm.value).subscribe(
       data => {
-    //    this.dialogService.openSuccessfullyChangedPassword();
+        this.dialogService.openSuccessDialog('phonenumber-changed-successfully.html');
       },
       err => {
         this.errorMessage = err.message;

@@ -1,8 +1,9 @@
-import {AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../../../services/data.service';
 
 import {ProfileService} from '../../../../../services/profile.service';
+import {DialogService} from '../../../../../services/dialog.service';
 
 @Component({
   selector: 'app-change-billing-data',
@@ -28,7 +29,8 @@ export class ChangeBillingDataComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private dataService: DataService,
               private profileService: ProfileService,
-              private el: ElementRef) {
+              private el: ElementRef,
+              private dialogService: DialogService) {
     this.createForm();
   }
 
@@ -88,7 +90,7 @@ export class ChangeBillingDataComponent implements OnInit {
       return;
     } else {
       this.profileService.changeBillingData(this.changeBillingDataForm, this.billingForeignCountryTax, this.billingToCompany).subscribe(data =>{
-
+            this.dialogService.openSuccessDialog('billingdata-changed-successfully.html')
         },
         err => {
           this.errorMessage = err.error.message;

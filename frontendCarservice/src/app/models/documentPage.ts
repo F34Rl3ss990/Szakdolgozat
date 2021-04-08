@@ -1,26 +1,32 @@
 import {MatTableDataSource} from '@angular/material/table';
 
 export interface responseDocument {
-  carId: bigint;
+  carId: number;
   brand: string;
   type: string;
-  serviceDataId: bigint;
-  documentIds: {};
-  documents?: documentArray[] | MatTableDataSource<documentArray>;
+  licensePlateNumber: string;
+  serviceDataId: number;
+  date: Date;
+  mileage: string;
+  documentIds: [];
+  documentList?: documentArray[] | MatTableDataSource<documentArray>;
 }
 
 export interface documentArray{
-  name: string;
-  documentId: bigint;
+  id: number;
   type: string;
-  size: bigint;
+  name: string;
+  size: string;
 }
 
 export interface responseDocumentSource {
-  carId: bigint;
+  carId: number;
   brand: string;
   type: string;
-  serviceDataId: bigint;
-  documentIds: {};
-  documents?: MatTableDataSource<documentArray>;
+  licensePlateNumber: string;
+  serviceDataId: number;
+  date: Date;
+  mileage: string;
+  documentIds: [];
+  documentList?: MatTableDataSource<documentArray>;
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataService} from '../../../../services/data.service';
 import {Subscription} from 'rxjs';
@@ -6,6 +6,7 @@ import {ServiceReservationService} from '../../../../services/service-reservatio
 import {userCarList} from '../../../../models/userCarList';
 import {Router} from '@angular/router';
 import {TokenStorageService} from '../../../../services/token-storage.service';
+import {ProfileService} from '../../../../services/profile.service';
 
 @Component({
   selector: 'app-auth-service-reservation',
@@ -58,7 +59,8 @@ export class AuthServiceReservationComponent implements OnInit {
               private serviceReservation: ServiceReservationService,
               private el: ElementRef,
               private router: Router,
-              private tokenStorage: TokenStorageService) {
+              private tokenStorage: TokenStorageService,
+              private profileService: ProfileService) {
     const currentYear = Date.now();
     this.minDate = new Date(currentYear);
     this.checkboxSetter();
@@ -71,6 +73,11 @@ export class AuthServiceReservationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.profileService.getUserData().subscribe(res =>{
+
+    }, error => {
+      this.router.navigate(['setProfile']);
+    })
   }
 
   createForm() {

@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
 const USER_API = 'http://localhost:8080/api/test/user/';
 const CAR_API = 'http://localhost:8080/api/test/car/';
+const DOCUMENT_API = 'http://localhost:8080/api/test/document/';
+const SERVICE_DATA_API = 'http://localhost:8080/api/test/serviceData/';
 
 const httpOptions = {
-
-  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
 @Injectable({
@@ -20,8 +21,8 @@ export class ProfileService {
 
   }
 
-  generateOtpNumber(): Observable<any>{
-    return this.http.get(`${AUTH_API}generateOtpNumber`);
+  generateOtpNumber(): Observable<any> {
+    return this.http.get(AUTH_API + 'generateOtpNumber');
   }
 
   changePhoneNumber(phoneNumberFormVal): Observable<any> {
@@ -54,8 +55,8 @@ export class ProfileService {
     }, httpOptions);
   }
 
-  getUserData(): Observable<any>{
-   return this.http.get(USER_API + 'getUser');
+  getUserData(): Observable<any> {
+    return this.http.get(USER_API + 'getUser');
   }
 
   addCar(addCarForm, foreignLicensePlate): Observable<any> {
@@ -72,7 +73,61 @@ export class ProfileService {
     }, httpOptions);
   }
 
-  getCarsData(): Observable<any>{
+  getCarsData(): Observable<any> {
     return this.http.get(CAR_API + 'getUser');
+  }
+
+
+  getUserDocuments(credentialId: bigint): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('credentialId', String(credentialId));
+    return this.http.get(`${DOCUMENT_API}filesByUser`, {params: params});
+  }
+
+  getCarDocuments(carId: bigint, credentialId: bigint): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('carId', String(carId));
+    params = params.append('credentialId', String(carId));
+    return this.http.get(`${DOCUMENT_API}filesCarId`, {params: params});
+  }
+
+  getUserServiceData(credentialId: bigint): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('credentialId', String(credentialId));
+    return this.http.get(`${SERVICE_DATA_API}serviceDataByUser`, {params: params});
+  }
+
+  getCarServiceData(carId: bigint, credentialId: bigint): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('carId', String(carId));
+    params = params.append('credentialId', String(carId));
+    return this.http.get(`${SERVICE_DATA_API}serviceDataByCar`, {params: params});
+  }
+
+  addCarAndUser(carAndUserForm, foreignLicensePlate, billingToCompany): Observable<any> {
+    return this.http.post(USER_API + 'serviceReservationUnauthorizedValidation', {
+      name: carAndUserForm.name,
+      email: carAndUserForm.email,
+      phoneNumber: carAndUserForm.phoneNumber,
+      brand: carAndUserForm.brand,
+      type: carAndUserForm.type,
+      yearOfManufacture: carAndUserForm.yearOfManufacture,
+      engineType: carAndUserForm.engineType,
+      mileage: carAndUserForm.mileage,
+      engineNumber: carAndUserForm.engineNumber,
+      chassisNumber: carAndUserForm.chassisNumber,
+      licensePlateNumber: carAndUserForm.licensePlateNumber,
+      foreignCountryPlate: foreignLicensePlate,
+      billingName: carAndUserForm.billingName,
+      billingPhoneNumber: carAndUserForm.billingPhoneNumber,
+      billingEmail: carAndUserForm.billingEmail,
+      billingZipCode: carAndUserForm.billingZipCode,
+      billingTown: carAndUserForm.billingTown,
+      billingStreet: carAndUserForm.billingStreet,
+      billingOtherAddressType: carAndUserForm.billingOtherAddressType,
+      billingTax: carAndUserForm.billingTax,
+      billingForeignCountryTax: carAndUserForm.billingForeignCountryTax,
+      billingToCompany: billingToCompany,
+    }, httpOptions);
   }
 }

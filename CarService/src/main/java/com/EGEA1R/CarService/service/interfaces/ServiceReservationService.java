@@ -1,6 +1,5 @@
 package com.EGEA1R.CarService.service.interfaces;
 
-import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UserCarsDTO;

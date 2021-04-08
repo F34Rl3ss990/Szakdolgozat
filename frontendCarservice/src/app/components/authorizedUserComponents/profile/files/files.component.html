@@ -1,1 +1,93 @@
-<p>files works!</p>
+<div class="container">
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <table mat-table #outerSort="matSort" [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort>
+
+    <ng-container matColumnDef="icon">
+      <th mat-header-cell  style="width:20px;" *matHeaderCellDef>  </th>
+      <td mat-cell   *matCellDef="let element" style="padding-left:12px;padding-right:8px">
+        <div *ngIf="!expanded">
+            <mat-icon style="color:black;"  [@indicatorRotate]="element == expandedElement ? 'expanded' : 'collapsed'">
+             arrow_drop_up
+            </mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Márka">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Márka </th>
+      <td mat-cell *matCellDef="let car"> {{car.brand}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Típus">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Típus </th>
+      <td mat-cell *matCellDef="let car"> {{car.type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Rendszám">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Rendszám </th>
+      <td mat-cell *matCellDef="let car"> {{car.licensePlateNumber}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Dátum">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Dátum </th>
+      <td mat-cell *matCellDef="let car"> {{car.date | date:'yyyy.MM.dd.' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Kilométer">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Aktuális kilométer </th>
+      <td mat-cell *matCellDef="let car"> {{car.mileage}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Letöltés">
+      <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Letöltés </th>
+      <td mat-cell *matCellDef="let car" style="text-align: -webkit-center;"><a><mdb-icon class="fas fa-lg" icon="file-archive" (click)="downloadZip(car.documentIds,  $event)"></mdb-icon></a></td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+        <div class="example-element-detail" *ngIf="element.documentList?.data.length" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div class="inner-table mat-elevation-z8" *ngIf="expandedElement">
+            <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.documentList" matSort>
+
+              <ng-container matColumnDef="Típus">
+                <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Típus </th>
+                  <td mat-cell *matCellDef="let document">
+                    <span *ngIf="document.type.includes('image')"><mdb-icon class="fas fa-lg" icon="file-image" style="padding-right:5px"></mdb-icon> Kép </span>
+                    <span *ngIf="document.type.includes('application')"><mdb-icon class="fas fa-lg" icon="file-alt" style="padding-right:5px"></mdb-icon> Dokumentum </span>
+                    <span *ngIf="document.type.includes('video')"><mdb-icon class="fas fa-lg" icon="file-video" style="padding-right:5px"></mdb-icon> Videó </span>
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Név">
+                <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Név </th>
+                <td mat-cell *matCellDef="let document"> {{document.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Méret">
+                <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Méret </th>
+                <td mat-cell *matCellDef="let document"> {{document.size}} </td>
+              </ng-container>
+              <mdb-icon fas icon="download"></mdb-icon>
+              <ng-container matColumnDef="Letöltés">
+                <th mat-header-cell class="custom-mat-header-styling tableHeaderCellDiv" mat-sort-header *matHeaderCellDef> Letöltés </th>
+                <td mat-cell *matCellDef="let document" style="text-align: -webkit-center;"><mdb-icon class="fas fa-lg" icon="download"><a (click)="downloadFile(document.id)">file_download </a></mdb-icon> </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="innerDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: innerDisplayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" [class.example-element-row]="element.documentList?.data.length"
+        [class.example-expanded-row]="expandedElement === element" (click)="toggleRow(element)">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+  <mat-paginator #branchPaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" [showFirstLastButtons]="true" class="mat-elevation-z8"> </mat-paginator>
+</div>

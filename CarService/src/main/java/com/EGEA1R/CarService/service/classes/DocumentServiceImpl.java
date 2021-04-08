@@ -1,33 +1,44 @@
 package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.persistance.entity.Document;
-import com.EGEA1R.CarService.persistance.repository.interfaces.DocumentRepository;
-import com.EGEA1R.CarService.persistance.repository.interfaces.FileSystemRepository;
+import com.EGEA1R.CarService.persistance.repository.classes.FileSystemRepositoryImpl;
+import com.EGEA1R.CarService.persistance.repository.interfaces.*;
 import com.EGEA1R.CarService.service.interfaces.DocumentService;
 import com.EGEA1R.CarService.web.DTO.DocumentDTO;
+import com.EGEA1R.CarService.web.DTO.FinanceDTO;
+import com.EGEA1R.CarService.web.DTO.ServiceDataDTO;
 import com.EGEA1R.CarService.web.DTO.payload.request.DocumentRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.FileAndCarResponse;
 import com.EGEA1R.CarService.web.DTO.payload.response.ResponseFile;
-import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.io.*;
 import java.math.RoundingMode;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -38,77 +49,156 @@ public class DocumentServiceImpl implements DocumentService {
 
     private FileSystemRepository fileSystemRepository;
 
+    private ServiceReservationRepository serviceReservationRepository;
+
+    private FinanceRepository financeRepository;
+
+    private ServiceDataRepository serviceDataRepository;
+
+    @Autowired
+    public void setServiceReservationRepository(ServiceReservationRepository serviceReservationRepository) {
+        this.serviceReservationRepository = serviceReservationRepository;
+    }
+
+    @Autowired
+    public void setFinanceRepository(FinanceRepository financeRepository) {
+        this.financeRepository = financeRepository;
+    }
+
+    @Autowired
+    public void setServiceDataRepository(ServiceDataRepository serviceDataRepository) {
+        this.serviceDataRepository = serviceDataRepository;
+    }
+
     @Autowired
     public void setDocumentRepository(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
     }
 
     @Autowired
-    public void setFileSystemRepository(FileSystemRepository fileSystemRepository){
+    public void setFileSystemRepository(FileSystemRepository fileSystemRepository) {
         this.fileSystemRepository = fileSystemRepository;
     }
 
-    @Transactional
     @Override
-    public void storeServiceFiles(List<MultipartFile> fileToStore) throws Exception {
-        for(MultipartFile file : fileToStore) {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            long size = file.getBytes().length;
-            double sizeToSave = 0;
-            String suffix = "";
-            df2.setRoundingMode(RoundingMode.UP);
-            if(size/(Math.pow(1024,3))>1 && size/(Math.pow(1024,3))<1){
-                suffix = "GB";
-                sizeToSave = Double.parseDouble(df2.format(size/(Math.pow(1024,3))));
-            } else if(size/(Math.pow(1024,2))>1 && size/(Math.pow(1024,3))<1){
-                suffix = "MB";
-                sizeToSave = Double.parseDouble(df2.format(size/(Math.pow(1024,2))));
-            } else if(size/1024>1 && size/(Math.pow(1024,2))<1 || size/1024<1){
-                suffix = "KB";
-                sizeToSave = Double.parseDouble(df2.format(size/1024));
+    @Transactional
+    public String storeServiceBigFiles(HttpServletRequest request) {
+        String RESOURCES_DIR = DocumentServiceImpl.class.getResource("/files/service/").getPath().substring(1);
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        try {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            FileItemIterator iter = upload.getItemIterator(request);
+            while (iter.hasNext()) {
+                FileItemStream item = iter.next();
+                InputStream stream = item.openStream();
+                String filename = item.getName();
+                String contentType = item.getContentType();
+                Path newFile = Paths.get(RESOURCES_DIR + sdf.format(date) + "-" + filename);
+                if (!item.isFormField()) {
+                    OutputStream out = new FileOutputStream(String.valueOf(newFile));
+                    IOUtils.copy(stream, out);
+                    stream.close();
+                    out.close();
+                    File file = new File(RESOURCES_DIR + sdf.format(date) + "-" + filename);
+                    DocumentRequest storedFile = DocumentRequest.builder()
+                            .name(filename)
+                            .fileType(contentType)
+                            .size(fileSize(file.length()))
+                            .build();
+                    documentRepository.saveServiceDocument(storedFile, newFile.toString());
+                }
             }
-            DocumentRequest storedFile = DocumentRequest.builder()
-                    .name(fileName)
-                    .fileType(file.getContentType())
-                    .data(file.getBytes())
-                    .size(sizeToSave + " " + suffix)
-                    .build();
-            String location = fileSystemRepository.saveServiceDocument(storedFile);
-            documentRepository.saveServiceDocument(storedFile, location);
+        } catch (FileUploadException e) {
+            return ("File upload error" + e.toString());
+        } catch (IOException e) {
+            return ("Internal server IO error" + e.toString());
         }
+        return "Successfully uploaded";
     }
 
-    @Transactional
-    @Override
-    public void storeClientFiles(List<MultipartFile> fileToStore, Long fkCarId, String email, Long fkServiceDataId) throws Exception {
-        for(MultipartFile file : fileToStore) {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            long size = file.getBytes().length;
-            double sizeToSave = 0;
-            String suffix = "";
-            df2.setRoundingMode(RoundingMode.UP);
-            if(size/(Math.pow(1024,3))>1 && size/(Math.pow(1024,3))<1){
-                suffix = "GB";
-                sizeToSave = Double.parseDouble(df2.format(size/(Math.pow(1024,3))));
-            } else if(size/(Math.pow(1024,2))>1 && size/(Math.pow(1024,3))<1){
-                suffix = "MB";
-                sizeToSave = Double.parseDouble(df2.format(size/(Math.pow(1024,2))));
-            } else if(size/1024>1 && size/(Math.pow(1024,2))<1 || size/1024<1){
-                suffix = "KB";
-                sizeToSave = Double.parseDouble(df2.format(size/1024));
-            }
-            DocumentRequest storedFile = DocumentRequest.builder()
-                    .name(fileName)
-                    .fileType(file.getContentType())
-                    .data(file.getBytes())
-                    .size(sizeToSave + " " + suffix)
-                    .fkDocumentCarId(fkCarId)
-                    .fkDocumentServiceData(fkServiceDataId)
-                    .build();
-            String location = fileSystemRepository.saveClientDocument(storedFile, email);
-            documentRepository.saveClientDocument(storedFile, location);
+    private String fileSize(long size) {
+        String sizeToSave = "";
+        df2.setRoundingMode(RoundingMode.UP);
+        if (size / (Math.pow(1024, 3)) > 1) {
+            sizeToSave = (Double.parseDouble(df2.format(size / (Math.pow(1024, 3)))) + " GB");
+        } else if (size / (Math.pow(1024, 2)) > 1 && size / (Math.pow(1024, 3)) < 1) {
+            sizeToSave = (Double.parseDouble(df2.format(size / (Math.pow(1024, 2)))) + " MB");
+        } else if (size / 1024 > 1 && size / (Math.pow(1024, 2)) < 1 || size / 1024 < 1) {
+            sizeToSave = (Double.parseDouble(df2.format(size / 1024)) + " KB");
         }
+        return sizeToSave;
     }
+
+    @Override
+    @Transactional
+    public String storeClientBigFiles(HttpServletRequest request) {
+        String RESOURCES_DIR;
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        ServiceDataDTO serviceDataDTO = new ServiceDataDTO();
+        FinanceDTO financeDTO = new FinanceDTO();
+        String email = "";
+        Long financeId;
+        Long serviceDataId;
+        String decoder = "UTF-8";
+        try {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(request);
+            Iterator<FileItem> iter = items.iterator();
+            for (FileItem item2 : items) {
+                FileItem item = item2;
+                ObjectMapper objectMapper = new ObjectMapper();
+                if (item.isFormField()) {
+                    if (item.getFieldName().equals("ServiceDataDTO")) {
+                        serviceDataDTO = objectMapper.readValue(item.getString(decoder), ServiceDataDTO.class);
+                    } else if (item.getFieldName().equals("FinanceDTO")) {
+                        financeDTO = objectMapper.readValue(item.getString(decoder), FinanceDTO.class);
+                    } else {
+                        email = item.getString(decoder);
+                    }
+                }
+            }
+            financeId = financeRepository.saveFinanceByServiceData(financeDTO);
+            serviceDataId = serviceDataRepository.saveServiceData(serviceDataDTO, financeId);
+            serviceReservationRepository.setServiceDataFk(serviceDataId, serviceDataDTO.getFkCarId());
+
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
+                if (!item.isFormField()) {
+                    InputStream stream = item.getInputStream();
+                    String filename = item.getName();
+                    String contentType = item.getContentType();
+                    String directory = "/files/client/";
+                    new File(FileSystemRepositoryImpl.class.getResource(directory).getPath(), email).mkdir();
+                    new File(FileSystemRepositoryImpl.class.getResource(directory + email + "/").getPath(), sdf.format(date)).mkdir();
+                    RESOURCES_DIR = FileSystemRepositoryImpl.class.getResource(directory + email + "/" + sdf.format(date) + "/").getPath().substring(1);
+                    Path newFile = Paths.get(RESOURCES_DIR + filename);
+                    OutputStream out = new FileOutputStream(String.valueOf(newFile));
+                    IOUtils.copy(stream, out);
+                    stream.close();
+                    out.close();
+                    File file = new File(RESOURCES_DIR + filename);
+                    DocumentRequest storedFile = DocumentRequest.builder()
+                            .name(filename)
+                            .fileType(contentType)
+                            .size(fileSize(file.length()))
+                            .fkDocumentCarId(serviceDataDTO.getFkCarId())
+                            .fkDocumentServiceData(serviceDataId)
+                            .build();
+                    documentRepository.saveClientDocument(storedFile, newFile.toString());
+                }
+            }
+        } catch (FileUploadException e) {
+            return ("File upload error" + e.toString());
+        } catch (IOException e) {
+            return ("Internal server IO error" + e.toString());
+        }
+        return "Successfully uploaded";
+    }
+
 
     @Override
     public FileSystemResource findDocument(Long documentId) {
@@ -124,15 +214,15 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<FileAndCarResponse> getAllFilesByCar(Long carId) {
-        List<DocumentDTO> documents = documentRepository.findAllByCar(carId);
+    public List<FileAndCarResponse> getAllFilesByCar(Long carId, Long credentialId) {
+        List<DocumentDTO> documents = documentRepository.findAllByCar(carId, credentialId);
         return fileAndCarResponseSetter(documents);
     }
 
-    private List<FileAndCarResponse> fileAndCarResponseSetter(List<DocumentDTO> documents){
+    private List<FileAndCarResponse> fileAndCarResponseSetter(List<DocumentDTO> documents) {
         Set<FileAndCarResponse> setCars = new HashSet<>();
         List<FileAndCarResponse> response = new ArrayList<>();
-        for(DocumentDTO documentDTO : documents){
+        for (DocumentDTO documentDTO : documents) {
             FileAndCarResponse fileAndCarResponse = new FileAndCarResponse();
             fileAndCarResponse.setCarId(documentDTO.getCarId());
             fileAndCarResponse.setBrand(documentDTO.getBrand());
@@ -143,14 +233,14 @@ public class DocumentServiceImpl implements DocumentService {
             fileAndCarResponse.setMileage(documentDTO.getMileage());
             setCars.add(fileAndCarResponse);
         }
-        for(FileAndCarResponse fileAndCarResponse : setCars){
+        for (FileAndCarResponse fileAndCarResponse : setCars) {
             response.add(fileAndCarResponse);
         }
-        for(FileAndCarResponse resp : response){
+        for (FileAndCarResponse resp : response) {
             List<ResponseFile> responseFiles = new ArrayList<>();
             List<Long> documentIds = new ArrayList<>();
-            for(DocumentDTO documentDTO : documents){
-                if(documentDTO.getServiceDataId().equals(resp.getServiceDataId())) {
+            for (DocumentDTO documentDTO : documents) {
+                if (documentDTO.getServiceDataId().equals(resp.getServiceDataId())) {
                     ResponseFile responseFile = new ResponseFile();
                     responseFile.setId(documentDTO.getFileId());
                     responseFile.setType(documentDTO.getDocumentType());
@@ -164,6 +254,71 @@ public class DocumentServiceImpl implements DocumentService {
             resp.setDocumentIds(documentIds);
         }
         return response;
+    }
+
+    @Override
+    public byte[] zippingFiles(List<Long> id, HttpServletResponse response) throws IOException {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
+        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + sdf.format(date) + ".zip" + "\"");
+        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+
+        ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
+        for (Long fileId : id) {
+            FileSystemResource resource = findDocument(fileId);
+            zipOutputStream.putNextEntry(new ZipEntry(resource.getFilename()));
+            FileInputStream is = new FileInputStream(resource.getPath());
+            IOUtils.copy(is, zipOutputStream);
+            is.close();
+            zipOutputStream.closeEntry();
+        }
+        zipOutputStream.close();
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<byte[]> getFile(Long id, HttpServletResponse response) {
+        FileSystemResource fileSystemResource = findDocument(id);
+        try {
+            InputStream is = new FileInputStream(fileSystemResource.getPath());
+            Long fileSize = fileSystemResource.contentLength();
+            response.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileSystemResource.getFilename() + "\"");
+            response.addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize));
+            response.addHeader(HttpHeaders.CONTENT_TYPE, "application/blob");
+            response.setHeader("responseType", "blob");
+            OutputStream outputStream = null;
+            try {
+                outputStream = response.getOutputStream();
+            } catch (IOException e) {
+                String msg = "ERROR: Could not generate output stream.";
+                response.setHeader(HttpHeaders.CONTENT_TYPE, String.valueOf((MediaType.TEXT_PLAIN)));
+                return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.NOT_FOUND);
+            }
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            try {
+                while ((read = is.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, read);
+                }
+                outputStream.flush();
+                outputStream.close();
+                is.close();
+
+            } catch (Exception e) {
+                String msg = "ERROR: Could not read file.";
+                response.setHeader(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.TEXT_PLAIN));
+                return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            String msg = "ERROR: Could not read file.";
+            response.setHeader(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.TEXT_PLAIN));
+            return new ResponseEntity<byte[]>(msg.getBytes(), HttpStatus.NOT_FOUND);
+        }
+        return null;
     }
 }
 

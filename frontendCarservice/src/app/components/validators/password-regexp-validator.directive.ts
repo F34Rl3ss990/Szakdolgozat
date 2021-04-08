@@ -1,6 +1,5 @@
 import { Directive } from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn} from '@angular/forms';
-import {matchingPasswordValidator} from './matching-password-validator.directive';
 
 export const passwordPatternValidator:ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   if (!control.value){

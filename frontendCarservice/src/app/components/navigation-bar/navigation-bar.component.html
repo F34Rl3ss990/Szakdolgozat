@@ -5,37 +5,22 @@
       <div class="container">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Kapcsolat</a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Szolgáltatások</a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Hozom-viszem szolgáltatás</a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Munkadíjak</a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Rólunk</a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
-          </li>
-          <li class="nav-item">
-            <a href="" class="nav-link" routerLink="">Test</a>
+            <a href="" class="nav-link" routerLink="">Álláslehetőség</a>
           </li>
         </ul>
       </div>
@@ -56,10 +41,10 @@
       <!-- Links -->
       <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
         <li class="nav-item">
-          <a class="nav-link waves-light" (click)="openLoginDialog()" mdbWavesEffect>Belépés</a>
+          <a class="nav-link waves-light" (click)="openLoginDialog()" mdbWavesEffect> <mdb-icon fas icon="sign-in-alt"></mdb-icon>Belépés</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link waves-light" (click)="openRegistrationDialog()"  mdbWavesEffect>Regisztráció</a>
+          <a class="nav-link waves-light" (click)="openRegistrationDialog()"  mdbWavesEffect><mdb-icon fas icon="user-plus"></mdb-icon>Regisztráció</a>
         </li>
       </ul>
 
@@ -68,7 +53,7 @@
           <a href="/profile" class="nav-link waves-light" routerLink="/profile" mdbWavesEffect><mdb-icon fas icon="user"></mdb-icon>Profil</a>
         </li>
         <li class="nav-item">
-          <a href="/logout" class="nav-link waves-light" (click)="logout()" mdbWavesEffect>Kijelentkezés</a>
+          <a href="/logout" class="nav-link waves-light" (click)="logout()" mdbWavesEffect><mdb-icon fas icon="sign-out-alt"></mdb-icon>Kijelentkezés</a>
         </li>
       </ul>
       <!-- Links -->
@@ -92,7 +77,7 @@
             <a href="/service-reservation" class="nav-link" routerLink="/auth-service-reservation">Időpontfoglalás </a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link" routerLink="changePassword">nem teszt </a>
+            <a href="" class="nav-link" routerLink="/test">nem teszt </a>
           </li>
           <li class="nav-item">
             <a href="/src" class="nav-link" routerLink="">Test </a>
@@ -101,6 +86,5 @@
       </div>
     </nav>
   </div>
-
 </header>
 

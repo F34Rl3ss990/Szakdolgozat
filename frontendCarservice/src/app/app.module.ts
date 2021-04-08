@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import { authInterceptorProviders } from './helpers/auth.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -26,22 +26,18 @@ import {RouterModule} from '@angular/router';
 import { EmailNotExistingValidatorDirective } from './components/validators/email-not-existing-validator.directive';
 import { ServiceReservationComponent } from './components/global/service-related-components/service-reservation/service-reservation.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {FlexModule} from '@angular/flex-layout';
 import {LoginDialogComponent} from './components/global/authorization-authentication/login/login-dialog/login-dialog.component';
 import {RegisterComponent} from './components/global/authorization-authentication/registration/register/register.component';
 import {HomeComponent} from './components/global/home/home.component';
 import {NavigationBarComponent} from './components/navigation-bar/navigation-bar.component';
-import {RegistrationSuccessfulComponent} from './components/global/authorization-authentication/registration/registration-successful/registration-successful.component';
 import {VerificationDialogComponent} from './components/global/authorization-authentication/registration/verification-dialog/verification-dialog.component';
 import {VerificationDialogEntryComponent} from './components/global/authorization-authentication/registration/verification-dialog-entry/verification-dialog-entry.component';
-import {PasswordTokenSentComponent} from './components/global/authorization-authentication/login/passwordReset/password-token-sent/password-token-sent.component';
 import {PasswordResetDialogComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-dialog/password-reset-dialog.component';
 import {PasswordResetDialogEntryComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-dialog-entry/password-reset-dialog-entry.component';
-import {PasswordSuccessfullyChangedComponent} from './components/global/authorization-authentication/login/passwordReset/password-successfully-changed/password-successfully-changed.component';
 import {ExpiredResetPasswordTokenComponent} from './components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
-import { SuccessfullyReservedUnauthorizedServiceComponent } from './components/global/service-related-components/successfully-reserved-unauthorized-service/successfully-reserved-unauthorized-service.component';
 import {DateAdapterService} from './services/date-adapter.service';
 import {MatSelectModule} from '@angular/material/select';
 import { VerifyServiceReservationComponent } from './components/global/service-related-components/verify-service-reservation/verify-service-reservation.component';
@@ -57,9 +53,8 @@ import { ChangePasswordComponent } from './components/authorizedUserComponents/p
 import { ChangeBillingDataComponent } from './components/authorizedUserComponents/profile/personal/change-billing-data/change-billing-data.component';
 import { CarDataComponent } from './components/authorizedUserComponents/profile/cars/car-data/car-data.component';
 import { AddCarComponent } from './components/authorizedUserComponents/profile/cars/add-car/add-car.component';
-import { ServicesComponent } from './components/authorizedUserComponents/profile/services/services.component';
+import { ServicesComponent } from './components/authorizedUserComponents/profile/services/services-user/services.component';
 import { FilesComponent } from './components/authorizedUserComponents/profile/files/files.component';
-import { SuccessfullyChangedPasswordComponent } from './components/authorizedUserComponents/profile/personal/change-password/successfully-changed-password/successfully-changed-password.component';
 import { ChangePhoneNumberComponent } from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
 import {UserService} from './services/user.service';
 import {TokenStorageService} from './services/token-storage.service';
@@ -71,6 +66,10 @@ import {DataService} from './services/data.service';
 import {AuthService} from './services/auth.service';
 import {MatSortModule} from '@angular/material/sort';
 import {MatButtonModule} from '@angular/material/button';
+import { ServicesCarComponent } from './components/authorizedUserComponents/profile/services/services-car/services-car.component';
+import { SafeHtmlPipe } from './services/safe-html.pipe';
+import { DynamicViewDialogComponent } from './components/dynamic-view-dialog/dynamic-view-dialog.component';
+import { FallbackIfNoUserComponent } from './components/authorizedUserComponents/fallback-if-no-user/fallback-if-no-user.component';
 
 @NgModule({
   declarations: [
@@ -85,18 +84,14 @@ import {MatButtonModule} from '@angular/material/button';
     MatchingPasswordMatcherDirective,
     PasswordRegexpValidatorDirective,
     ExistingEmailValidatorDirective,
-    RegistrationSuccessfulComponent,
     VerificationDialogComponent,
     VerificationDialogEntryComponent,
     PasswordResetTokenSenderComponent,
-    PasswordTokenSentComponent,
     PasswordResetDialogComponent,
     PasswordResetDialogEntryComponent,
-    PasswordSuccessfullyChangedComponent,
     ExpiredResetPasswordTokenComponent,
     EmailNotExistingValidatorDirective,
     ServiceReservationComponent,
-    SuccessfullyReservedUnauthorizedServiceComponent,
     VerifyServiceReservationComponent,
     AuthServiceReservationComponent,
     VerifyServiceComponent,
@@ -109,8 +104,11 @@ import {MatButtonModule} from '@angular/material/button';
     AddCarComponent,
     ServicesComponent,
     FilesComponent,
-    SuccessfullyChangedPasswordComponent,
-    ChangePhoneNumberComponent
+    ChangePhoneNumberComponent,
+    ServicesCarComponent,
+    SafeHtmlPipe,
+    DynamicViewDialogComponent,
+    FallbackIfNoUserComponent,
   ],
   imports: [
     BrowserModule,

@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceByUserResponse {
+    private Long carId;
     private String brand;
     private String type;
     private String licensePlateNumber;
-    private Long carId;
     private List<ServiceDataDTO> serviceList;
 }
