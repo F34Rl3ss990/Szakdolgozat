@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
@@ -51,11 +52,6 @@ public class UserServiceImpl implements UserService {
         this.emailService = emailService;
     }
 
-    @Override
-    public void saveUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO, Long credentialId, String email){
-            userRepository.saveUser(mapDTOtoUser(unauthorizedUserReservationDTO), credentialId, email);
-    }
-
     private void mileageSetter(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
         String mileageNum = (unauthorizedUserReservationDTO.getMileage() == null) ? "" : unauthorizedUserReservationDTO.getMileage();
         if (mileageNum.equals("")) {
@@ -96,6 +92,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUserId(Long userId) {
         return userRepository.getUserByUserId(userId);
+    }
+
+    @Override
+    public void modifyPhoneNumber(String phoneNumber, Long userId) {
+        userRepository.modifyPhoneNumber(phoneNumber, userId);
+    }
+
+    @Override
+    public void addCarAndUser(CarAndUserDTO carAndUserDTO, Long credentialId) {
+        userRepository.addCarAndUser(carAndUserDTO, credentialId);
     }
 
     @Override

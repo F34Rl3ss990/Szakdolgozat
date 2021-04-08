@@ -4,6 +4,7 @@ import com.EGEA1R.CarService.persistance.entity.Car;
 import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
+import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,28 +21,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @PersistenceContext
     private EntityManager em;
-
-    @Transactional
-    @Override
-    public void saveUser(@Valid User user, Long credentialId, String email) {
-        em.createNativeQuery("INSERT INTO user (name, e_mail, phone_number, billing_name, " +
-                "billing_phone_number, billing_zip_code, billing_town, billing_street, billing_other_address_type," +
-                " billing_tax_number, billing_email, fk_user_credential)" +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-                .setParameter(1, user.getName())
-                .setParameter(2, email)
-                .setParameter(3, user.getPhoneNumber())
-                .setParameter(4, user.getBillingInformation().getBillingName())
-                .setParameter(5, user.getBillingInformation().getBillingPhoneNumber())
-                .setParameter(6, user.getBillingInformation().getBillingZipCode())
-                .setParameter(7, user.getBillingInformation().getBillingTown())
-                .setParameter(8, user.getBillingInformation().getBillingStreet())
-                .setParameter(9, user.getBillingInformation().getBillingOtherAddressType())
-                .setParameter(10, user.getBillingInformation().getBillingTaxNumber())
-                .setParameter(11, user.getBillingInformation().getBillingEmail())
-                .setParameter(12, credentialId)
-                .executeUpdate();
-    }
 
     @Transactional
     @Override
@@ -98,19 +77,17 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void modifyUserData(User user) {
         em.createNativeQuery("UPDATE user " +
-                "set phone_number = ?, billing_name = ?, billing_phone_number = ?," +
+                "set billing_name = ?, billing_phone_number = ?," +
                 " billing_zip_code = ?, billing_town = ?, billing_street = ?," +
-                " billing_other_address_type = ?, billing_email = ?" +
-                " where user_id = ?")
-                .setParameter(1, user.getPhoneNumber())
-                .setParameter(2, user.getBillingInformation().getBillingName())
-                .setParameter(3, user.getBillingInformation().getBillingPhoneNumber())
-                .setParameter(4, user.getBillingInformation().getBillingZipCode())
-                .setParameter(5, user.getBillingInformation().getBillingTown())
-                .setParameter(6, user.getBillingInformation().getBillingStreet())
-                .setParameter(7, user.getBillingInformation().getBillingOtherAddressType())
-                .setParameter(8, user.getBillingInformation().getBillingEmail())
-                .setParameter(9, user.getUserId())
+                " billing_other_address_type = ?, billing_email = ? where user.user_id = ?")
+                .setParameter(1, user.getBillingInformation().getBillingName())
+                .setParameter(2, user.getBillingInformation().getBillingPhoneNumber())
+                .setParameter(3, user.getBillingInformation().getBillingZipCode())
+                .setParameter(4, user.getBillingInformation().getBillingTown())
+                .setParameter(5, user.getBillingInformation().getBillingStreet())
+                .setParameter(6, user.getBillingInformation().getBillingOtherAddressType())
+                .setParameter(7, user.getBillingInformation().getBillingEmail())
+                .setParameter(8, user.getUserId())
                 .executeUpdate();
     }
 
@@ -151,6 +128,63 @@ public class UserRepositoryImpl implements UserRepository {
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
         query.setParameter(1, userId);
         return (User) query.getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public void modifyPhoneNumber(String phoneNumber, Long userId) {
+        em.createNativeQuery("UPDATE user " +
+                "set phone_number = ? where user.user_id = ?")
+                .setParameter(1, phoneNumber)
+                .setParameter(2, userId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    @Override
+    public void addCarAndUser(CarAndUserDTO carAndUserDTO, Long credentialId) {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("ADD_USER_AND_CAR");
+        query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(3, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(4, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(5, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(6, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(7, Integer.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(8, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(9, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(10, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(11, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(12, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(13, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(14, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(15, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(16, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(17, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(18, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(19, String.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(20, String.class, ParameterMode.IN);
+        query.setParameter(1, credentialId);
+        query.setParameter(2, carAndUserDTO.getName());
+        query.setParameter(3, carAndUserDTO.getEmail());
+        query.setParameter(4, carAndUserDTO.getPhoneNumber());
+        query.setParameter(5, carAndUserDTO.getBillingName());
+        query.setParameter(6, carAndUserDTO.getBillingPhoneNumber());
+        query.setParameter(7, carAndUserDTO.getBillingZipCode());
+        query.setParameter(8, carAndUserDTO.getBillingTown());
+        query.setParameter(9, carAndUserDTO.getBillingStreet());
+        query.setParameter(10, carAndUserDTO.getBillingOtherAddressType());
+        query.setParameter(11, carAndUserDTO.getBillingTaxNumber());
+        query.setParameter(12, carAndUserDTO.getBillingEmail());
+        query.setParameter(13, carAndUserDTO.getBrand());
+        query.setParameter(14, carAndUserDTO.getType());
+        query.setParameter(15, carAndUserDTO.getEngineType());
+        query.setParameter(16, carAndUserDTO.getYearOfManufacture());
+        query.setParameter(17, carAndUserDTO.getEngineNumber());
+        query.setParameter(18, carAndUserDTO.getChassisNumber());
+        query.setParameter(20, carAndUserDTO.getMileage());
+        query.setParameter(19, carAndUserDTO.getLicensePlateNumber());
+        query.executeUpdate();
     }
 
 }

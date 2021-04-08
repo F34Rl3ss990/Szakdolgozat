@@ -26,7 +26,7 @@ export class ProfileService {
   }
 
   changePhoneNumber(phoneNumberFormVal): Observable<any> {
-    return this.http.post(AUTH_API + 'changePhoneNumber', {
+    return this.http.post(USER_API + 'changePhoneNumber', {
       phoneNumber: phoneNumberFormVal.phoneNumber,
     }, httpOptions);
   }
@@ -105,7 +105,7 @@ export class ProfileService {
   }
 
   addCarAndUser(carAndUserForm, foreignLicensePlate, billingToCompany): Observable<any> {
-    return this.http.post(USER_API + 'serviceReservationUnauthorizedValidation', {
+    return this.http.post(USER_API + 'addCarAndUser', {
       name: carAndUserForm.name,
       email: carAndUserForm.email,
       phoneNumber: carAndUserForm.phoneNumber,

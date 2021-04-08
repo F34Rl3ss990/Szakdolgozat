@@ -20,10 +20,6 @@ public class ModifyUserDateRequest {
     @NotNull
     private Long userId;
 
-    @NotNull
-    @ValidPhoneNumber
-    private String phoneNumber;
-
     private Boolean billingToCompany;
 
     @ValidName

@@ -52,11 +52,11 @@ export class ChangeBillingDataComponent implements OnInit {
 
   taxNumberValidator(event){
     if(!event.checked) {
-      this.changeBillingDataForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required])
+      this.changeBillingDataForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required]);
       this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     } else {
       this.changeBillingDataForm.controls['billingTax'].clearValidators();
-      this.changeBillingDataForm.controls['billingTax'].setValidators(Validators.required)
+      this.changeBillingDataForm.controls['billingTax'].setValidators(Validators.required);
       this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     }
   }

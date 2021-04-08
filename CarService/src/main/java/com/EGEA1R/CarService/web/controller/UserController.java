@@ -3,6 +3,8 @@ package com.EGEA1R.CarService.web.controller;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.UserService;
+import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
+import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
@@ -37,18 +39,25 @@ public class UserController {
         return userService.getUserDetailsByCredentialId(credentialDetails.getCredentialId());
     }
 
-    @PostMapping("/addUser")
+    @PostMapping("/changeBillingData")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> addUser(@RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.saveUser(unauthorizedUserReservationDTO, credentialDetails.getCredentialId(), credentialDetails.getUsername());
-        return ResponseEntity.ok(new MessageResponse("User successfully added!"));
+    public ResponseEntity<?> modifyBillingData(@Valid @RequestBody ModifyUserDateRequest modifyUserDateRequest){
+        userService.modifyUser(modifyUserDateRequest);
+        return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));
     }
 
-    @PostMapping("/modifyUser")
+    @PostMapping("/changePhoneNumber")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> modifyUserData(@Valid @RequestBody ModifyUserDateRequest modifyUserDateRequest){
-        userService.modifyUser(modifyUserDateRequest);
+    public ResponseEntity<?> modifyUserPhoneNumber(@ValidPhoneNumber @RequestParam String phoneNumber, @RequestParam Long userId ){
+        userService.modifyPhoneNumber(phoneNumber, userId);
+        return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));
+    }
+
+    @PostMapping("/addCarAndUser")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> addCarAndUser(@Valid @RequestBody CarAndUserDTO carAndUserDTO){
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userService.addCarAndUser(carAndUserDTO, credentialDetails.getCredentialId());
         return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));
     }
 

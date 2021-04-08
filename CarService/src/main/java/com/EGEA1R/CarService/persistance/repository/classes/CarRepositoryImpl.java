@@ -51,20 +51,6 @@ public class CarRepositoryImpl implements CarRepository {
                 .executeUpdate();
     }
 
-    @Transactional
-    @Override
-    public void deleteCarById(Long carId){
-        em.createNativeQuery("delete from service_reservation where fk_service_reservation_car = ?")
-                .setParameter(1, carId)
-                .executeUpdate();
-        em.createNativeQuery("delete from car_mileage where fk_car_mileage_car = ?")
-                .setParameter(1, carId)
-                .executeUpdate();
-        em.createNativeQuery("delete from car where car_id = ?")
-                .setParameter(1, carId)
-                .executeUpdate();
-    }
-
     @Override
     public List<Car> getAllCarByUser(Long userId) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("GET_ALL_CAR_BY_USER", "GetCars");

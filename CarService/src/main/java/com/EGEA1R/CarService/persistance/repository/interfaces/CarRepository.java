@@ -12,8 +12,6 @@ public interface CarRepository {
 
     void modifyCarById(Car car);
 
-    void deleteCarById(Long carId);
-
     List<Car> getAllCarByUser(Long userId);
 
     Optional<Car> finCarByCarId(Long carId);

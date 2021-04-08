@@ -49,11 +49,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void deleteCar(Long id){
-        carRepository.deleteCarById(id);
-    }
-
-    @Override
     public List<Car> getAllCarListByUser(Long userId){
         return carRepository.getAllCarByUser(userId);
     }

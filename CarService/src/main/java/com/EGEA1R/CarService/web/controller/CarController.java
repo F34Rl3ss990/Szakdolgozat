@@ -29,18 +29,12 @@ public class CarController {
     }
 
     @PostMapping("/modifyCar")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOSS')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'BOSS')")
     public ResponseEntity<?> modifyCar(@Valid @RequestBody CarDTO carDTO){
         carService.modifyCar(carDTO);
         return ResponseEntity.ok("Car successfully modified!");
     }
 
-    @DeleteMapping("/deleteCar")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> deleteCar(@RequestBody Long carId){
-        carService.deleteCar(carId);
-        return ResponseEntity.ok("Car successfully deleted!");
-    }
 /*
      @GetMapping("/getEveryCarByUser")
      @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'BOSS')")
