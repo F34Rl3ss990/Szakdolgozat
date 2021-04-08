@@ -4,6 +4,13 @@
 @import 'customize-bootstrap.scss';
 @import '../node_modules/bootstrap/scss/bootstrap';
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .cdk-overlay-pane.my-dialog, .cdk-overlay-pane.login-dialog {
   position: relative !important;
 }
