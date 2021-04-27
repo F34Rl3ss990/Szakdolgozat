@@ -3,6 +3,7 @@
   display: block;
   font-size: 16px;
   font-weight: 500;
+  width:168px;
 }
 
 .test-box{
@@ -11,4 +12,8 @@
   padding-top:0px;
   padding-bottom:0px;
   padding-right:10px
+}
+
+.align-from-label{
+  padding-left:10px;
 }

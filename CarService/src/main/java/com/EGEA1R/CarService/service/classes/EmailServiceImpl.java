@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
         this.thymeleafTemplateEngine = thymeleafTemplateEngine;
     }
 
-    @Value("classpath:/unnamed.png")
+    @Value("classpath:/carServiceLogo.png")
     Resource resourceFile;
 
     @Override
@@ -72,7 +72,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        helper.addInline("unnamed", resourceFile);
+        helper.addInline("carServiceLogo", resourceFile);
         message.setFrom(new InternetAddress("carservice9900@gmail.com", "Car service"));
         emailSender.send(message);
     }

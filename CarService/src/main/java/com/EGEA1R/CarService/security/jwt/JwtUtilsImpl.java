@@ -6,8 +6,10 @@ import com.EGEA1R.CarService.service.interfaces.JwtTokenCheckService;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
+import ognl.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +59,17 @@ public class JwtUtilsImpl implements JwtUtils, JwtUtilId{
     }
 
     @Override
-    public Boolean checkIfNotBlocked(String authToken){
+    public Boolean checkIfNotBlocked(String authToken) {
         String email = getEmailFromJwtToken(authToken);
-        Optional<TokenBlock> tokenBlock = jwtTokenCheckService.findTokenBlock(email);
-        if(tokenBlock.isPresent()) {
-            return !tokenBlock.get().getJwtToken().equals(authToken);
-        }else{
-            return true;
+        List<TokenBlock> tokenBlock = jwtTokenCheckService.findTokenBlock(email);
+        Boolean tokenNotEqual = true;
+        for (TokenBlock tokens : tokenBlock) {
+            if (tokens.getJwtToken().equals(authToken)) {
+                tokenNotEqual = false;
+                break;
+            }
         }
+        return tokenNotEqual;
     }
 
     @Override

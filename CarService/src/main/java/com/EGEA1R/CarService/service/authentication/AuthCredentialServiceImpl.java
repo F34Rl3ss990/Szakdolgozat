@@ -15,7 +15,7 @@ public class AuthCredentialServiceImpl implements UserDetailsService {
     private CredentialRepository credentialRepository;
 
     @Autowired
-    public void setCredentialRepository2(CredentialRepository credentialRepository){
+    public void setCredentialRepository(CredentialRepository credentialRepository){
         this.credentialRepository = credentialRepository;
     }
 

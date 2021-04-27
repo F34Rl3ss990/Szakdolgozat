@@ -6,6 +6,8 @@ import {ProfileService} from '../../../../../services/profile.service';
 import {TokenStorageService} from '../../../../../services/token-storage.service';
 import {ActivatedRoute} from '@angular/router';
 import {carServicePageResponse} from '../../../../../models/carServicePage';
+import {DialogService} from '../../../../../services/dialog.service';
+import {DataService} from '../../../../../services/data.service';
 
 @Component({
   selector: 'app-services-car',
@@ -23,7 +25,9 @@ export class ServicesCarComponent implements OnInit {
 
   constructor(private profileService: ProfileService,
               private route: ActivatedRoute,
-              private tokenStorageService: TokenStorageService) {
+              private tokenStorageService: TokenStorageService,
+              private dialogService: DialogService,
+              private dataService: DataService) {
   }
 
   ngOnInit() {
@@ -36,9 +40,15 @@ export class ServicesCarComponent implements OnInit {
     })
   }
   applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
+  }
+
+  openDetailsMenu(comment, servicesDone){
+    this.dataService.comment = comment;
+    this.dataService.servicesDone = servicesDone;
+    this.dialogService.openDetailsDialog();
   }
 }
 

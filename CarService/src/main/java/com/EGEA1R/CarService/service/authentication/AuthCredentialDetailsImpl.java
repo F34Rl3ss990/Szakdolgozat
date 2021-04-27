@@ -24,7 +24,8 @@ public class AuthCredentialDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public static AuthCredentialDetailsImpl build(Credential credential){
-        List<GrantedAuthority> authority = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(credential.getPermission())));
+        List<GrantedAuthority> authority = Collections.singletonList
+                (new SimpleGrantedAuthority(String.valueOf(credential.getPermission())));
         return new AuthCredentialDetailsImpl(
                 credential.getCredentialId(),
                 credential.getEmail(),

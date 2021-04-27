@@ -54,4 +54,19 @@ public class PasswordResetRepositoryImpl implements PasswordResetRepository {
             return  Optional.empty();
         }
     }
+
+    @Override
+    public Optional<String> getCredentialEmailByPasswordResetToken(String passwordResetToken) {
+        try {
+            Query query = em.createNativeQuery("select email from credential" +
+                    " inner join passwordreset p" +
+                    " on credential.credential_id = p.fk_passwordreset_credential_id " +
+                    " where token = ?")
+                    .setParameter(1, passwordResetToken);
+            BigInteger result = (BigInteger) query.getSingleResult();
+            return Optional.of((String) result.toString());
+        }catch(NoResultException n){
+            return  Optional.empty();
+        }
+    }
 }

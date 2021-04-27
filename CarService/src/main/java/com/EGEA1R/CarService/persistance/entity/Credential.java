@@ -143,17 +143,6 @@ public class Credential{
     @Column(name = "multifactor_auth", columnDefinition = "VARCHAR(45) default 'NULL'")
     private String mfa;
 
-    @Size(max = 60)
-    @ValidAccentLetters
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Size(max = 60)
-    @ValidAccentLetters
-    @Column(name = "last_name")
-    private String lastName;
-
-
     @OneToOne(cascade = CascadeType.REMOVE,
      fetch = FetchType.LAZY, mappedBy = "credential")
     @JsonIgnore

@@ -6,6 +6,7 @@ import {PasswordResetDialogComponent} from '../components/global/authorization-a
 import {ExpiredResetPasswordTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/expired-reset-password-token/expired-reset-password-token.component';
 import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
 import {DynamicViewDialogComponent} from '../components/dynamic-view-dialog/dynamic-view-dialog.component';
+import {DetailsDialogComponent} from '../components/authorizedUserComponents/profile/services/details-dialog/details-dialog.component';
 
 
 @Injectable({
@@ -21,8 +22,16 @@ export class DialogService {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
-    dialogConfig.data = viewName
+    dialogConfig.data = viewName;
     this.dialog.open(DynamicViewDialogComponent, dialogConfig);
+  }
+
+  openDetailsDialog(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-container';
+    this.dialog.open(DetailsDialogComponent, dialogConfig);
   }
 
   openLoginDialog() {

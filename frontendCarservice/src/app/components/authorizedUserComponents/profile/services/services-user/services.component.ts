@@ -6,6 +6,8 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatPaginator} from '@angular/material/paginator';
 import {responseServiceData, serviceArray} from '../../../../../models/ServicePage';
+import {DialogService} from '../../../../../services/dialog.service';
+import {DataService} from '../../../../../services/data.service';
 
 @Component({
   selector: 'app-services',
@@ -44,7 +46,9 @@ export class ServicesComponent implements OnInit {
 
   constructor(private cd: ChangeDetectorRef,
               private profileService: ProfileService,
-              private tokenStorageService: TokenStorageService) {
+              private tokenStorageService: TokenStorageService,
+              private dialogService: DialogService,
+              private dataService: DataService) {
   }
 
   ngOnInit() {
@@ -74,5 +78,11 @@ export class ServicesComponent implements OnInit {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
+  }
+
+  openDetailsMenu(comment, servicesDone){
+    this.dataService.comment = comment;
+    this.dataService.servicesDone = servicesDone;
+    this.dialogService.openDetailsDialog();
   }
 }

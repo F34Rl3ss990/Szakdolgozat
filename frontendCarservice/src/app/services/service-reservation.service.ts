@@ -24,7 +24,7 @@ export class ServiceReservationService {
       reservedDate: authorizedService.reservedDate,
       reservedServices: collector,
       fkCarUserId: userId
-    })
+    }, httpOptions)
   }
 
   reserveAuthorizedService(authorizedService, collector): Observable<any>{

@@ -14,7 +14,7 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
-              "path": "./custom-webpack.config.js"
+              "path": "custom-webpack.config.js"
             },
             "outputPath": "dist/frontendCarservice",
             "index": "src/index.html",
@@ -52,8 +52,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "aot": true,
               "sourceMap": false,
+              "aot": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,

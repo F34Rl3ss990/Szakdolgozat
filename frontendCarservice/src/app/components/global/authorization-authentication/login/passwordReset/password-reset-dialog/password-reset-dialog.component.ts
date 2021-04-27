@@ -56,7 +56,7 @@ export class PasswordResetDialogComponent implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
       }),
-      matchingPassword: this.fb.control('', {updateOn: 'change', validators: []}),
+      matchingPassword: this.fb.control('', {updateOn: 'change',  validators: [Validators.required, Validators.minLength(8)]}),
       hide: this.fb.control('')
     }, {validator: matchingPasswordValidator});
   }

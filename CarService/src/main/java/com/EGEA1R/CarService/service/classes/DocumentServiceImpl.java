@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.persistance.entity.CarMileage;
 import com.EGEA1R.CarService.persistance.entity.Document;
 import com.EGEA1R.CarService.persistance.repository.classes.FileSystemRepositoryImpl;
 import com.EGEA1R.CarService.persistance.repository.interfaces.*;
@@ -18,6 +19,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
@@ -147,15 +149,15 @@ public class DocumentServiceImpl implements DocumentService {
             DiskFileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
-            Iterator<FileItem> iter = items.iterator();
-            for (FileItem item2 : items) {
-                FileItem item = item2;
+            for (FileItem item : items) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 if (item.isFormField()) {
                     if (item.getFieldName().equals("ServiceDataDTO")) {
-                        serviceDataDTO = objectMapper.readValue(item.getString(decoder), ServiceDataDTO.class);
+                        serviceDataDTO = objectMapper.readValue(item.getString(decoder),
+                                ServiceDataDTO.class);
                     } else if (item.getFieldName().equals("FinanceDTO")) {
-                        financeDTO = objectMapper.readValue(item.getString(decoder), FinanceDTO.class);
+                        financeDTO = objectMapper.readValue(item.getString(decoder),
+                                FinanceDTO.class);
                     } else {
                         email = item.getString(decoder);
                     }
@@ -165,16 +167,18 @@ public class DocumentServiceImpl implements DocumentService {
             serviceDataId = serviceDataRepository.saveServiceData(serviceDataDTO, financeId);
             serviceReservationRepository.setServiceDataFk(serviceDataId, serviceDataDTO.getFkCarId());
 
-            while (iter.hasNext()) {
-                FileItem item = iter.next();
+            for (FileItem item : items) {
                 if (!item.isFormField()) {
                     InputStream stream = item.getInputStream();
                     String filename = item.getName();
                     String contentType = item.getContentType();
                     String directory = "/files/client/";
-                    new File(FileSystemRepositoryImpl.class.getResource(directory).getPath(), email).mkdir();
-                    new File(FileSystemRepositoryImpl.class.getResource(directory + email + "/").getPath(), sdf.format(date)).mkdir();
-                    RESOURCES_DIR = FileSystemRepositoryImpl.class.getResource(directory + email + "/" + sdf.format(date) + "/").getPath().substring(1);
+                    new File(FileSystemRepositoryImpl.class.getResource(directory)
+                            .getPath(), email).mkdir();
+                    new File(FileSystemRepositoryImpl.class.getResource(directory
+                            + email + "/").getPath(), sdf.format(date)).mkdir();
+                    RESOURCES_DIR = FileSystemRepositoryImpl.class.getResource(directory
+                            + email + "/" + sdf.format(date) + "/").getPath().substring(1);
                     Path newFile = Paths.get(RESOURCES_DIR + filename);
                     OutputStream out = new FileOutputStream(String.valueOf(newFile));
                     IOUtils.copy(stream, out);
@@ -286,10 +290,10 @@ public class DocumentServiceImpl implements DocumentService {
             InputStream is = new FileInputStream(fileSystemResource.getPath());
             Long fileSize = fileSystemResource.contentLength();
             response.addHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
-            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileSystemResource.getFilename() + "\"");
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
+                    fileSystemResource.getFilename() + "\"");
             response.addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileSize));
             response.addHeader(HttpHeaders.CONTENT_TYPE, "application/blob");
-            response.setHeader("responseType", "blob");
             OutputStream outputStream = null;
             try {
                 outputStream = response.getOutputStream();
@@ -307,7 +311,6 @@ public class DocumentServiceImpl implements DocumentService {
                 outputStream.flush();
                 outputStream.close();
                 is.close();
-
             } catch (Exception e) {
                 String msg = "ERROR: Could not read file.";
                 response.setHeader(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.TEXT_PLAIN));

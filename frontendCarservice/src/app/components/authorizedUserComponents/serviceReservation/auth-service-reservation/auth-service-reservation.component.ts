@@ -261,6 +261,11 @@ export class AuthServiceReservationComponent implements OnInit {
     this.dateSetter()
     const time = d.getTime();
     const day = d.getDay();
+    var currYear = new Date().getFullYear()
+    var currMonth = new Date().getMonth()
+    var currDay = new Date().getDate()
+    currMonth = currMonth+1;
+    var currTime = new Date(currYear+'.'+currMonth+'.'+currDay+'.').getTime()
     const longWeekCounter = d.getTime() + 86400000;
     let y;
     if(this.holidayList.find(x=>x.getTime() == longWeekCounter)) {
@@ -272,7 +277,7 @@ export class AuthServiceReservationComponent implements OnInit {
         y += 1;
       }
     }
-    return !this.holidayList.find(x=>x.getTime()==time) && (day !== 0 && day !==6) && (day !== y)
+    return !this.holidayList.find(x=>x.getTime()==time) && (day !== 0 && day !==6) && (day !== y) && (currTime !== time)
   }
   collectorSetter(){
     this.collector = [''];
@@ -365,6 +370,7 @@ export class AuthServiceReservationComponent implements OnInit {
           this.router.navigate(['auth-service-reservation/verify'])
         },
         err => {
+        console.log(err)
           this.errorMessage = err.error.message;
           this.autoFocusOnError()
         })

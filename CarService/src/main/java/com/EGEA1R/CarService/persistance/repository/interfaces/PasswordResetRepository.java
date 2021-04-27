@@ -11,4 +11,6 @@ public interface PasswordResetRepository {
     Optional<PasswordReset> getExpDateByResetToken(String passwordResetToken);
 
     Optional<Long> getCredentialIdByPasswordResetToken(String passwordResetToken);
+
+    Optional<String> getCredentialEmailByPasswordResetToken(String passwordResetToken);
 }

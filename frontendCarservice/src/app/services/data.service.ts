@@ -35,6 +35,9 @@ export class DataService {
   data;
   billingToCompany;
 
+  comment;
+  servicesDone;
+
   carInspection = [{
     name: 'Minimalista csomag',
     value: 'minimalista csomag'

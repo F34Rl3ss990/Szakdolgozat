@@ -7,7 +7,7 @@ import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.CredentialRepository;
 import com.EGEA1R.CarService.persistance.repository.interfaces.PasswordResetRepository;
-import com.EGEA1R.CarService.persistance.repository.TokenBlockRepository;
+import com.EGEA1R.CarService.persistance.repository.interfaces.TokenBlockRepository;
 import com.EGEA1R.CarService.security.EncrypterHelper;
 import com.EGEA1R.CarService.security.jwt.JwtUtilId;
 import com.EGEA1R.CarService.service.interfaces.*;
@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -125,7 +124,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Override
-    @Async
     public ResponseEntity<?> authenticationChoose(String email, LoginRequest loginRequest) throws NullPointerException {
         String authType = credentialRepository.getMultiFactorAuth(email);
         if (authType.equals("email")) {
@@ -223,7 +221,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Override
-    public Optional<TokenBlock> findTokenBlock(String email) {
+    public List<TokenBlock> findTokenBlock(String email) {
         return tokenBlockRepository.findByUserId(getByEmail(email).getCredentialId());
     }
 

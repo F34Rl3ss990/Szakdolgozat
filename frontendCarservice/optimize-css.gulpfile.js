@@ -5,6 +5,7 @@ const gzip = require("gulp-gzip");
 const brotli = require("gulp-brotli");
 const clean = require("gulp-clean");
 const { series, parallel } = require("gulp");
+const rename = require("gulp-rename");
 
 // #1 | Optimize CSS
 /*
@@ -110,7 +111,7 @@ gulp.task("copy-op-css", () => {
 // #6 | Clear temp folder
 gulp.task("clear-test", () => {
   return gulp
-    .src("../dist/test/", { read: false })
+    .src("../dist/test/", { allowEmpty: true })
     .pipe(clean({ force: true }));
 });
 

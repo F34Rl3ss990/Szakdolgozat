@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.web.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.*;
 
 import javax.mail.MessagingException;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/auth")
 public class CredentialController {
 
@@ -115,7 +115,7 @@ public class CredentialController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) throws UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<?> registerUser( @RequestBody SignupRequest signupRequest) throws UnsupportedEncodingException, MessagingException {
         String path = "/api/auth/signup";
         credentialService.createNewCredential(signupRequest.getEmail(), signupRequest.getPassword(), path);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -148,9 +148,14 @@ public class CredentialController {
 
     @GetMapping("/changePassword")
     public Boolean validatePasswordResetToken(
-                                         @RequestParam("token") String passwordResetToken) {
+                                         @RequestParam("token") String passwordResetToken) throws MessagingException, UnsupportedEncodingException {
         String result = passwordresetTokenService.validatePasswordResetToken(passwordResetToken);
-         return result != null;
+        if(result==null){
+            String email = passwordresetTokenService.getCredentialEmailByToken(passwordResetToken);
+            Credential credential = credentialService.getByEmail(email);
+            passwordresetTokenService.createPasswordResetTokenForCredentialAndSendIt(credential);
+        }
+        return result != null;
     }
 
     @PostMapping("/savePassword")

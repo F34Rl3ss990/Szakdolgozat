@@ -72,7 +72,7 @@ export class LoginDialogComponent implements OnInit {
   }
   resetPasswordDialog(){
     this.dialogService.openPasswordResetTokenSenderDialog();
-      this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   ngOnInit(): void {

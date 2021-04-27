@@ -496,7 +496,6 @@ export class ServiceReservationComponent implements OnInit {
       return;
     } else {
     this.serviceReservation.reserveUnauthorizedServiceValidation(this.serviceReservationForm.getRawValue(), this.collector, this.foreignCountryPlate, this.billingToCompany).subscribe(data =>{
-      console.log(data)
       this.router.navigate(['/service-reservation/verify'])
     },
       err => {

@@ -25,7 +25,6 @@ export class DynamicViewDialogComponent implements OnInit {
     this.http.get(`../../../../../../assets/view/${this.data}`, {responseType: "text"}).subscribe(data=>{
       this.viewContent = data;
     })
-    console.log(this.data)
     this.renderer.listen(document, 'keydown', event => {
       if (event.key === 'Escape') {
         this.close();

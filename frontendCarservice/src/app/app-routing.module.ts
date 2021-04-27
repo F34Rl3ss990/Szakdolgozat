@@ -16,12 +16,14 @@ import {ServicesComponent} from './components/authorizedUserComponents/profile/s
 import {FilesComponent} from './components/authorizedUserComponents/profile/files/files.component';
 import {ChangePhoneNumberComponent} from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
 import {FallbackIfNoUserComponent} from './components/authorizedUserComponents/fallback-if-no-user/fallback-if-no-user.component';
+import {NavbarComponent} from 'angular-bootstrap-md';
 
 
 const routes: Routes = [
   { path: 'login', component: LoginDialogComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: NavbarComponent},
   { path: 'service-reservation', component: ServiceReservationComponent},
   { path: 'service-reservation/verify', component: VerifyServiceReservationComponent},
   { path: 'auth-service-reservation', component: AuthServiceReservationComponent},

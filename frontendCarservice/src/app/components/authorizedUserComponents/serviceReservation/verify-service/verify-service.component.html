@@ -1,145 +1,145 @@
-<div class="container">
+<div class="container" style="padding-top: 10px">
   <div class="column">
     <h4>Személyes adatok:</h4>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Név: </mat-label>
       </div>
-      <mat-label>{{user.name}}</mat-label>
+      <mat-label class="align-from-label">{{user.name}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Telefonszám: </mat-label>
       </div>
-      <mat-label>{{user.phoneNumber}}</mat-label>
+      <mat-label class="align-from-label">{{user.phoneNumber}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Email: </mat-label>
       </div>
-      <mat-label>{{user.email}}</mat-label>
+      <mat-label class="align-from-label">{{user.email}}</mat-label>
     </div>
     <h4>Számlázási adatok:</h4>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Név: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingName}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingName}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Telefonszám: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingPhoneNumber}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingPhoneNumber}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Email: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingEmail}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingEmail}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="user.billingInformation.billingTaxNumber!=null">
       <div class="column test-box">
         <mat-label class="align-end">Adószám: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingTaxNumber}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingTaxNumber}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Irányítószám: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingZipCode}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingZipCode}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Város: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingTown}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingTown}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Utca, házszám: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingStreet}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingStreet}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="user.billingInformation.billingOtherAddressType!=''">
       <div class="column test-box">
         <mat-label class="align-end">Emelet, ajtó: </mat-label>
       </div>
-      <mat-label>{{user.billingInformation.billingOtherAddressType}}</mat-label>
+      <mat-label class="align-from-label">{{user.billingInformation.billingOtherAddressType}}</mat-label>
     </div>
     <h4>Gépjármű adatok:</h4>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Márka: </mat-label>
       </div>
-      <mat-label>{{selectedCar.brand}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.brand}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Típus: </mat-label>
       </div>
-      <mat-label>{{selectedCar.type}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.type}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Gyártási év: </mat-label>
       </div>
-      <mat-label>{{selectedCar.yearOfManufacture}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.yearOfManufacture}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Motor típus: </mat-label>
       </div>
-      <mat-label>{{selectedCar.engineType}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.engineType}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="selectedCar.mileage!=''">
       <div class="column test-box">
         <mat-label class="align-end">Kilométeróra állása: </mat-label>
       </div>
-      <mat-label>{{selectedCar.mileage}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.mileage}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="selectedCar.engineNumber!=null">
       <div class="column test-box">
         <mat-label class="align-end">Motorkód: </mat-label>
       </div>
-      <mat-label>{{selectedCar.engineNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.engineNumber}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="selectedCar.chassisNumber!=null">
       <div class="column test-box">
         <mat-label class="align-end">Alvázszám: </mat-label>
       </div>
-      <mat-label>{{selectedCar.chassisNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.chassisNumber}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="selectedCar.licensePlateNumber!=''">
       <div class="column test-box">
         <mat-label class="align-end">Rendszám: </mat-label>
       </div>
-      <mat-label>{{selectedCar.licensePlateNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.licensePlateNumber}}</mat-label>
     </div>
     <h4>Igényelt szolgáltatások:</h4>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Szolgáltatások: </mat-label>
       </div>
-      <mat-label> {{collector}}</mat-label>
+      <mat-label class="align-from-label"> {{collector}}</mat-label>
     </div>
     <div fxLayout="row" *ngIf="serviceForm.controls['comment'].value!=''">
       <div class="column test-box">
         <mat-label class="align-end">Megjegyzés: </mat-label>
       </div>
-      <mat-label>{{serviceForm.controls['comment'].value}}</mat-label>
+      <mat-label class="align-from-label">{{serviceForm.controls['comment'].value}}</mat-label>
     </div>
     <h4>Lefoglalt időpnt: </h4>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Időpont: </mat-label>
       </div>
-      <mat-label> {{serviceForm.value.reservedDate | date:'yyyy.MM.dd'}}</mat-label>
+      <mat-label class="align-from-label"> {{serviceForm.value.reservedDate | date:'yyyy.MM.dd'}}</mat-label>
     </div>
     <div class="row">
-      <button type="submit" class="btn btn-primary btn-block" style="margin-left:50px; width: 120px; margin-top:15px" (click)="backClicked()">Módosítás</button>
-      <button type="submit" class="btn btn-primary btn-block" style="width: 120px; margin-top:15px;margin-left:35px" (click)="verify()">Foglalás véglegesítése</button>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-left:50px; width: 120px; margin-top:15px; margin-bottom: 15px" (click)="backClicked()">Módosítás</button>
+      <button type="submit" class="btn btn-primary btn-block" style="width: 120px; margin-top:15px;margin-left:35px; margin-bottom: 15px" (click)="verify()">Foglalás véglegesítése</button>
     </div>
   </div>
 </div>

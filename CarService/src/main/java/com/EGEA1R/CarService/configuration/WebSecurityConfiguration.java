@@ -4,6 +4,7 @@ import com.EGEA1R.CarService.security.jwt.AuthEntryPointJwt;
 import com.EGEA1R.CarService.security.jwt.AuthTokenFilter;
 import com.EGEA1R.CarService.security.jwt.CustomAccessDeniedHandler;
 import com.EGEA1R.CarService.service.authentication.AuthCredentialServiceImpl;
+import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +18,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        // securedEnabled = true,
-        // jsr250Enabled = true,
         prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -32,8 +33,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AuthCredentialServiceImpl credentialService;
 
     private CustomAccessDeniedHandler accessDeniedHandler;
-
-
 
     @Autowired
     public void setCredentialService(AuthCredentialServiceImpl credentialService){
@@ -55,12 +54,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
-/*
-    @Bean
-    public CommonsMultipartResolver canBeCalledAnything(){
-        return new CommonsMultipartResolver();
-    }
-*/
+
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(credentialService).passwordEncoder(passwordEncoder());

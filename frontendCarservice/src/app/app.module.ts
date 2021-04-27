@@ -70,6 +70,7 @@ import { ServicesCarComponent } from './components/authorizedUserComponents/prof
 import { SafeHtmlPipe } from './services/safe-html.pipe';
 import { DynamicViewDialogComponent } from './components/dynamic-view-dialog/dynamic-view-dialog.component';
 import { FallbackIfNoUserComponent } from './components/authorizedUserComponents/fallback-if-no-user/fallback-if-no-user.component';
+import { DetailsDialogComponent } from './components/authorizedUserComponents/profile/services/details-dialog/details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { FallbackIfNoUserComponent } from './components/authorizedUserComponents
     SafeHtmlPipe,
     DynamicViewDialogComponent,
     FallbackIfNoUserComponent,
+    DetailsDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -172,7 +174,15 @@ import { FallbackIfNoUserComponent } from './components/authorizedUserComponents
     ],
   exports: [AppComponent],
   bootstrap: [AppComponent],
-  entryComponents: [LoginDialogComponent,
-    RegisterComponent, VerificationDialogEntryComponent, VerificationDialogComponent]
+  entryComponents: [
+    LoginDialogComponent,
+    RegisterComponent,
+    VerificationDialogEntryComponent,
+    VerificationDialogComponent,
+    PasswordResetTokenSenderComponent,
+    DynamicViewDialogComponent,
+    ExpiredResetPasswordTokenComponent,
+    PasswordResetDialogComponent,
+    DetailsDialogComponent]
 })
 export class AppModule { }

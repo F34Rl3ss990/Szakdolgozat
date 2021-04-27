@@ -67,7 +67,7 @@ export class RegisterComponent implements OnInit {
       matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
       data: this.fb.control(''),
       hide: this.fb.control('')
-    }, {validator: matchingPasswordValidator},);
+    }, {validator: matchingPasswordValidator});
   }
 
   ngOnInit(): void {

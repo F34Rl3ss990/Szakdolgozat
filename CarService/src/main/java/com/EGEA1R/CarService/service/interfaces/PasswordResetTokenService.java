@@ -11,4 +11,6 @@ public interface PasswordResetTokenService {
     String validatePasswordResetToken(String token);
 
     void createPasswordResetTokenForCredentialAndSendIt(Credential credential) throws UnsupportedEncodingException, MessagingException;
+
+    String getCredentialEmailByToken(String passwordResetToken);
 }

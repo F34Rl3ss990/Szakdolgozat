@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/test/serviceReservation")
 public class ServiceReservationController {
 
@@ -48,8 +47,8 @@ public class ServiceReservationController {
     }
 
     @PostMapping("/serviceReservationUnauthorizedValidation")
-    public ResponseEntity<?> unauthorizedUserReservationValidation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) {
-        return ResponseEntity.ok(new MessageResponse("Valid!"));
+    public Boolean authorizedUserReservationValidation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) {
+        return true;
     }
 
     @PostMapping("/serviceReservationAuthorizedValidation")
