@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Router} from '@angular/router';
 import {TokenStorageService} from '../../services/token-storage.service';
@@ -47,12 +47,12 @@ export class NavigationBarComponent implements OnInit {
     window.location.reload();
   }
 
-  openRegistrationDialog(){
+  openRegistrationDialog() {
     this.dialogService.openRegistrationDialog();
   }
 
 
-  openLoginDialog(){
+  openLoginDialog() {
     this.dialogService.openLoginDialog();
   }
 

@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  submit(){
+  submit() {
     this.hideEm.nativeElement.focus();
   }
 
@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
 
 
   onSubmit(): void {
-    this.submit()
+    this.submit();
     this.isSubmitted = true;
     this.authService.register(this.registerForm.value).subscribe(
       data => {
@@ -85,17 +85,17 @@ export class RegisterComponent implements OnInit {
         this.dialogService.openSuccessDialog('registration-successful.component.html');
       },
       err => {
-        if (!this.registerForm.controls['email'].valid) {
-          this.registerForm.controls['email'].setErrors({'pattern': true});
+        if (!this.registerForm.controls.email.valid) {
+          this.registerForm.controls.email.setErrors({pattern: true});
         }
-        if (this.registerForm.controls['email'].value === '') {
-          this.registerForm.controls['email'].setErrors({'required': true, 'pristine': true});
+        if (this.registerForm.controls.email.value === '') {
+          this.registerForm.controls.email.setErrors({required: true, pristine: true});
         }
-        if (this.registerForm.controls['password'].value === '') {
-          this.registerForm.controls['password'].setErrors({'required': true, 'pristine': true});
+        if (this.registerForm.controls.password.value === '') {
+          this.registerForm.controls.password.setErrors({required: true, pristine: true});
         }
-        if (this.registerForm.controls['matchingPassword'].value == '') {
-          this.registerForm.controls['matchingPassword'].setErrors({'required': true});
+        if (this.registerForm.controls.matchingPassword.value === '') {
+          this.registerForm.controls.matchingPassword.setErrors({required: true});
         }
         this.isSignUpFailed = true;
         for (const key of Object.keys(this.registerForm.controls)) {

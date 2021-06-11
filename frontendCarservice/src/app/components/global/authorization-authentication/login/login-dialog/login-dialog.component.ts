@@ -7,6 +7,7 @@ import {DialogService} from '../../../../../services/dialog.service';
 import {ErrorMatcherDirective} from '../../../../validators/error-matcher.directive';
 import {DataService} from '../../../../../services/data.service';
 import {Router} from '@angular/router';
+import {catchError} from 'rxjs/operators';
 
 
 @Component({
@@ -18,25 +19,24 @@ export class LoginDialogComponent implements OnInit {
   form: any = {};
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage: string = "";
+  errorMessage: string = '';
   roles: string[] = [];
   loginForm: FormGroup;
   hide = true;
   isSubmitted: boolean;
   matcher = new ErrorMatcherDirective();
 
-  @ViewChild('hideIt') hideIt : ElementRef;
-
+  @ViewChild('hideIt') hideIt: ElementRef;
 
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-     if(event.key === 'Escape'){
-      this.close()
+    if (event.key === 'Escape') {
+      this.close();
     }
   }
 
-  submit(){
+  submit() {
     this.hideIt.nativeElement.focus();
   }
 
@@ -70,7 +70,8 @@ export class LoginDialogComponent implements OnInit {
     this.dialogService.openRegistrationDialog();
     this.dialogRef.close();
   }
-  resetPasswordDialog(){
+
+  resetPasswordDialog() {
     this.dialogService.openPasswordResetTokenSenderDialog();
     this.dialogRef.close();
   }
@@ -83,13 +84,13 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submit()
+    this.submit();
     this.isSubmitted = true;
     this.authService.login(this.loginForm.value).subscribe(
       data => {
         this.dataService.serviceReservationForm = null;
         this.tokenStorage.saveToken(data.token);
-        this.tokenStorage.saveExp(data.date)
+        this.tokenStorage.saveExp(data.date);
         this.tokenStorage.saveUser(data);
         this.roles = this.tokenStorage.getUser().roles;
         this.isLoggedIn = true;
@@ -98,7 +99,10 @@ export class LoginDialogComponent implements OnInit {
         this.dialogRef.close();
       },
       err => {
-        console.log(err)
+        console.log(err);
+        console.log(err.status)
+        console.log(err.message)
+        console.log(err.errors)
         this.errorMessage = err.error.message;
         if(!this.loginForm.controls['email'].valid){
           this.loginForm.controls['email'].setErrors({'pattern': true});

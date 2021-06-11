@@ -95,8 +95,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Alvázszám</mat-label>
           <input type="text" matInput formControlName="chassisNumber" #chassisNumber
-                 placeholder="Alvázszám"
-          >
+                 placeholder="Alvázszám">
         </mat-form-field>
         <mat-error *ngIf="addCarForm.controls['chassisNumber'].hasError('pattern')">
           Érvénytelen karakterek a motorkód mezőben!
@@ -108,8 +107,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Rendszám</mat-label>
           <input type="text" matInput formControlName="licensePlateNumber" #licensePlateNumber
-                 placeholder="Rendszám"
-          >
+                 placeholder="Rendszám">
         </mat-form-field>
         <mat-error *ngIf="addCarForm.controls['licensePlateNumber'].hasError('badLicensePlatePattern') && !foreignCountryPlate
                         || addCarForm.controls['licensePlateNumber'].hasError('pattern') && !foreignCountryPlate">

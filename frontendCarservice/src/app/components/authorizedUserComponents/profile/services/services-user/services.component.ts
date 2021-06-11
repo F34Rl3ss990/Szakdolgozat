@@ -30,7 +30,7 @@ import {DataService} from '../../../../../services/data.service';
 })
 export class ServicesComponent implements OnInit {
 
-  expanded: boolean = false;
+  expanded = false;
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
   @ViewChild(MatPaginator, {static: true}) branchPaginator: MatPaginator;
   @ViewChild('outerSort', {static: true}) sort: MatSort;
@@ -69,9 +69,11 @@ export class ServicesComponent implements OnInit {
   }
 
   toggleRow(element: responseServiceData) {
-    element.serviceList && (element.serviceList as MatTableDataSource<serviceArray>).data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
+    element.serviceList && (element.serviceList as MatTableDataSource<serviceArray>).
+      data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
     this.cd.detectChanges();
-    this.innerTables.forEach((table, index) => (table.dataSource as MatTableDataSource<serviceArray>).sort = this.innerSort.toArray()[index]);
+    this.innerTables.forEach((table, index) =>
+      (table.dataSource as MatTableDataSource<serviceArray>).sort = this.innerSort.toArray()[index]);
   }
 
   applyFilter(filterValue: string) {
@@ -80,7 +82,7 @@ export class ServicesComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-  openDetailsMenu(comment, servicesDone){
+  openDetailsMenu(comment, servicesDone) {
     this.dataService.comment = comment;
     this.dataService.servicesDone = servicesDone;
     this.dialogService.openDetailsDialog();

@@ -16,20 +16,20 @@ export class PasswordResetTokenSenderComponent implements OnInit {
 
   resetPasswordForm: FormGroup;
   errorMessage = '';
-  isSendFailed: boolean = false;
+  isSendFailed = false;
   isSubmitted: boolean;
   matcher = new ErrorMatcherDirective();
 
-  @ViewChild('hideIt') hideEm : ElementRef;
+  @ViewChild('hideIt') hideEm: ElementRef;
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if(event.key === 'Escape'){
-      this.close()
+    if (event.key === 'Escape') {
+      this.close();
     }
   }
 
-  submit(){
+  submit() {
     this.hideEm.nativeElement.focus();
   }
 
@@ -49,13 +49,13 @@ export class PasswordResetTokenSenderComponent implements OnInit {
         validators: [Validators.pattern(this.dataService.patternEmail), Validators.required],
         asyncValidators: [notExistingEmailValidator(this.authService)]
       }),
-    },{updateOn: 'submit'})
+    }, {updateOn: 'submit'});
   }
 
   ngOnInit(): void {
   }
 
-  doLogin(e){
+  doLogin(e) {
     console.log(e);
   }
 
@@ -69,8 +69,8 @@ export class PasswordResetTokenSenderComponent implements OnInit {
         this.dialogRef.close();
       },
       err => {
-        if(this.resetPasswordForm.controls['email'].value===''){
-          this.resetPasswordForm.controls['email'].setErrors({'required' : true, 'pristine': true});
+        if (this.resetPasswordForm.controls.email.value === '') {
+          this.resetPasswordForm.controls.email.setErrors({required: true, pristine: true});
         }
         this.isSendFailed = true;
         for (const key of Object.keys(this.resetPasswordForm.controls)) {

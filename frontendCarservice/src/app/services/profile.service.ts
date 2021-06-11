@@ -26,6 +26,7 @@ export class ProfileService {
   }
 
   changePhoneNumber(phoneNumberFormVal): Observable<any> {
+    console.log(phoneNumberFormVal.phoneNumber);
     return this.http.post(USER_API + 'changePhoneNumber', {
       phoneNumber: phoneNumberFormVal.phoneNumber,
     }, httpOptions);
@@ -33,25 +34,27 @@ export class ProfileService {
 
   changePassword(passwordFormVal): Observable<any> {
     return this.http.post(AUTH_API + 'updatePassword', {
-      password: passwordFormVal.email,
-      matchingPassword: passwordFormVal.otpNum,
+      password: passwordFormVal.password,
+      matchingPassword: passwordFormVal.matchingPassword,
       oldPassword: passwordFormVal.oldPassword,
       otpNum: passwordFormVal.otpNum
     }, httpOptions);
   }
 
   changeBillingData(billingDataFormVal, billingForeignTax, billingToCompany): Observable<any> {
+    console.log(billingForeignTax)
+    console.log(billingToCompany)
     return this.http.post(USER_API + 'changeBillingData', {
-      billingName: billingDataFormVal.billingName,
-      billingEmail: billingDataFormVal.billingEmail,
-      billingPhoneNumber: billingDataFormVal.billingPhoneNumber,
-      billingZipCode: billingDataFormVal.billingZipCode,
-      billingTown: billingDataFormVal.billingTown,
-      billingStreet: billingDataFormVal.billingStreet,
-      billingOtherAddressType: billingDataFormVal.billingOtherAddressType,
-      billingTaxNumber: billingDataFormVal.billingTaxNumber,
+      billingName: billingDataFormVal.value.billingName,
+      billingEmail: billingDataFormVal.value.billingEmail,
+      billingPhoneNumber: billingDataFormVal.value.billingPhoneNumber,
+      billingZipCode: billingDataFormVal.value.billingZipCode,
+      billingTown: billingDataFormVal.value.billingTown,
+      billingStreet: billingDataFormVal.value.billingStreet,
+      billingOtherAddressType: billingDataFormVal.value.billingOtherAddressType,
+      billingTaxNumber: billingDataFormVal.value.billingTaxNumber,
       billingForeignCountryTax: billingForeignTax,
-      billingToCompany: billingToCompany
+      billingToCompany
     }, httpOptions);
   }
 
@@ -60,6 +63,7 @@ export class ProfileService {
   }
 
   addCar(addCarForm, foreignLicensePlate): Observable<any> {
+    console.log(addCarForm.mileage)
     return this.http.post(CAR_API + 'addCar', {
       brand: addCarForm.brand,
       type: addCarForm.type,
@@ -81,27 +85,27 @@ export class ProfileService {
   getUserDocuments(credentialId: bigint): Observable<any> {
     let params = new HttpParams();
     params = params.append('credentialId', String(credentialId));
-    return this.http.get(`${DOCUMENT_API}filesByUser`, {params: params});
+    return this.http.get(`${DOCUMENT_API}filesByUser`, {params});
   }
 
   getCarDocuments(carId: bigint, credentialId: bigint): Observable<any> {
     let params = new HttpParams();
     params = params.append('carId', String(carId));
     params = params.append('credentialId', String(carId));
-    return this.http.get(`${DOCUMENT_API}filesCarId`, {params: params});
+    return this.http.get(`${DOCUMENT_API}filesCarId`, {params});
   }
 
   getUserServiceData(credentialId: bigint): Observable<any> {
     let params = new HttpParams();
     params = params.append('credentialId', String(credentialId));
-    return this.http.get(`${SERVICE_DATA_API}serviceDataByUser`, {params: params});
+    return this.http.get(`${SERVICE_DATA_API}serviceDataByUser`, {params});
   }
 
   getCarServiceData(carId: bigint, credentialId: bigint): Observable<any> {
     let params = new HttpParams();
     params = params.append('carId', String(carId));
     params = params.append('credentialId', String(carId));
-    return this.http.get(`${SERVICE_DATA_API}serviceDataByCar`, {params: params});
+    return this.http.get(`${SERVICE_DATA_API}serviceDataByCar`, {params});
   }
 
   addCarAndUser(carAndUserForm, foreignLicensePlate, billingToCompany): Observable<any> {
@@ -127,7 +131,7 @@ export class ProfileService {
       billingOtherAddressType: carAndUserForm.billingOtherAddressType,
       billingTax: carAndUserForm.billingTax,
       billingForeignCountryTax: carAndUserForm.billingForeignCountryTax,
-      billingToCompany: billingToCompany,
+      billingToCompany,
     }, httpOptions);
   }
 }
