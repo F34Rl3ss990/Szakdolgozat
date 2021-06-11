@@ -42,6 +42,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("classpath:/carServiceLogo.png")
     Resource resourceFile;
 
+    @Async
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -78,14 +79,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
 
-
-
     private void sendMessageUsingThymeleafTemplate(
             String to, String subject, String html, Context thymeleafContext) throws MessagingException, UnsupportedEncodingException {
         String htmlBody = thymeleafTemplateEngine.process(html, thymeleafContext);
         sendHtmlMessage(subject, to, htmlBody);
     }
 
+    @Async
     @Override
     public void sendVerificationToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Verification email";
@@ -95,6 +95,7 @@ public class EmailServiceImpl implements EmailService {
         sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
+    @Async
     @Override
     public void resendVerificationToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Verification mail resent";
@@ -104,6 +105,7 @@ public class EmailServiceImpl implements EmailService {
         sendMessageUsingThymeleafTemplate(to, subject, html, thymeleafContext);
     }
 
+    @Async
     @Override
     public void sendResetPasswordToken(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String subject = "Password reset token mail";
@@ -148,9 +150,8 @@ public class EmailServiceImpl implements EmailService {
         context.setVariable("billingEmail", unauthorizedUserReservationDTO.getBillingEmail());
         context.setVariable("billingTax", unauthorizedUserReservationDTO.getBillingTaxNumber());
         context.setVariable("billingZipCode", unauthorizedUserReservationDTO.getBillingZipCode());
-        context.setVariable("billingTown", sdf.format(unauthorizedUserReservationDTO.getBillingTown()));
+        context.setVariable("billingTown", unauthorizedUserReservationDTO.getBillingTown());
         context.setVariable("billingStreet", unauthorizedUserReservationDTO.getBillingStreet());
         context.setVariable("billingOtherAddressType", unauthorizedUserReservationDTO.getBillingOtherAddressType());
-
     }
 }

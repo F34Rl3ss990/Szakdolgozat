@@ -8,11 +8,12 @@ import java.util.Optional;
 
 public interface CarRepository {
 
-    void addCar(Car car);
+    void addCar(Car car, String mileage, Long userId);
 
     void modifyCarById(Car car);
 
     List<Car> getAllCarByUser(Long userId);
 
     Optional<Car> finCarByCarId(Long carId);
+
 }
