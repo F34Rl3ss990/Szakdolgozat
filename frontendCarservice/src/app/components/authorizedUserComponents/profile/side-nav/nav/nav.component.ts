@@ -60,7 +60,7 @@ export class NavComponent implements AfterViewInit {
       iconName: 'file-alt',
       route: 'profile/files'
     }
-  ];
+  ]
 
   constructor() {
 

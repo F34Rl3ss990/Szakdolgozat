@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit,  ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -36,17 +36,16 @@ export class ServicesCarComponent implements OnInit {
         this.dataSource = new MatTableDataSource(dbData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.branchPaginator;
-      });
-    });
+      })
+    })
   }
-
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
   }
 
-  openDetailsMenu(comment, servicesDone) {
+  openDetailsMenu(comment, servicesDone){
     this.dataService.comment = comment;
     this.dataService.servicesDone = servicesDone;
     this.dialogService.openDetailsDialog();

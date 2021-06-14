@@ -6,7 +6,7 @@ import {documentArray, responseDocument} from '../../../../models/documentPage';
 import {ProfileService} from '../../../../services/profile.service';
 import {TokenStorageService} from '../../../../services/token-storage.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatPaginator} from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-files',
@@ -14,8 +14,8 @@ import {MatPaginator} from '@angular/material/paginator';
   styleUrls: ['./files.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
     trigger('indicatorRotate', [
@@ -30,10 +30,10 @@ import {MatPaginator} from '@angular/material/paginator';
 export class FilesComponent implements OnInit {
 
 
-  expanded = false;
+  expanded: boolean = false;
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
-  @ViewChild(MatPaginator, {static: true}) branchPaginator: MatPaginator;
-  @ViewChild('outerSort', {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) branchPaginator: MatPaginator;
+  @ViewChild('outerSort', { static: true }) sort: MatSort;
   @ViewChildren('innerSort') innerSort: QueryList<MatSort>;
   @ViewChildren('innerTables') innerTables: QueryList<MatTable<documentArray>>;
 
@@ -44,31 +44,29 @@ export class FilesComponent implements OnInit {
   innerDisplayedColumns = ['Típus', 'Név', 'Méret', 'Letöltés'];
   expandedElement: responseDocument | null;
 
-  constructor(private cd: ChangeDetectorRef,
-              private profileService: ProfileService,
-              private tokenStorageService: TokenStorageService,
-              private router: Router,
-              private route: ActivatedRoute) {
-  }
+  constructor( private cd: ChangeDetectorRef,
+               private profileService: ProfileService,
+               private tokenStorageService: TokenStorageService,
+               private router: Router,
+               private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params.id == null) {
-        this.profileService.getUserDocuments(this.tokenStorageService.getUser().id).subscribe(dbData => {
+        this.profileService.getUserDocuments(this.tokenStorageService.getUser().id).subscribe(dbData =>{
           this.documentFromDb = dbData;
-          this.initTable();
-        });
+          this.initTable()
+        })
       } else {
-        this.profileService.getCarDocuments(params.id, this.tokenStorageService.getUser().id).subscribe(dbData => {
-          this.documentFromDb = dbData;
-          this.initTable();
-        });
+        this.profileService.getCarDocuments(params.id, this.tokenStorageService.getUser().id).subscribe(dbData =>{
+        this.documentFromDb = dbData;
+        this.initTable()
+        })
       }
-    });
+    })
 
   }
-
-  initTable() {
+  initTable(){
     this.documentFromDb.forEach(data => {
       if (data.documentList && Array.isArray(data.documentList) && data.documentList.length) {
         this.documentTable = [...this.documentTable, {...data, documentList: new MatTableDataSource(data.documentList)}];
@@ -83,11 +81,9 @@ export class FilesComponent implements OnInit {
 
 
   toggleRow(element: responseDocument) {
-    element.documentList && (element.documentList as MatTableDataSource<documentArray>).
-      data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
+    element.documentList && (element.documentList as MatTableDataSource<documentArray>).data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
     this.cd.detectChanges();
-    this.innerTables.forEach((table, index) =>
-      (table.dataSource as MatTableDataSource<documentArray>).sort = this.innerSort.toArray()[index]);
+    this.innerTables.forEach((table, index) => (table.dataSource as MatTableDataSource<documentArray>).sort = this.innerSort.toArray()[index]);
   }
 
   applyFilter(filterValue: string) {
@@ -96,20 +92,20 @@ export class FilesComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-  downloadFile(documentId): void {
-    window.open(`http://localhost:8080/api/test/document/files/${documentId}`);
+  downloadFile(documentId): void{
+    window.open(`http://localhost:8080/api/test/document/files/${documentId}`)
   }
 
-  downloadZip(documentId: [], event: any): void {
+  downloadZip(documentId:[], event: any): void{
     event.stopPropagation();
-    let stringKey = '';
-    for (let i = 0; documentId.length > i; i++) {
-      if (stringKey === '') {
-        stringKey += '?id=' + documentId[i];
-      } else {
-        stringKey += '&id=' + documentId[i];
+    var string = "";
+    for(var i = 0; documentId.length>i;i++){
+      if(string === ""){
+        string += "?id=" + documentId[i];
+      }else{
+        string += "&id=" + documentId[i];
       }
     }
-    window.open(`http://localhost:8080/api/test/document/zip-download${stringKey}`);
+    window.open(`http://localhost:8080/api/test/document/zip-download${string}`)
   }
 }

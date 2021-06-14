@@ -18,9 +18,9 @@ import {MatchingPasswordMatcherDirective} from '../../../../validators/matching-
 export class ChangePasswordComponent implements OnInit {
 
   changePasswordForm: FormGroup;
-  isSubmitted = false;
+  isSubmitted: boolean = false;
   matcher = new ErrorMatcherDirective();
-  showHiddenInput = false;
+  showHiddenInput: boolean = false;
   hide = true;
   CrossFieldErrorMatcher = new MatchingPasswordMatcherDirective();
   errorMessage = '';
@@ -42,6 +42,7 @@ export class ChangePasswordComponent implements OnInit {
   }
 
 
+
   createForm() {
     this.changePasswordForm = this.fb.group({
       oldPassword: this.fb.control('', {updateOn: 'blur'}),
@@ -50,8 +51,8 @@ export class ChangePasswordComponent implements OnInit {
         validators: [Validators.minLength(8), passwordPatternValidator]
       }),
       matchingPassword: this.fb.control('', {updateOn: 'change'}),
-      otpNum: this.fb.control('', {updateOn: 'blur', validators: [Validators.required]})
-    }, {validator: matchingPasswordValidator}, );
+      otpNum: this.fb.control('', {updateOn: 'blur', validators:[Validators.required]})
+    }, {validator: matchingPasswordValidator},);
   }
 
   generateOtpNumber() {
@@ -60,18 +61,18 @@ export class ChangePasswordComponent implements OnInit {
     this.profileService.generateOtpNumber().subscribe();
   }
 
-  errCleaner() {
-    this.changePasswordForm.controls.oldPassword.setErrors({invalidPassword: null});
-    this.changePasswordForm.controls.oldPassword.updateValueAndValidity();
-    this.changePasswordForm.controls.otpNum.setErrors({invalidOtpNum: null});
-    this.changePasswordForm.controls.otpNum.updateValueAndValidity();
+  errCleaner(){
+    this.changePasswordForm.controls['oldPassword'].setErrors({'invalidPassword' : null});
+    this.changePasswordForm.controls['oldPassword'].updateValueAndValidity();
+    this.changePasswordForm.controls['otpNum'].setErrors({'invalidOtpNum' : null});
+    this.changePasswordForm.controls['otpNum'].updateValueAndValidity();
 
-    this.changePasswordForm.controls.oldPassword.setErrors({nullVal: null});
-    this.changePasswordForm.controls.oldPassword.updateValueAndValidity();
-    this.changePasswordForm.controls.password.setErrors({nullVal: null});
-    this.changePasswordForm.controls.password.updateValueAndValidity();
-    this.changePasswordForm.controls.matchingPassword.setErrors({nullVal: null});
-    this.changePasswordForm.controls.matchingPassword.updateValueAndValidity();
+    this.changePasswordForm.controls['oldPassword'].setErrors({'nullVal' : null});
+    this.changePasswordForm.controls['oldPassword'].updateValueAndValidity();
+    this.changePasswordForm.controls['password'].setErrors({'nullVal' : null});
+    this.changePasswordForm.controls['password'].updateValueAndValidity();
+    this.changePasswordForm.controls['matchingPassword'].setErrors({'nullVal' : null});
+    this.changePasswordForm.controls['matchingPassword'].updateValueAndValidity();
   }
 
   onSubmit(): void {
@@ -80,32 +81,24 @@ export class ChangePasswordComponent implements OnInit {
     this.isSubmitted = true;
     this.profileService.changePassword(this.changePasswordForm.value).subscribe(
       data => {
-        this.tokenStorageService.signOutFrontEnd();
-        this.tokenStorageService.saveToken(data.token);
-        this.tokenStorageService.saveExp(data.date);
-        this.tokenStorageService.saveUser(data);
-        this.dialogService.openSuccessDialog('password-successfully-changed.html');
+        this.dialogService.openSuccessDialog('successfully-reserved-service.html');
       },
       err => {
-        console.log(err)
-        this.errorMessage = err.error.message;
-        if (this.changePasswordForm.controls.password.value === '') {
-          this.changePasswordForm.controls.password.setErrors({nullVal: true, pristine: true});
+        this.errorMessage = err.message;
+        if (this.changePasswordForm.controls['password'].value == '') {
+          this.changePasswordForm.controls['password'].setErrors({'nullVal': true, 'pristine': true});
         }
-        if (this.changePasswordForm.controls.matchingPassword.value === '') {
-          this.changePasswordForm.controls.matchingPassword.setErrors({nullVal: true, pristine: true});
+        if (this.changePasswordForm.controls['matchingPassword'].value === '') {
+          this.changePasswordForm.controls['matchingPassword'].setErrors({'nullVal': true, 'pristine': true});
         }
-        if (this.changePasswordForm.controls.oldPassword.value === '') {
-          this.changePasswordForm.controls.oldPassword.setErrors({nullVal: true, pristine: true});
+        if (this.changePasswordForm.controls['oldPassword'].value === '') {
+          this.changePasswordForm.controls['oldPassword'].setErrors({'nullVal': true, 'pristine': true});
         }
-        if (this.errorMessage.includes('Incorrect old pass')) {
-          this.changePasswordForm.controls.oldPassword.setErrors({invalidPassword: true, pristine: true});
+        if(this.errorMessage.includes("Incorrect old pass")){
+          this.changePasswordForm.controls['oldPassword'].setErrors({'invalidPassword': true, 'pristine': true});
         }
-        if (this.errorMessage.includes('Invalid or expired otp')) {
-          this.changePasswordForm.controls.otpNum.setErrors({invalidOtpNum: true, pristine: true});
-        }
-        if (this.errorMessage.includes('Invalid OTP')) {
-          this.changePasswordForm.controls.otpNum.setErrors({invalidOtpNum: true, pristine: true});
+        if(this.errorMessage.includes("Invalid or expired otp")){
+          this.changePasswordForm.controls['otpNum'].setErrors({'invalidOtpNum': true, 'pristine': true});
         }
         for (const key of Object.keys(this.changePasswordForm.controls)) {
           if (this.changePasswordForm.controls[key].invalid) {

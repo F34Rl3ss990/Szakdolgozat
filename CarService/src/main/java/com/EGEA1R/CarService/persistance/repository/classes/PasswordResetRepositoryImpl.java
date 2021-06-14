@@ -63,7 +63,7 @@ public class PasswordResetRepositoryImpl implements PasswordResetRepository {
                     " on credential.credential_id = p.fk_passwordreset_credential_id " +
                     " where token = ?")
                     .setParameter(1, passwordResetToken);
-            String result = (String) query.getSingleResult();
+            BigInteger result = (BigInteger) query.getSingleResult();
             return Optional.of((String) result.toString());
         }catch(NoResultException n){
             return  Optional.empty();

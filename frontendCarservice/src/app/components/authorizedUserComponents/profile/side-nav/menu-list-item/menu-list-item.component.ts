@@ -19,7 +19,7 @@ import {Router} from '@angular/router';
   ]
 })
 export class MenuListItemComponent implements OnInit {
-  expanded = false;
+  expanded: boolean = false;
   // @ts-ignore
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
   @Input() item: NavItem;

@@ -16,13 +16,13 @@ export class ChangeBillingDataComponent implements OnInit {
   isSubmitted: boolean;
   billingSameAsUserData = true;
   billingForeignCountryTax = false;
-  errorMessage = '';
-  user: any = {};
+  errorMessage = ''
+  user: any ={};
   billingToCompany = false;
 
   @ViewChild('hideIt') hideIt: ElementRef;
 
-  submit() {
+  submit(){
     this.hideIt.nativeElement.focus();
   }
 
@@ -34,54 +34,40 @@ export class ChangeBillingDataComponent implements OnInit {
     this.createForm();
   }
 
-  createForm() {
+  createForm(){
     this.changeBillingDataForm = this.fb.group({
-        billingSameAsUserData: this.fb.control(''),
-        billingName: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
-        billingPhoneNumber: this.fb.control('', {
-          updateOn: 'blur',
-          validators: [Validators.required, Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]
-        }),
-        billingEmail: this.fb.control('', {
-          updateOn: 'blur',
-          validators: [Validators.required, Validators.pattern(this.dataService.patternEmail)]
-        }),
-        billingZipCode: this.fb.control('', {
-          updateOn: 'blur',
-          validators: [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern('[0-9]+')]
-        }),
-        billingTown: this.fb.control('', {
-          updateOn: 'blur',
-          validators: [Validators.required, Validators.pattern(this.dataService.negatedSet)]
-        }),
-        billingStreet: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
-        billingOtherAddressType: this.fb.control('', {}),
-        billingTax: this.fb.control('', {updateOn: 'blur'}),
-        billingForeignCountryTax: this.fb.control('', {}),
-      }
-    );
+      billingSameAsUserData: this.fb.control(''),
+      billingName: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
+      billingPhoneNumber: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]}),
+      billingEmail: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.pattern(this.dataService.patternEmail)]}),
+      billingZipCode: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern('[0-9]+')]}),
+      billingTown: this.fb.control('', {updateOn: 'blur', validators: [Validators.required, Validators.pattern(this.dataService.negatedSet)]}),
+      billingStreet: this.fb.control('', {updateOn: 'blur', validators: Validators.required}),
+      billingOtherAddressType: this.fb.control('', {}),
+      billingTax: this.fb.control('', {updateOn: 'blur'}),
+      billingForeignCountryTax: this.fb.control('',{}),
+    }
+   )
   }
 
-  taxNumberValidator(event) {
-    if (!event.checked) {
-      this.changeBillingDataForm.controls.billingTax.setValidators(
-        [Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required]);
-      this.changeBillingDataForm.controls.billingTax.updateValueAndValidity();
+  taxNumberValidator(event){
+    if(!event.checked) {
+      this.changeBillingDataForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required]);
+      this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     } else {
-      this.changeBillingDataForm.controls.billingTax.clearValidators();
-      this.changeBillingDataForm.controls.billingTax.setValidators(Validators.required);
-      this.changeBillingDataForm.controls.billingTax.updateValueAndValidity();
+      this.changeBillingDataForm.controls['billingTax'].clearValidators();
+      this.changeBillingDataForm.controls['billingTax'].setValidators(Validators.required);
+      this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     }
   }
 
-  taxNumberRequiredSetter(event) {
-    if (event.checked) {
-      this.changeBillingDataForm.controls.billingTax.setValidators(
-        [Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required]);
-      this.changeBillingDataForm.controls.billingTax.updateValueAndValidity();
+  taxNumberRequiredSetter(event){
+    if(event.checked) {
+      this.changeBillingDataForm.controls['billingTax'].setValidators([Validators.pattern('^[0-9]{8}[-][0-9][-][0-9]{2}$'), Validators.required])
+      this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     } else {
-      this.changeBillingDataForm.controls.billingTax.clearValidators();
-      this.changeBillingDataForm.controls.billingTax.updateValueAndValidity();
+      this.changeBillingDataForm.controls['billingTax'].clearValidators();
+      this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
     }
   }
 
@@ -95,57 +81,56 @@ export class ChangeBillingDataComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  onSubmit(): void{
     this.errCleaner();
     this.submit();
     this.isSubmitted = true;
-    if (!this.changeBillingDataForm.valid) {
-      this.autoFocusOnError();
+    if(!this.changeBillingDataForm.valid) {
+      this.autoFocusOnError()
       return;
     } else {
-      this.profileService.changeBillingData(this.changeBillingDataForm, this.billingForeignCountryTax,
-        this.billingToCompany).subscribe(data => {
-          this.dialogService.openSuccessDialog('billingdata-changed-successfully.html');
+      this.profileService.changeBillingData(this.changeBillingDataForm, this.billingForeignCountryTax, this.billingToCompany).subscribe(data =>{
+            this.dialogService.openSuccessDialog('billingdata-changed-successfully.html')
         },
         err => {
           this.errorMessage = err.error.message;
-          if (this.errorMessage.includes('Tax number is inc')) {
-            this.changeBillingDataForm.controls.billingTax.setErrors({badTaxPattern: true});
+          if(this.errorMessage.includes('Tax number is inc')){
+            this.changeBillingDataForm.controls['billingTax'].setErrors({'badTaxPattern' : true});
           }
-          this.autoFocusOnError();
-        });
+          this.autoFocusOnError()
+        })
     }
   }
 
-  errCleaner() {
-    this.changeBillingDataForm.controls.billingTax.setErrors({badTaxPattern: null});
-    this.changeBillingDataForm.controls.billingTax.updateValueAndValidity();
+  errCleaner(){
+    this.changeBillingDataForm.controls['billingTax'].setErrors({'badTaxPattern' : null});
+    this.changeBillingDataForm.controls['billingTax'].updateValueAndValidity();
   }
 
-  dataSetter() {
-    this.changeBillingDataForm.controls.billingName.setValue(this.user.billingInformation.billingName);
-    this.changeBillingDataForm.controls.billingPhoneNumber.setValue(this.user.billingInformation.billingPhoneNumber);
-    this.changeBillingDataForm.controls.billingEmail.setValue(this.user.billingInformation.billingEmail);
-    this.changeBillingDataForm.controls.billingTax.setValue(this.user.billingInformation.billingTaxNumber);
-    this.changeBillingDataForm.controls.billingTown.setValue(this.user.billingInformation.billingTown);
-    this.changeBillingDataForm.controls.billingZipCode.setValue(this.user.billingInformation.billingZipCode);
-    this.changeBillingDataForm.controls.billingStreet.setValue(this.user.billingInformation.billingStreet);
-    this.changeBillingDataForm.controls.billingOtherAddressType.setValue(this.user.billingInformation.billingOtherAddressType);
+  dataSetter(){
+    this.changeBillingDataForm.controls['billingName'].setValue(this.user.billingInformation.billingName);
+    this.changeBillingDataForm.controls['billingPhoneNumber'].setValue(this.user.billingInformation.billingPhoneNumber);
+    this.changeBillingDataForm.controls['billingEmail'].setValue(this.user.billingInformation.billingEmail);
+    this.changeBillingDataForm.controls['billingTax'].setValue(this.user.billingInformation.billingTaxNumber);
+    this.changeBillingDataForm.controls['billingTown'].setValue(this.user.billingInformation.billingTown);
+    this.changeBillingDataForm.controls['billingZipCode'].setValue(this.user.billingInformation.billingZipCode);
+    this.changeBillingDataForm.controls['billingStreet'].setValue(this.user.billingInformation.billingStreet);
+    this.changeBillingDataForm.controls['billingOtherAddressType'].setValue(this.user.billingInformation.billingOtherAddressType);
   }
 
   ngOnInit(): void {
     this.profileService.getUserData().subscribe(res => {
       this.user = res;
-      this.dataSetter();
-      if (this.user.billingInformation.billingTaxNumber !== '') {
+      this.dataSetter()
+      if (this.user.billingInformation.billingTaxNumber != null) {
         this.billingToCompany = true;
       }
       if (this.user.billingInformation.billingTaxNumber != null) {
-        if (!this.user.billingInformation.billingTaxNumber.match('^[0-9]{8}[-][0-9][-][0-9]{2}$')) {
+        if (!this.user.billingInformation.billingTaxNumber.match("^[0-9]{8}[-][0-9][-][0-9]{2}$")) {
           this.billingForeignCountryTax = true;
         }
       }
-    });
+    })
   }
 
 }

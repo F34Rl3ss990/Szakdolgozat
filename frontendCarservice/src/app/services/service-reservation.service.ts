@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 const serviceReservationURL = 'http://localhost:8080/api/test/serviceReservation/';
 
 const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
+  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
 
 @Injectable({
@@ -15,29 +15,28 @@ const httpOptions = {
 
 export class ServiceReservationService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
-  reserveAuthorizedServiceValidation(authorizedService, collector, carId): Observable<any> {
-    return this.http.post(serviceReservationURL + 'serviceReservationAuthorizedValidation', {
+  reserveAuthorizedServiceValidation(authorizedService, collector, userId): Observable<any>{
+    return this.http.post(serviceReservationURL + 'serviceReservationAuthorizedValidation',{
       fkServiceReservationCarId: authorizedService.car,
       comment: authorizedService.comment,
       reservedDate: authorizedService.reservedDate,
       reservedServices: collector,
-      carId: carId
-    }, httpOptions);
+      fkCarUserId: userId
+    }, httpOptions)
   }
 
-  reserveAuthorizedService(authorizedService, collector): Observable<any> {
-    return this.http.post(serviceReservationURL + 'reserveService', {
+  reserveAuthorizedService(authorizedService, collector): Observable<any>{
+    return this.http.post(serviceReservationURL + 'reserveService',{
       fkServiceReservationCarId: authorizedService.car,
       comment: authorizedService.comment,
       reservedDate: authorizedService.reservedDate,
-      reservedServices: collector
-    });
+      reservedServices: authorizedService.collector
+    })
   }
 
-  getUserCars(credentialId): Observable<any> {
+  getUserCars(credentialId): Observable<any>{
     return this.http.get(`${serviceReservationURL}getCarsByRegId?credentialId=${credentialId}`);
   }
 
@@ -65,7 +64,7 @@ export class ServiceReservationService {
       billingOtherAddressType: unauthorizedService.billingOtherAddressType,
       billingTax: unauthorizedService.billingTax,
       billingForeignCountryTax: unauthorizedService.billingForeignCountryTax,
-      billingToCompany,
+      billingToCompany: billingToCompany,
       reservedServices: collector,
       comment: unauthorizedService.comment
     }, httpOptions);
@@ -99,8 +98,8 @@ export class ServiceReservationService {
     }, httpOptions);
   }
 
-  getServiceableCarsList(): Observable<any> {
-    return this.http.get(serviceReservationURL + 'reserveDataGetter');
+  getServiceableCarsList(): Observable<any>{
+    return this.http.get(serviceReservationURL + 'reserveDataGetter')
   }
 
 

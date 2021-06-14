@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute} from '@angular/router';
 import {AuthService} from '../../../../../../services/auth.service';
@@ -16,24 +16,21 @@ export class PasswordResetDialogEntryComponent implements OnInit {
               private route: ActivatedRoute,
               private dataService: DataService,
               private authService: AuthService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService){
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const token = params.token;
-      console.log(token);
-      this.authService.checkPasswordResetToken(token).subscribe(result => {
-        if (result === true) {
+    this.route.params.subscribe(params =>{
+      let token = params['token'];
+      this.authService.checkPasswordResetToken(token).subscribe(result =>{
+        if (result==true){
           this.dataService.token = token;
           this.dialogService.openPasswordResetDialog();
-        } else {
+        } else{
           this.dialogService.openExpiredTokenDialog();
         }
-      }, err => {
-        this.dialogService.openBadPasswordResetTokenDialog();
-      });
-    });
+      })
+    })
 
   }
 

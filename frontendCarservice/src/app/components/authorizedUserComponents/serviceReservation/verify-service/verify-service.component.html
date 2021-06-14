@@ -73,49 +73,49 @@
       <div class="column test-box">
         <mat-label class="align-end">Márka: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.brand}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.brand}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Típus: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.type}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.type}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Gyártási év: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.yearOfManufacture}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.yearOfManufacture}}</mat-label>
     </div>
     <div fxLayout="row">
       <div class="column test-box">
         <mat-label class="align-end">Motor típus: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.engineType}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.engineType}}</mat-label>
     </div>
-    <div fxLayout="row" *ngIf="selectedCarObj.mileage!=''">
+    <div fxLayout="row" *ngIf="selectedCar.mileage!=''">
       <div class="column test-box">
         <mat-label class="align-end">Kilométeróra állása: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.mileage}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.mileage}}</mat-label>
     </div>
-    <div fxLayout="row" *ngIf="selectedCarObj.engineNumber!=null">
+    <div fxLayout="row" *ngIf="selectedCar.engineNumber!=null">
       <div class="column test-box">
         <mat-label class="align-end">Motorkód: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.engineNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.engineNumber}}</mat-label>
     </div>
-    <div fxLayout="row" *ngIf="selectedCarObj.chassisNumber!=null">
+    <div fxLayout="row" *ngIf="selectedCar.chassisNumber!=null">
       <div class="column test-box">
         <mat-label class="align-end">Alvázszám: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.chassisNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.chassisNumber}}</mat-label>
     </div>
-    <div fxLayout="row" *ngIf="selectedCarObj.licensePlateNumber!=''">
+    <div fxLayout="row" *ngIf="selectedCar.licensePlateNumber!=''">
       <div class="column test-box">
         <mat-label class="align-end">Rendszám: </mat-label>
       </div>
-      <mat-label class="align-from-label">{{selectedCarObj.licensePlateNumber}}</mat-label>
+      <mat-label class="align-from-label">{{selectedCar.licensePlateNumber}}</mat-label>
     </div>
     <h4>Igényelt szolgáltatások:</h4>
     <div fxLayout="row">

@@ -14,8 +14,7 @@ export class DetailsDialogComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<DetailsDialogComponent>,
               private renderer: Renderer2,
-              private dataService: DataService) {
-  }
+              private dataService: DataService) { }
 
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {

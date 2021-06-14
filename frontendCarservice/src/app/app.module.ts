@@ -71,7 +71,6 @@ import { SafeHtmlPipe } from './services/safe-html.pipe';
 import { DynamicViewDialogComponent } from './components/dynamic-view-dialog/dynamic-view-dialog.component';
 import { FallbackIfNoUserComponent } from './components/authorizedUserComponents/fallback-if-no-user/fallback-if-no-user.component';
 import { DetailsDialogComponent } from './components/authorizedUserComponents/profile/services/details-dialog/details-dialog.component';
-import { BadPasswordResetTokenComponent } from './components/global/authorization-authentication/login/passwordReset/bad-password-reset-token/bad-password-reset-token.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +111,6 @@ import { BadPasswordResetTokenComponent } from './components/global/authorizatio
     DynamicViewDialogComponent,
     FallbackIfNoUserComponent,
     DetailsDialogComponent,
-    BadPasswordResetTokenComponent,
   ],
   imports: [
     BrowserModule,
@@ -149,7 +147,7 @@ import { BadPasswordResetTokenComponent } from './components/global/authorizatio
         ]
       },
       {path: '**', redirectTo: 'home'}
-    ], ),
+    ],),
     MatDatepickerModule,
     FlexModule,
     MatSelectModule,

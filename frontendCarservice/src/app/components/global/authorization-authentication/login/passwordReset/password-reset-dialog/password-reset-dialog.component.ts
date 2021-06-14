@@ -19,23 +19,23 @@ export class PasswordResetDialogComponent implements OnInit {
 
   resetPasswordForm: FormGroup;
   errorMessage = '';
-  isResetFailed = false;
+  isResetFailed: boolean = false;
   token: string;
   hide = true;
   CrossFieldErrorMatcher = new MatchingPasswordMatcherDirective();
   isSubmitted: boolean;
   matcher = new ErrorMatcherDirective();
 
-  @ViewChild('hideIt') hideEm: ElementRef;
+  @ViewChild('hideIt') hideEm : ElementRef;
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.close();
+   if(event.key === 'Escape'){
+      this.close()
     }
   }
 
-  submit() {
+  submit(){
     this.hideEm.nativeElement.focus();
   }
 
@@ -56,7 +56,7 @@ export class PasswordResetDialogComponent implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required, Validators.minLength(8), passwordPatternValidator]
       }),
-      matchingPassword: this.fb.control('', {updateOn: 'change', validators: [Validators.required, Validators.minLength(8)]}),
+      matchingPassword: this.fb.control('', {updateOn: 'change',  validators: [Validators.required, Validators.minLength(8)]}),
       hide: this.fb.control('')
     }, {validator: matchingPasswordValidator});
   }
@@ -66,7 +66,7 @@ export class PasswordResetDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submit();
+    this.submit()
     this.isSubmitted = true;
     this.authService.savePassword(this.resetPasswordForm.value, this.token).subscribe(
       data => {
@@ -74,9 +74,10 @@ export class PasswordResetDialogComponent implements OnInit {
         this.dialogService.openSuccessDialog('password-successfully-changed.html');
       },
       err => {
+        this.errorMessage = err.error.errors;
         this.isResetFailed = true;
-        if (this.resetPasswordForm.controls.matchingPassword.value === '') {
-          this.resetPasswordForm.controls.matchingPassword.setErrors({required: true});
+        if (this.resetPasswordForm.controls['matchingPassword'].value == '') {
+          this.resetPasswordForm.controls['matchingPassword'].setErrors({'required': true});
         }
         for (const key of Object.keys(this.resetPasswordForm.controls)) {
           if (this.resetPasswordForm.controls[key].invalid) {

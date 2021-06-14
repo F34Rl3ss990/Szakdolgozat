@@ -1,24 +1,26 @@
 
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢„ª‰
-_
-java:S2583¸"CChange this condition so that it does not always evaluate to "true"(Äï©ıÿÿÿÿ
-K
-java:S1128"5Remove this unused import 'java.text.ParseException'.(ñ®ï•
-A
-java:S1452L"&Remove usage of generic wildcard type.(¦æĞ¤ûÿÿÿÿ
-<
-java:S1452W"&Remove usage of generic wildcard type.(—­è€
-<
-java:S1452e"&Remove usage of generic wildcard type.(£˜€è
-A
-java:S1452v"&Remove usage of generic wildcard type.(Ôö¨ìüÿÿÿÿ
-A
-java:S1452}"&Remove usage of generic wildcard type.( ô–‚úÿÿÿÿ
 B
-java:S1452"&Remove usage of generic wildcard type.(øŒ²Êşÿÿÿÿ
+java:S1452±"&Remove usage of generic wildcard type.(ÒÊÍôüÿÿÿÿ
 =
-java:S1452¢"&Remove usage of generic wildcard type.(ÑæùÄ
+java:S1452 "&Remove usage of generic wildcard type.(ÑæùÄ
 B
-java:S1452³"&Remove usage of generic wildcard type.(ÒÊÍôüÿÿÿÿ
+java:S1452"&Remove usage of generic wildcard type.(øŒ²Êşÿÿÿÿ
+B
+java:S1452•"&Remove usage of generic wildcard type.(¸£¨šùÿÿÿÿ
 ?
-java:S1068$"*Remove this unused "logger" private field.(·ì“g
+java:S1068*"*Remove this unused "logger" private field.(·ì“g
+A
+java:S1452R"&Remove usage of generic wildcard type.(¦æĞ¤ûÿÿÿÿ
+<
+java:S1452h"&Remove usage of generic wildcard type.(£˜€è
+A
+java:S1452|"&Remove usage of generic wildcard type.( ô–‚úÿÿÿÿ
+W
+java:S1075q"ARefactor your code to get this URI from a customizable parameter.(ÊÿÀÃ
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¢„ª‰
+B
+java:S1452Ã"&Remove usage of generic wildcard type.(Î·Š«şÿÿÿÿ
+<
+java:S1452]"&Remove usage of generic wildcard type.(—­è€
+<
+java:S1452p"&Remove usage of generic wildcard type.(šŠÂÛ

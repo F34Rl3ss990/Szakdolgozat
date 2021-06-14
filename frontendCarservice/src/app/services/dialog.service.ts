@@ -7,8 +7,6 @@ import {ExpiredResetPasswordTokenComponent} from '../components/global/authoriza
 import {PasswordResetTokenSenderComponent} from '../components/global/authorization-authentication/login/passwordReset/password-reset-token-sender/password-reset-token-sender.component';
 import {DynamicViewDialogComponent} from '../components/dynamic-view-dialog/dynamic-view-dialog.component';
 import {DetailsDialogComponent} from '../components/authorizedUserComponents/profile/services/details-dialog/details-dialog.component';
-import {Router} from '@angular/router';
-import {BadPasswordResetTokenComponent} from '../components/global/authorization-authentication/login/passwordReset/bad-password-reset-token/bad-password-reset-token.component';
 
 
 @Injectable({
@@ -17,25 +15,18 @@ import {BadPasswordResetTokenComponent} from '../components/global/authorization
 export class DialogService {
 
   isLoggedIn = false;
+  constructor(private dialog: MatDialog) { }
 
-  constructor(private dialog: MatDialog,
-              private router: Router) {
-  }
-
-  openSuccessDialog(viewName: string) {
+  openSuccessDialog(viewName: string){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.data = viewName;
-    const dialogRef = this.dialog.open(DynamicViewDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(result => {
-      this.router.navigate(['home']);
-    });
+    this.dialog.open(DynamicViewDialogComponent, dialogConfig);
   }
 
-
-  openDetailsDialog() {
+  openDetailsDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -51,7 +42,7 @@ export class DialogService {
     this.dialog.open(LoginDialogComponent, dialogConfig);
   }
 
-  openPasswordResetTokenSenderDialog() {
+  openPasswordResetTokenSenderDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.panelClass = 'my-dialog';
@@ -65,14 +56,6 @@ export class DialogService {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'my-dialog';
     this.dialog.open(PasswordResetDialogComponent, dialogConfig);
-  }
-
-  openBadPasswordResetTokenDialog(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.panelClass = 'my-dialog';
-    this.dialog.open(BadPasswordResetTokenComponent, dialogConfig);
   }
 
   openRegistrationDialog() {

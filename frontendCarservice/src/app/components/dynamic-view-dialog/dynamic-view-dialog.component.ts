@@ -12,7 +12,7 @@ import {DataService} from '../../services/data.service';
 export class DynamicViewDialogComponent implements OnInit {
 
 
-  public viewContent: any;
+  public viewContent :any;
 
   constructor(private dialogRef: MatDialogRef<DynamicViewDialogComponent>,
               private renderer: Renderer2,
@@ -21,11 +21,10 @@ export class DynamicViewDialogComponent implements OnInit {
               private dataService: DataService,
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-
   ngOnInit(): void {
-    this.http.get(`../../../../../../assets/view/${this.data}`, {responseType: 'text'}).subscribe(data => {
+    this.http.get(`../../../../../../assets/view/${this.data}`, {responseType: "text"}).subscribe(data=>{
       this.viewContent = data;
-    });
+    })
     this.renderer.listen(document, 'keydown', event => {
       if (event.key === 'Escape') {
         this.close();
@@ -34,7 +33,7 @@ export class DynamicViewDialogComponent implements OnInit {
   }
 
   close() {
-    this.dataService.user = null;
+    this.dataService.user = null
     this.dataService.selectedCar = null;
     this.dataService.serviceReservationForm = null;
     this.dataService.collector = null;
@@ -44,6 +43,7 @@ export class DynamicViewDialogComponent implements OnInit {
     this.dataService.data = null;
     this.dataService.token = null;
     this.dialogRef.close();
+    this.router.navigate['/home'];
   }
 }
 

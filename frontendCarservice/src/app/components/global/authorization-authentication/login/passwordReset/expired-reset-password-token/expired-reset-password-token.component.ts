@@ -15,7 +15,6 @@ export class ExpiredResetPasswordTokenComponent implements OnInit {
               private renderer: Renderer2,
               private dataService: DataService) {
   }
-
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
       if (event.key === 'Escape') {

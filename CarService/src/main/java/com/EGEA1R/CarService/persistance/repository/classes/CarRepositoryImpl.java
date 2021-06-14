@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public class CarRepositoryImpl implements CarRepository {
 
     @Transactional
     @Override
-    public void addCar(Car car, String mileage, Long userId) {
+    public void addCar(Car car) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SAVE_CAR");
         for(int i = 1; i<8; i++) {
              query.registerStoredProcedureParameter(i, String.class, ParameterMode.IN);
@@ -32,8 +31,8 @@ public class CarRepositoryImpl implements CarRepository {
         query.setParameter(5, car.getEngineNumber());
         query.setParameter(6, car.getChassisNumber());
         query.setParameter(7, car.getLicensePlateNumber().toUpperCase());
-        query.setParameter(8, userId);
-        query.setParameter(9, mileage);
+        query.setParameter(8, car.getFkCarUserId());
+        query.setParameter(9, car.getCarMileages().get(0).getMileage());
         query.execute();
     }
 
@@ -71,5 +70,6 @@ public class CarRepositoryImpl implements CarRepository {
             return Optional.empty();
         }
     }
+
 
 }

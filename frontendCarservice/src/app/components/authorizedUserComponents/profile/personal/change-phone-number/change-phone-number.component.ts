@@ -14,7 +14,7 @@ import {DialogService} from '../../../../../services/dialog.service';
 export class ChangePhoneNumberComponent implements OnInit {
 
   changePhoneNumberForm: FormGroup;
-  isSubmitted = false;
+  isSubmitted: boolean = false;
   errorMessage = '';
 
   @ViewChild('hideIt') hideEm: ElementRef;
@@ -35,11 +35,8 @@ export class ChangePhoneNumberComponent implements OnInit {
 
   createForm() {
     this.changePhoneNumberForm = this.fb.group({
-      phoneNumber: this.fb.control('', {
-        updateOn: 'blur',
-        validators: [Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]
-      }),
-    });
+      phoneNumber: this.fb.control('',{updateOn: 'blur', validators: [Validators.minLength(8), Validators.maxLength(14), Validators.pattern('[0-9]+')]}),
+  })
   }
 
 

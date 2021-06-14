@@ -16,16 +16,14 @@ import {ServicesComponent} from './components/authorizedUserComponents/profile/s
 import {FilesComponent} from './components/authorizedUserComponents/profile/files/files.component';
 import {ChangePhoneNumberComponent} from './components/authorizedUserComponents/profile/personal/change-phone-number/change-phone-number.component';
 import {FallbackIfNoUserComponent} from './components/authorizedUserComponents/fallback-if-no-user/fallback-if-no-user.component';
-import {HomeComponent} from './components/global/home/home.component';
-import {VerificationDialogEntryComponent} from './components/global/authorization-authentication/registration/verification-dialog-entry/verification-dialog-entry.component';
-import {PasswordResetDialogEntryComponent} from './components/global/authorization-authentication/login/passwordReset/password-reset-dialog-entry/password-reset-dialog-entry.component';
+import {NavbarComponent} from 'angular-bootstrap-md';
+
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent},
   { path: 'login', component: LoginDialogComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'registrationConfirm/:token', component: VerificationDialogEntryComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: NavbarComponent},
   { path: 'service-reservation', component: ServiceReservationComponent},
   { path: 'service-reservation/verify', component: VerifyServiceReservationComponent},
   { path: 'auth-service-reservation', component: AuthServiceReservationComponent},
@@ -47,8 +45,10 @@ const routes: Routes = [
       {path: 'services/:id', component: ServicesComponent},
       {path: 'files/:id', component: FilesComponent},
       {path: 'files', component: FilesComponent},
+
     ]},
-  { path: 'changePassword/:token', component: PasswordResetDialogEntryComponent}
+  {path: 'changePassword', component: ChangePasswordComponent},
+
 ];
 
 @NgModule({

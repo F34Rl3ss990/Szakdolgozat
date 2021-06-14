@@ -138,6 +138,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         }
     }
 
+    @Async
     @Override
     public void generateOtpNum(String email) {
         int otp = otpService.generateOTP(email);
@@ -167,6 +168,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Transactional
+    @Async
     @Override
     public void createNewCredential(String email, String password, String path) throws UnsupportedEncodingException, MessagingException {
         Credential credential = Credential.builder()
@@ -297,7 +299,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
             int serverOtp = otpService.getOtp(email);
             if (serverOtp > 0) {
                 if (otpNum == serverOtp) {
-                 //   otpService.clearOTP(email);
+                    otpService.clearOTP(email);
                     return true;
                 } else {
                     throw new BadRequestException("Invalid OTP nubmer!");

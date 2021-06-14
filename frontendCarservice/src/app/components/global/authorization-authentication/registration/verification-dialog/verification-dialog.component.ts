@@ -19,7 +19,6 @@ export class VerificationDialogComponent implements OnInit {
               private dataService: DataService,
               private router: Router) {
   }
-
   ngOnInit(): void {
     this.renderer.listen(document, 'keydown', event => {
       if (event.key === 'Escape') {
@@ -34,6 +33,6 @@ export class VerificationDialogComponent implements OnInit {
     this.dataService.liveToken = null;
     this.dataService.expiredVerifyToken = null;
     this.dialogRef.close();
-    this.router.navigate(['home']);
+    this.router.navigate(['home'])
   }
 }
