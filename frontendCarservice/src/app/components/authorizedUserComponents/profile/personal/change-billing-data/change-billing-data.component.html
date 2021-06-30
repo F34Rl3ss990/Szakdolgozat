@@ -6,7 +6,6 @@
     <div class="row">
       <div class="column billing-check-box">
         <mat-checkbox
-          [checked]="billingToCompany"
           (change)="billingToCompany = !billingToCompany;taxNumberRequiredSetter($event)" >Számlázási adatok céghez kapcsolódnak
         </mat-checkbox>
       </div>

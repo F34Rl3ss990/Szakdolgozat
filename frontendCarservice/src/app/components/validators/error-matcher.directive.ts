@@ -7,7 +7,8 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 })
 export class ErrorMatcherDirective implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    let isSubmittedByForm = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmittedByForm) || (control.hasError('required') && control.hasError('pristine')));
+    const isSubmittedByForm = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmittedByForm) ||
+      (control.hasError('required') && control.hasError('pristine')));
   }
 }

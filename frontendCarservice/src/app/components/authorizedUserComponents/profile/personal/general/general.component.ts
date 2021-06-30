@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProfileService} from '../../../../../services/profile.service';
 import {Router} from '@angular/router';
 
@@ -9,18 +9,19 @@ import {Router} from '@angular/router';
 })
 export class GeneralComponent implements OnInit {
 
-  user: any = {}
+  user: any = {};
 
   constructor(private profileService: ProfileService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.profileService.getUserData().subscribe(res => {
-      this.user = res;
+        this.user = res;
       }, error => {
-      this.router.navigate(['setProfile']);
+        this.router.navigate(['setProfile']);
       }
-    )
+    );
   }
 
 }

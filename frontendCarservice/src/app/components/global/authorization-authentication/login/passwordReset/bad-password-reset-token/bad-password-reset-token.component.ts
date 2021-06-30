@@ -3,15 +3,15 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {DataService} from '../../../../../../services/data.service';
 
 @Component({
-  selector: 'app-expired-reset-password-token',
-  templateUrl: './expired-reset-password-token.component.html',
-  styleUrls: ['./expired-reset-password-token.component.css']
+  selector: 'app-bad-password-reset-token',
+  templateUrl: './bad-password-reset-token.component.html',
+  styleUrls: ['./bad-password-reset-token.component.css']
 })
-export class ExpiredResetPasswordTokenComponent implements OnInit {
+export class BadPasswordResetTokenComponent implements OnInit {
 
   isVerified: boolean;
 
-  constructor(private dialogRef: MatDialogRef<ExpiredResetPasswordTokenComponent>,
+  constructor(private dialogRef: MatDialogRef<BadPasswordResetTokenComponent>,
               private renderer: Renderer2,
               private dataService: DataService) {
   }

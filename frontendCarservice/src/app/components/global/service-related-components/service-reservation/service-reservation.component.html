@@ -6,7 +6,7 @@
       <div class="column">
         <h2>1. Gépjármű adatok</h2>
         <mat-form-field appearance="outline">
-          <mat-label>Kérem válasszon gépjármű márkát*</mat-label>
+          <mat-label >Kérem válasszon gépjármű márkát*</mat-label>
           <mat-select [(value)]="selectedBrand" (selectionChange)="typeSetter($event)" formControlName="brand">
             <ng-container *ngFor="let brand of brandSet; let i = index">
               <mat-option value="{{this.brand}}">{{this.brand}}</mat-option>
@@ -37,7 +37,7 @@
         <p></p>
 
         <mat-form-field appearance="outline">
-          <mat-label>Kérem válasszon gyártási évet*</mat-label>
+          <mat-label >Kérem válasszon gyártási évet*</mat-label>
           <mat-select [(value)]="selectedYearOfManufacture" (selectionChange)="engineTypeSetter($event)" formControlName="yearOfManufacture">
             <ng-container *ngFor="let yearOfManufacture of yearOfManufactureSet; let i = index">
               <mat-option value="{{this.yearOfManufacture}}">{{this.yearOfManufacture}}</mat-option>
@@ -53,10 +53,10 @@
         <p></p>
 
         <mat-form-field appearance="outline">
-          <mat-label>Kérem válasszon motor típust*</mat-label>
+          <mat-label >Kérem válasszon motor típust*</mat-label>
           <mat-select [(value)]="selectedEngineType" formControlName="engineType">
             <ng-container *ngFor="let engineType of engineTypeSet; let i = index">
-              <mat-option value="{{this.engineType}}">{{this.engineType}}</mat-option>
+              <mat-option  value="{{this.engineType}}">{{this.engineType}}</mat-option>
             </ng-container>
           </mat-select>
         </mat-form-field>

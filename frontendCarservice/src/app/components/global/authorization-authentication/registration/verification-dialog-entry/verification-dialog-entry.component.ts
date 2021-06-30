@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {VerificationDialogComponent} from '../verification-dialog/verification-dialog.component';
@@ -15,12 +15,12 @@ export class VerificationDialogEntryComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private router: Router,
               private route: ActivatedRoute,
-              private authService:AuthService,
+              private authService: AuthService,
               private dataService: DataService,
-              private dialogService: DialogService){
+              private dialogService: DialogService) {
     this.openDialog();
-
   }
+
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
 
@@ -28,14 +28,16 @@ export class VerificationDialogEntryComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'custom-dialog-container';
 
-    this.route.params.subscribe(params =>{
-      let token = params['token'];
-      this.authService.confirmRegistration(token).subscribe(message =>{
+    this.route.params.subscribe(params => {
+      const token = params['token'];
+      console.log(token)
+      console.log(params)
+      this.authService.confirmRegistration(token).subscribe(message => {
           this.dataService.liveToken = true;
           this.dialog.open(VerificationDialogComponent, dialogConfig);
         },
         err => {
-          if(err.error.message.includes("This account is already verified or banned")){
+          if (err.error.message.includes('This account is already verified or banned')) {
             this.dataService.alreadyVerified = true;
           } else {
             this.dataService.expiredVerifyToken = true;
@@ -46,6 +48,7 @@ export class VerificationDialogEntryComponent implements OnInit {
       );
     });
   }
+
   ngOnInit(): void {
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataService} from '../../../../services/data.service';
 import {FormGroup} from '@angular/forms';
 import {Location} from '@angular/common';
@@ -19,8 +19,9 @@ export class VerifyServiceReservationComponent implements OnInit {
   constructor(private dataService: DataService,
               private location: Location,
               private dialogService: DialogService,
-              private serviceReservation: ServiceReservationService,
-              private tokenStorageService: TokenStorageService) { }
+              private serviceReservation: ServiceReservationService) {
+  }
+
   ngOnInit(): void {
     this.serviceForm = this.dataService.serviceReservationForm;
     this.collector = this.dataService.collector;
@@ -30,13 +31,12 @@ export class VerifyServiceReservationComponent implements OnInit {
     this.location.back();
   }
 
-  verify(){
+  verify() {
+    this.serviceReservation.reserveUnauthorizedService(this.serviceForm.getRawValue(), this.collector).subscribe(data => {
+      this.dialogService.openSuccessDialog('successfully-reserved-service.html');
+    }, error => {
 
-    this.serviceReservation.reserveUnauthorizedService(this.serviceForm.getRawValue(), this.collector).subscribe(data =>{
-        this.dialogService.openSuccessDialog('successfully-reserved-service.html');
-      }, error => {
-
-    })
+    });
   }
 
 }

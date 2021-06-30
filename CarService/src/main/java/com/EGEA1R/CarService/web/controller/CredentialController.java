@@ -45,7 +45,6 @@ public class CredentialController {
 
     private PasswordResetTokenService passwordresetTokenService;
 
-
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;

@@ -1,27 +1,27 @@
-import { Directive } from '@angular/core';
+import {Directive} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn} from '@angular/forms';
 
 export const passwordPatternValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  if (!control.value){
+  if (!control.value) {
     return null;
   }
-  let hasNumber = /\d/.test(control.value);
-  let hasUpper = /[A-Z]/.test(control.value);
-  let hasLower = /[a-z]/.test(control.value);
-  let hasSpecial =/[<>{}\"/|;:.,~!?@#$%^=&()¿§«»ω⊙¤°℃℉€¥£¢¡®©_+\\[\\]+$/.test(control.value);
+  const hasNumber = /\d/.test(control.value);
+  const hasUpper = /[A-Z]/.test(control.value);
+  const hasLower = /[a-z]/.test(control.value);
+  const hasSpecial = /[<>{}\"/|;:.,~!?@#$%^=&()¿§«»ω⊙¤°℃℉€¥£¢¡®©_+\\[\\]+$/.test(control.value);
 
   const valid = hasNumber && hasUpper && hasLower && hasSpecial;
-  return !valid ? { strong: true} : null;
+  return !valid ? {strong: true} : null;
 
 };
 
 @Directive({
   selector: '[appPasswordRegexpValidator]',
-  providers: [{ provide: NG_VALIDATORS, useExisting: PasswordRegexpValidatorDirective, multi: true }]
+  providers: [{provide: NG_VALIDATORS, useExisting: PasswordRegexpValidatorDirective, multi: true}]
 })
-export class PasswordRegexpValidatorDirective implements Validator{
+export class PasswordRegexpValidatorDirective implements Validator {
   validate(control: AbstractControl): ValidationErrors {
-    return  passwordPatternValidator(control);
+    return passwordPatternValidator(control);
   }
 
 }

@@ -161,23 +161,6 @@
           A telefonszám legfeljebb 14 számból állhat!
         </mat-error>
         <p></p>
-        <mat-form-field appearance="outline">
-          <mat-label>Email*</mat-label>
-          <input type="email" matInput formControlName="email" #email
-                 placeholder="Email"
-          >
-        </mat-form-field>
-        <mat-error *ngIf="userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].touched
-                   || userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].dirty
-                   || userAndCarSaverForm.controls['email'].hasError('required') && userAndCarSaverForm.controls['email'].hasError('pristine')
-                   || isSubmitted && userAndCarSaverForm.controls['email'].value==''">
-          Email cím megadása kötelező!
-        </mat-error>
-        <mat-error
-          *ngIf="userAndCarSaverForm.controls['email'].hasError('pattern') && !userAndCarSaverForm.controls['email'].hasError('required')">
-          Érvénytelen e-mail formátum!
-        </mat-error>
-        <p></p>
       </div>
     </div>
     <div class="row">

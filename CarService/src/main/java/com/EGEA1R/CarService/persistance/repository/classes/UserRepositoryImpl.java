@@ -5,12 +5,14 @@ import com.EGEA1R.CarService.persistance.entity.ServiceReservation;
 import com.EGEA1R.CarService.persistance.entity.User;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
+import com.EGEA1R.CarService.web.DTO.payload.UserDataDTO;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +77,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Transactional
     @Override
-    public void modifyUserData(User user) {
+    public void modifyUserData(User user, Long userId) {
         em.createNativeQuery("UPDATE user " +
                 "set billing_name = ?, billing_phone_number = ?," +
                 " billing_zip_code = ?, billing_town = ?, billing_street = ?," +
@@ -87,7 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .setParameter(5, user.getBillingInformation().getBillingStreet())
                 .setParameter(6, user.getBillingInformation().getBillingOtherAddressType())
                 .setParameter(7, user.getBillingInformation().getBillingEmail())
-                .setParameter(8, user.getUserId())
+                .setParameter(8, userId)
                 .executeUpdate();
     }
 
@@ -111,22 +113,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByCarId(Long carId) {
+    public Optional<UserDataDTO> findUserByCarId(Long carId) {
         try {
             StoredProcedureQuery query = em.createStoredProcedureQuery("GET_USER_DETAILS_BY_FK_CAR_ID", "GetUserDetailsByFkCarId");
             query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
             query.setParameter(1, carId);
-            return Optional.of((User) query.getSingleResult());
+            return Optional.of((UserDataDTO) query.getSingleResult());
         }catch (NoResultException n){
             return Optional.empty();
         }
     }
 
     @Override
-    public User getUserByUserId(Long userId) {
-        StoredProcedureQuery query = em.createStoredProcedureQuery("GET_USER_BY_USER_ID", "GetUserByFkId");
+    public User getUserByCarId(Long carId) {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("GET_USER_BY_CAR_ID", "GetUserByFkId");
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
-        query.setParameter(1, userId);
+        query.setParameter(1, carId);
         return (User) query.getSingleResult();
     }
 
@@ -142,7 +144,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Transactional
     @Override
-    public void addCarAndUser(CarAndUserDTO carAndUserDTO, Long credentialId) {
+    public void addCarAndUser(CarAndUserDTO carAndUserDTO, Long credentialId, String email) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("ADD_USER_AND_CAR");
         query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
         query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
@@ -166,7 +168,7 @@ public class UserRepositoryImpl implements UserRepository {
         query.registerStoredProcedureParameter(20, String.class, ParameterMode.IN);
         query.setParameter(1, credentialId);
         query.setParameter(2, carAndUserDTO.getName());
-        query.setParameter(3, carAndUserDTO.getEmail());
+        query.setParameter(3, email);
         query.setParameter(4, carAndUserDTO.getPhoneNumber());
         query.setParameter(5, carAndUserDTO.getBillingName());
         query.setParameter(6, carAndUserDTO.getBillingPhoneNumber());
@@ -182,9 +184,16 @@ public class UserRepositoryImpl implements UserRepository {
         query.setParameter(16, carAndUserDTO.getYearOfManufacture());
         query.setParameter(17, carAndUserDTO.getEngineNumber());
         query.setParameter(18, carAndUserDTO.getChassisNumber());
-        query.setParameter(20, carAndUserDTO.getMileage());
-        query.setParameter(19, carAndUserDTO.getLicensePlateNumber());
+        query.setParameter(19, carAndUserDTO.getMileage());
+        query.setParameter(20, carAndUserDTO.getLicensePlateNumber());
         query.executeUpdate();
+    }
+
+    @Override
+    public Long findUserIdByCredentialId(Long credentialId) {
+        Query query = em.createNativeQuery("SELECT user_id from user where fk_user_credential = ?");
+        query.setParameter(1, credentialId);
+        return ((BigInteger) query.getSingleResult()).longValue();
     }
 
 }
