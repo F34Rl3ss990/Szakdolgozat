@@ -62,7 +62,11 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
 
     private boolean isTokenExpired(PasswordReset passToken) {
         final Calendar cal = Calendar.getInstance();
-        return passToken.getExpiryDate().after(cal.getTime());
+        if (passToken.getExpiryDate().compareTo(cal.getTime())==1){
+            return false;
+        } else{
+            return true;
+        }
     }
 
     @Transactional

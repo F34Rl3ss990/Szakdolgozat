@@ -12,6 +12,7 @@ import com.EGEA1R.CarService.service.interfaces.UserService;
 import com.EGEA1R.CarService.web.DTO.ServiceReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.DTO.UserCarsDTO;
+import com.EGEA1R.CarService.web.DTO.payload.UserDataDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -123,7 +124,7 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
 
     private void sendEmailAfterServiceReservation(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         Car car = carService.getCarById(serviceReservationDTO.getFkServiceReservationCarId());
-        User user = userService.getUserDetailsByCarId(serviceReservationDTO.getFkServiceReservationCarId());
+        UserDataDTO user = userService.getUserDetailsByCarId(serviceReservationDTO.getFkServiceReservationCarId());
         UnauthorizedUserReservationDTO unauthorizedUserReservationDTO = UnauthorizedUserReservationDTO.builder()
                 .name(user.getName())
                 .email(user.getEmail())
@@ -139,6 +140,14 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
                 .reservedDate(serviceReservationDTO.getReservedDate())
                 .reservedServices(serviceReservationDTO.getReservedServices())
                 .comment(serviceReservationDTO.getComment())
+                .billingZipCode(user.getBillingZipCode())
+                .billingTown(user.getBillingTown())
+                .billingOtherAddressType(user.getBillingOtherAddressType())
+                .billingStreet(user.getBillingStreet())
+                .billingName(user.getBillingName())
+                .billingPhoneNumber(user.getBillingPhoneNumber())
+                .billingEmail(user.getBillingEmail())
+                .billingTaxNumber(user.getBillingTaxNumber())
                 .build();
         emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }

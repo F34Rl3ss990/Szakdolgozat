@@ -27,5 +27,5 @@ public class ServiceReservationDTO {
     @NotNull
     private String reservedServices;
 
-    private Long fkCarUserId;
+    private Long carId;
 }

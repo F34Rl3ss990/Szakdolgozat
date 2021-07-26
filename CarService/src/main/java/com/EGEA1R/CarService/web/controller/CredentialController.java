@@ -20,6 +20,7 @@ import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -84,7 +85,7 @@ public class CredentialController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         AuthCredentialDetailsImpl credentialDetails = setAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
         String role = credentialDetails.getAuthorities().toString();
             if(role.equals("[ROLE_ADMIN]") || role.equals("[ROLE_BOSS]")){
@@ -126,7 +127,7 @@ public class CredentialController {
 
         Verification verification = verificationTokenService.getFkAndExpDateByToken(verificationToken);
         String permission = credentialService.getPermissionById(verification.getFkVerificationId());
-        if(!permission.equals("[ROLE_DISABLED]")){
+        if(!permission.equals("ROLE_DISABLED")){
             return ResponseEntity.badRequest().body(new MessageResponse("This account is already verified or banned"));
         }
         Calendar cal = Calendar.getInstance();
@@ -135,6 +136,7 @@ public class CredentialController {
             return ResponseEntity.ok(new MessageResponse("Verification token resent"));
         }
         verificationTokenService.modifyPermissionOnVerifiedUser(verification.getFkVerificationId());
+
         return ResponseEntity.ok(new MessageResponse("Successfully verified"));
     }
 
@@ -150,12 +152,14 @@ public class CredentialController {
     public Boolean validatePasswordResetToken(
                                          @RequestParam("token") String passwordResetToken) throws MessagingException, UnsupportedEncodingException {
         String result = passwordresetTokenService.validatePasswordResetToken(passwordResetToken);
-        if(result==null){
+        if(result == null){
+            return result == null;
+        } else{
             String email = passwordresetTokenService.getCredentialEmailByToken(passwordResetToken);
             Credential credential = credentialService.getByEmail(email);
             passwordresetTokenService.createPasswordResetTokenForCredentialAndSendIt(credential);
+            return false;
         }
-        return result != null;
     }
 
     @PostMapping("/savePassword")

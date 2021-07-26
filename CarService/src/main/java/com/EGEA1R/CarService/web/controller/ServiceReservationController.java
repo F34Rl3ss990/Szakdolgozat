@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
@@ -54,20 +53,19 @@ public class ServiceReservationController {
     @PostMapping("/serviceReservationAuthorizedValidation")
     @PreAuthorize("hasRole('USER')")
     public User authorizedUserReservationValidation(@Valid @RequestBody ServiceReservationDTO serviceReservationDTO) {
-        return userService.getUserByUserId(serviceReservationDTO.getFkCarUserId());
+        return userService.getUserByCarId(serviceReservationDTO.getCarId());
     }
 
     @PostMapping("/serviceReservationUnauthorized")
-    public ResponseEntity<?> unauthorizedUserReservation(@RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> unauthorizedUserReservation(@Valid @RequestBody UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException {
         userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
         return ResponseEntity.ok(new MessageResponse("Successfully reserved!"));
     }
 
     @PostMapping("/reserveService")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> reserveService(@RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
+    public void reserveService(@RequestBody ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
         serviceReservationService.saveService(serviceReservationDTO);
-        return ResponseEntity.ok("Successfully reserved!");
     }
 
     @GetMapping("/getServicesByUser")

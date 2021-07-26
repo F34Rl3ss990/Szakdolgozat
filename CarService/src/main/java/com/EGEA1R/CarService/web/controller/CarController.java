@@ -1,10 +1,13 @@
 package com.EGEA1R.CarService.web.controller;
 
+import com.EGEA1R.CarService.service.authentication.AuthCredentialDetailsImpl;
 import com.EGEA1R.CarService.service.interfaces.CarService;
 import com.EGEA1R.CarService.web.DTO.CarDTO;
+import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,9 +25,9 @@ public class CarController {
 
     @PostMapping("/addCar")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> addCarToUser(@Valid @RequestBody CarDTO carDTO){
-        carService.addCar(carDTO);
-        return ResponseEntity.ok("Car successfully added!");
+    public void addCarToUser(@Valid @RequestBody CarDTO carDTO){
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        carService.addCar(carDTO, credentialDetails.getCredentialId());
     }
 
     @PostMapping("/modifyCar")

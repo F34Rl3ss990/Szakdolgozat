@@ -50,14 +50,16 @@ public class ExcelServiceImpl implements ExcelService {
                             if(currentCell.getCellType() == CellType.STRING) {
                                 excelCarDTO.setType(currentCell.getStringCellValue());
                             } else if (currentCell.getCellType() == CellType.NUMERIC){
-                                excelCarDTO.setType(String.valueOf(currentCell.getNumericCellValue()));
+                                String numericType = String.valueOf(currentCell.getNumericCellValue());
+                                numericType  = numericType.substring(0, numericType.length() - 2);
+                                excelCarDTO.setType(numericType);
                             }
                             break;
                         case 2:
                             if(currentCell.getCellType() == CellType.STRING) {
                                 excelCarDTO.setYearOfManufacture(currentCell.getStringCellValue());
                             } else if (currentCell.getCellType() == CellType.NUMERIC){
-                                excelCarDTO.setYearOfManufacture(String.valueOf(currentCell.getNumericCellValue()));
+                                excelCarDTO.setYearOfManufacture((String.valueOf(currentCell.getNumericCellValue())).substring(0,4));
                             }
                             break;
                         case 3:

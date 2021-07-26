@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.validation.annotation;
 
+import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberCarAndUserDTO;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUnauthorizedUserReservation;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUserAdd;
 import com.EGEA1R.CarService.validation.classes.taxnumber.TaxNumberUserModify;
@@ -15,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {TaxNumberUserAdd.class, TaxNumberUserModify.class, TaxNumberUnauthorizedUserReservation.class})
+@Constraint(validatedBy = {TaxNumberUserAdd.class, TaxNumberUserModify.class, TaxNumberUnauthorizedUserReservation.class, TaxNumberCarAndUserDTO.class})
 @Documented
 public @interface ValidTaxNumber {
     String message() default "Invalid tax number";

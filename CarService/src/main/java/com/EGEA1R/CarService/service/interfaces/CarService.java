@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CarService {
 
-    void addCar(CarDTO carDTO);
+    void addCar(CarDTO carDTO, Long credentialId);
 
     void modifyCar(CarDTO carDTO);
 

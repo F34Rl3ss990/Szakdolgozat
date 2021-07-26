@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -17,7 +19,6 @@ import javax.validation.constraints.Pattern;
 @ValidTaxNumber
 public class ModifyUserDateRequest {
 
-    @NotNull
     private Long userId;
 
     private Boolean billingToCompany;
@@ -30,11 +31,12 @@ public class ModifyUserDateRequest {
     private String billingPhoneNumber;
 
     @NotNull
-    @Pattern(regexp = "^[0-9]{4}$")
+    @Min(1000)
+    @Max(9999)
     private Integer billingZipCode;
 
     @NotNull
-    @Pattern(regexp = "^[a-zA-Z\\s\\-]+$")
+    @ValidAccentAndWhitespace
     private String billingTown;
 
     @NotNull

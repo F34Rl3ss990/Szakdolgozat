@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.validation.annotation;
 
 import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateCarAdd;
+import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateCarAndUserDTO;
 import com.EGEA1R.CarService.validation.classes.licenseplate.LicensePlateUnauthorizedUserService;
 
 import javax.validation.Constraint;
@@ -14,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = {LicensePlateCarAdd.class, LicensePlateUnauthorizedUserService.class})
+@Constraint(validatedBy = {LicensePlateCarAdd.class, LicensePlateUnauthorizedUserService.class, LicensePlateCarAndUserDTO.class})
 @Documented
 public @interface ValidLicensePlateNumber {
     String message() default "Invalid license plate number";

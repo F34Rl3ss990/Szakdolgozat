@@ -7,6 +7,7 @@ import com.EGEA1R.CarService.validation.annotation.ValidPhoneNumber;
 import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
 import com.EGEA1R.CarService.web.DTO.UnauthorizedUserReservationDTO;
 import com.EGEA1R.CarService.web.DTO.payload.request.ModifyUserDateRequest;
+import com.EGEA1R.CarService.web.DTO.payload.request.PhoneNumber;
 import com.EGEA1R.CarService.web.DTO.payload.response.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +42,16 @@ public class UserController {
     @PostMapping("/changeBillingData")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> modifyBillingData(@Valid @RequestBody ModifyUserDateRequest modifyUserDateRequest){
-        userService.modifyUser(modifyUserDateRequest);
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userService.modifyUser(modifyUserDateRequest, credentialDetails.getCredentialId());
         return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));
     }
 
     @PostMapping("/changePhoneNumber")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> modifyUserPhoneNumber(@ValidPhoneNumber @RequestParam String phoneNumber, @RequestParam Long userId ){
-        userService.modifyPhoneNumber(phoneNumber, userId);
+    public ResponseEntity<?> modifyUserPhoneNumber(@ValidPhoneNumber @RequestBody PhoneNumber phoneNumber){
+        AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userService.modifyPhoneNumber(phoneNumber.getPhoneNumber(), credentialDetails.getCredentialId());
         return ResponseEntity.ok(new MessageResponse("User data changed successfully!"));
     }
 

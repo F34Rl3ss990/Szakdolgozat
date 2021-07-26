@@ -1,5 +1,6 @@
 package com.EGEA1R.CarService.service.classes;
 
+import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
 import com.EGEA1R.CarService.web.exception.BadRequestException;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.Car;
@@ -22,6 +23,8 @@ public class CarServiceImpl implements CarService {
 
     private ModelMapper modelMapper;
 
+    private UserRepository userRepository;
+
     @Autowired
     public void setCarRepository(CarRepository carRepository){
         this.carRepository = carRepository;
@@ -32,20 +35,22 @@ public class CarServiceImpl implements CarService {
         this.modelMapper = modelMapper;
     }
 
+    @Autowired
+    public void setUserRepository(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
+
     @Override
-    public void addCar(CarDTO carDTO){
+    public void addCar(CarDTO carDTO, Long credentialId){
         mileageSetter(carDTO);
-        if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))){
-            carRepository.addCar(mapCarDTOtoCar(carDTO));
-        }
+        Long userId = userRepository.findUserIdByCredentialId(credentialId);
+        carRepository.addCar(mapCarDTOtoCar(carDTO), carDTO.getMileage(), userId);
     }
 
     @Override
     public void modifyCar(CarDTO carDTO){
         mileageSetter(carDTO);
-        if(Boolean.TRUE.equals(checkLicensePlate(carDTO.getForeignCountryPlate(), carDTO.getLicensePlateNumber()))) {
-            carRepository.modifyCarById(mapCarDTOtoCar(carDTO));
-        }
+        carRepository.modifyCarById(mapCarDTOtoCar(carDTO));
     }
 
     @Override
@@ -65,7 +70,7 @@ public class CarServiceImpl implements CarService {
             carDTO.setMileage(mileageNum);
         }
     }
-
+/*
     public static Boolean checkLicensePlate(Boolean foreignPlate, String licensePlate){
         if(!foreignPlate && (Pattern.matches("^[a-zA-Z]{3}[-][0-9]{3}$", licensePlate)) ||
                 Pattern.matches("^[a-zA-Z]{2}[-][0-9]{2}[-][0-9]{2}$", licensePlate)||
@@ -77,7 +82,7 @@ public class CarServiceImpl implements CarService {
         } else{
             throw new BadRequestException(String.format("LicensePlate is incorrect: %s", licensePlate));
         }
-    }
+    }*/
 
     private Car mapCarDTOtoCar(CarDTO carDTO){
         Car car = modelMapper.map(carDTO, Car.class);

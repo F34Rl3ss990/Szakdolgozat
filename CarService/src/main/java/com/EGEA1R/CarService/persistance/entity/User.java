@@ -18,14 +18,14 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @SqlResultSetMapping(
-        name="GetUserByFkId",
+        name = "GetUserByFkId",
         entities = {
                 @EntityResult(entityClass = com.EGEA1R.CarService.persistance.entity.User.class)
-                        }
+        }
 )
 
 @SqlResultSetMapping(
-        name="GetUserByPermission",
+        name = "GetUserByPermission",
         classes = {
                 @ConstructorResult(
                         targetClass = com.EGEA1R.CarService.persistance.entity.User.class,
@@ -42,11 +42,19 @@ import java.util.List;
         name = "GetUserDetailsByFkCarId",
         classes = {
                 @ConstructorResult(
-                        targetClass = com.EGEA1R.CarService.persistance.entity.User.class,
+                        targetClass = com.EGEA1R.CarService.web.DTO.payload.UserDataDTO.class,
                         columns = {
                                 @ColumnResult(name = "name", type = String.class),
                                 @ColumnResult(name = "e_mail", type = String.class),
-                                @ColumnResult(name = "phone_number", type = String.class)
+                                @ColumnResult(name = "phone_number", type = String.class),
+                                @ColumnResult(name = "billing_name", type = String.class),
+                                @ColumnResult(name = "billing_email", type = String.class),
+                                @ColumnResult(name = "billing_phone_number", type = String.class),
+                                @ColumnResult(name = "billing_zip_code", type = Integer.class),
+                                @ColumnResult(name = "billing_town", type = String.class),
+                                @ColumnResult(name = "billing_street", type = String.class),
+                                @ColumnResult(name = "billing_other_address_type", type = String.class),
+                                @ColumnResult(name = "billing_tax_number", type = String.class)
                         }
                 )
         }
@@ -95,27 +103,30 @@ public class User {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride( name = "billingName", column =  @Column(name = "billing_name")),
-            @AttributeOverride( name = "billingPhoneNumber", column = @Column(name = "billing_phone_number")),
-            @AttributeOverride( name = "billingZipCode", column = @Column(name = "billing_zip_code")),
-            @AttributeOverride( name = "billingTown", column = @Column(name = "billing_town")),
-            @AttributeOverride( name = "billingStreet", column = @Column(name = "billing_street")),
-            @AttributeOverride( name = "billingOtherAddressType", column = @Column(name = "billing_other_address_type")),
-            @AttributeOverride( name = "billingTaxNumber", column = @Column(name = "billing_tax_number")),
-            @AttributeOverride( name = "billingEmail", column = @Column(name = "billing_email"))
+            @AttributeOverride(name = "billingName", column = @Column(name = "billing_name")),
+            @AttributeOverride(name = "billingPhoneNumber", column = @Column(name = "billing_phone_number")),
+            @AttributeOverride(name = "billingZipCode", column = @Column(name = "billing_zip_code")),
+            @AttributeOverride(name = "billingTown", column = @Column(name = "billing_town")),
+            @AttributeOverride(name = "billingStreet", column = @Column(name = "billing_street")),
+            @AttributeOverride(name = "billingOtherAddressType", column = @Column(name = "billing_other_address_type")),
+            @AttributeOverride(name = "billingTaxNumber", column = @Column(name = "billing_tax_number")),
+            @AttributeOverride(name = "billingEmail", column = @Column(name = "billing_email"))
     })
     private BillingInformation billingInformation;
 
-    public User(Long userId, String name, String email, String phoneNumber){
+    public User(Long userId, String name, String email, String phoneNumber) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public User(String name, String email, String phoneNumber){
+    public User(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
 }
+
+

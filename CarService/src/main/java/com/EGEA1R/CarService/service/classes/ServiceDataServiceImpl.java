@@ -79,49 +79,5 @@ public class ServiceDataServiceImpl implements ServiceDataService {
     public List<ServiceDataDTO> getServiceDataListByCar(Long carId, Long credentialId) {
         return serviceDataRepository.getAllServiceByCar(carId, credentialId);
     }
-/*
-    @Override
-    public List<ServiceByUserResponse> getServiceDataListByUser(Long credentialId) {
-        List<ServiceDataDTO> listFromDb = serviceDataRepository.getAllServiceByUser(credentialId);
-        List<ServiceDataDTO> populateList = new ArrayList<>();
-        List<ServiceByUserResponse> response = new ArrayList<>();
-        Long id = null;
-        ServiceByUserResponse serviceByUserResponse = new ServiceByUserResponse();
-        int i = 1;
-        for (ServiceDataDTO serviceDataDTO : listFromDb) {
-            ServiceDataDTO dataForList = new ServiceDataDTO();
-            if (id == null) {
-                serviceByUserResponse.setBrand(serviceDataDTO.getBrand());
-                serviceByUserResponse.setType(serviceDataDTO.getType());
-                serviceByUserResponse.setLicensePlateNumber(serviceDataDTO.getLicensePlateNumber());
-                serviceByUserResponse.setCarId(serviceDataDTO.getFkCarId());
-                id = serviceDataDTO.getFkCarId();
-            }
-            if (id != serviceDataDTO.getFkCarId()) {
-                serviceByUserResponse.setServiceList(populateList);
-                response.add(serviceByUserResponse);
-                populateList.clear();
-                serviceByUserResponse.setBrand(serviceDataDTO.getBrand());
-                serviceByUserResponse.setType(serviceDataDTO.getType());
-                serviceByUserResponse.setLicensePlateNumber(serviceDataDTO.getLicensePlateNumber());
-                serviceByUserResponse.setCarId(serviceDataDTO.getFkCarId());
-            }
-            id = serviceDataDTO.getFkCarId();
-            dataForList.setDate(serviceDataDTO.getDate());
-            dataForList.setAmount(serviceDataDTO.getAmount());
-            dataForList.setBillNum(serviceDataDTO.getBillNum());
-            dataForList.setServicesDone(serviceDataDTO.getServicesDone());
-            dataForList.setComment(serviceDataDTO.getComment());
-            dataForList.setMileage(serviceDataDTO.getMileage());
-            populateList.add(dataForList);
-            if (listFromDb.size() == i) {
-                serviceByUserResponse.setServiceList(populateList);
-                response.add(serviceByUserResponse);
-            }
-            i++;
-        }
-        return response;
-    }
 
- */
 }

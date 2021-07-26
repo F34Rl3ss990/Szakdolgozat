@@ -1,6 +1,7 @@
 package com.EGEA1R.CarService.service.classes;
 
 import com.EGEA1R.CarService.web.DTO.CarAndUserDTO;
+import com.EGEA1R.CarService.web.DTO.payload.UserDataDTO;
 import com.EGEA1R.CarService.web.exception.ResourceNotFoundException;
 import com.EGEA1R.CarService.persistance.entity.*;
 import com.EGEA1R.CarService.persistance.repository.interfaces.UserRepository;
@@ -71,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyUser(ModifyUserDateRequest modifyUserDateRequest){
-            userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest));
+    public void modifyUser(ModifyUserDateRequest modifyUserDateRequest, Long credentialId){
+            userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest), userRepository.findUserIdByCredentialId(credentialId));
     }
 
     @Override
@@ -83,25 +84,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserDetailsByCarId(Long carId){
+    public UserDataDTO getUserDetailsByCarId(Long carId){
         return userRepository
                 .findUserByCarId(carId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("User with this id not found: %s", Long.toString(carId))));
     }
 
     @Override
-    public User getUserByUserId(Long userId) {
-        return userRepository.getUserByUserId(userId);
+    public User getUserByCarId(Long carId) {
+        return userRepository.getUserByCarId(carId);
     }
 
     @Override
-    public void modifyPhoneNumber(String phoneNumber, Long userId) {
-        userRepository.modifyPhoneNumber(phoneNumber, userId);
+    public void modifyPhoneNumber(String phoneNumber, Long credentialId) {
+        userRepository.modifyPhoneNumber(phoneNumber, userRepository.findUserIdByCredentialId(credentialId));
     }
 
     @Override
     public void addCarAndUser(CarAndUserDTO carAndUserDTO, Long credentialId) {
-        userRepository.addCarAndUser(carAndUserDTO, credentialId);
+         User user = userRepository.findUserByCredentialId(credentialId).
+                  orElseThrow(() -> new ResourceNotFoundException(String.format("User with this credentialId not found: %s", Long.toString(credentialId))));;
+        userRepository.addCarAndUser(carAndUserDTO, credentialId, user.getEmail());
     }
 
     @Override
