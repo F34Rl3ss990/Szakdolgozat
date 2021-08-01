@@ -1,0 +1,44 @@
+package com.car_service.egea1r.persistance.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "part")
+public class Part {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "part_id", insertable = false, updatable = false)
+    private Long partId;
+
+    @NotNull
+    @Column(name = "name")
+    private String name;
+
+    @NotNull
+    @PositiveOrZero
+    @Pattern(regexp = "^[0-9]+$")
+    @Column(name = "amount")
+    private Integer amount;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_part_car")
+    private Car car;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_part_item")
+    private Item item;
+
+}
