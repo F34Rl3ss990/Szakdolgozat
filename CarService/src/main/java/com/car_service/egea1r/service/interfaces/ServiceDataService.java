@@ -7,12 +7,13 @@ import org.apache.commons.fileupload.FileUploadException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public interface ServiceDataService {
 
     void saveDataAndFinance(HttpServletRequest request) throws IOException, FileUploadException;
 
-    List<ServiceByUserResponse> getServiceDataListByUser(long credentialId);
+    Set<ServiceByUserResponse> getServiceDataListByUser(long credentialId);
 
     List<ServiceDataDTO> getServiceDataListByCar(long carId, long credentialId);
 }

@@ -1,18 +1,18 @@
 package com.car_service.egea1r.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -58,6 +58,7 @@ public class Verification {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "fk_verification_credential_id")
+    @ToString.Exclude
     private Credential credential;
 
     @Column(name = "fk_verification_credential_id", insertable = false, updatable = false)
@@ -70,5 +71,19 @@ public class Verification {
 
     public Verification(Long verificationId){
         this.verificationId = verificationId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Verification that = (Verification) o;
+
+        return Objects.equals(verificationId, that.verificationId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 1780544339;
     }
 }

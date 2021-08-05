@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
         foreignTaxNumber = "billingEuTax",
         taxNumber = "billingTaxNumber"
 )
-public class ModifyUserDateRequest {
+public class ModifyUserDataRequest {
 
     private Long userId;
 

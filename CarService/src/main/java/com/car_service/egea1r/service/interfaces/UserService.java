@@ -3,7 +3,7 @@ package com.car_service.egea1r.service.interfaces;
 import com.car_service.egea1r.persistance.entity.User;
 import com.car_service.egea1r.web.data.DTO.CarAndUserDTO;
 import com.car_service.egea1r.web.data.DTO.UserDataDTO;
-import com.car_service.egea1r.web.data.payload.request.ModifyUserDateRequest;
+import com.car_service.egea1r.web.data.payload.request.ModifyUserDataRequest;
 import com.car_service.egea1r.web.data.DTO.UnauthorizedUserReservationDTO;
 import org.springframework.beans.support.PagedListHolder;
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     void saveUnauthorizedUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) throws MessagingException, UnsupportedEncodingException;
 
-    void modifyUser(ModifyUserDateRequest modifyUserDateRequest, long credentialId);
+    void modifyUser(ModifyUserDataRequest modifyUserDataRequest, long credentialId);
 
     User getUserDetailsByCredentialId(long credentialId);
 

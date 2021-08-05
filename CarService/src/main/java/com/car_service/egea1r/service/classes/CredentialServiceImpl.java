@@ -126,6 +126,8 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Credential not found by token: %s", passwordResetToken)));
     }
 
+
+    //email service thrown exceptions
     @Transactional
     @Override
     public String createNewCredential(String email, String password, String path) throws UnsupportedEncodingException, MessagingException {
@@ -206,13 +208,13 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
                 .findByEmailForMFA(email)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("username %s", email)));
         String mfaType = credential.getMfa();
-        Boolean verify = false;
+        boolean verify = false;
         if (mfaType.equals("phone")) {
             verify = phoneVerify(code, credential);
         } else if (mfaType.equals("email")) {
             verify = emailVerify(code, email);
         }
-        if (Boolean.TRUE.equals(verify)) {
+        if (verify) {
             return credential;
         } else {
             throw new BadRequestException("Authentication was not successful");

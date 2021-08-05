@@ -5,7 +5,7 @@ import com.car_service.egea1r.service.authentication.AuthCredentialDetailsImpl;
 import com.car_service.egea1r.service.interfaces.UserService;
 import com.car_service.egea1r.validation.annotation.ValidPhoneNumber;
 import com.car_service.egea1r.web.data.DTO.CarAndUserDTO;
-import com.car_service.egea1r.web.data.payload.request.ModifyUserDateRequest;
+import com.car_service.egea1r.web.data.payload.request.ModifyUserDataRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
@@ -37,9 +37,9 @@ public class UserController {
 
     @PostMapping("/changeBillingData")
     @PreAuthorize("hasRole('USER')")
-    public String modifyBillingData(@Valid @RequestBody ModifyUserDateRequest modifyUserDateRequest){
+    public String modifyBillingData(@Valid @RequestBody ModifyUserDataRequest modifyUserDataRequest){
         AuthCredentialDetailsImpl credentialDetails = (AuthCredentialDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.modifyUser(modifyUserDateRequest, credentialDetails.getCredentialId());
+        userService.modifyUser(modifyUserDataRequest, credentialDetails.getCredentialId());
         return USER_DATA_CHANGE;
     }
 

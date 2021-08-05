@@ -5,7 +5,6 @@ import com.car_service.egea1r.validation.annotation.ValidPassword;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Builder

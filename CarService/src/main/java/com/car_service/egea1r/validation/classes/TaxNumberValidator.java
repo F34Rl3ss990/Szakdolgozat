@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
-public class TaxNumberValidator implements ConstraintValidator<ValidTaxNumber, T> {
+public class TaxNumberValidator implements ConstraintValidator<ValidTaxNumber, Object> {
 
     private final String regexp = "^[0-9]{8}[-][0-9][-][0-9]{2}$";
     private String taxNumber;
@@ -24,7 +24,7 @@ public class TaxNumberValidator implements ConstraintValidator<ValidTaxNumber, T
     }
 
     @Override
-    public boolean isValid(final T object, final ConstraintValidatorContext context) {
+    public boolean isValid(final Object object, final ConstraintValidatorContext context) {
         String taxValue = (String) new BeanWrapperImpl(object).getPropertyValue(taxNumber);
         boolean booleanValue = Boolean.parseBoolean((new BeanWrapperImpl(object).getPropertyValue(String.valueOf(foreignTaxNumber))).toString());
         boolean companyTaxValue = Boolean.parseBoolean((new BeanWrapperImpl(object).getPropertyValue(String.valueOf(billingToCompany))).toString());

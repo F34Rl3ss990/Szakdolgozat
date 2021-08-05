@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/serviceData")
@@ -34,7 +35,7 @@ public class ServiceDataController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/serviceDataByUser")
-    public List<ServiceByUserResponse> getServiceDataByUser(@RequestParam Long credentialId){
+    public Set<ServiceByUserResponse> getServiceDataByUser(@RequestParam Long credentialId){
        return serviceDataService.getServiceDataListByUser(credentialId);
     }
 

@@ -1,15 +1,18 @@
 package com.car_service.egea1r.persistance.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -34,4 +37,18 @@ public class Stock {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_stock_item")
     private Item item;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Stock stock = (Stock) o;
+
+        return Objects.equals(stockId, stock.stockId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 1136165790;
+    }
 }

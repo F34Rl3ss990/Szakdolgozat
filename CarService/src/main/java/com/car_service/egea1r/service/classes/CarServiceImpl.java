@@ -1,7 +1,8 @@
 package com.car_service.egea1r.service.classes;
 
 import com.car_service.egea1r.persistance.repository.interfaces.UserRepository;
-import com.car_service.egea1r.web.data.mapper.MapStructMap;
+import com.car_service.egea1r.web.data.mapper.MapStructObjectMapper;
+import com.car_service.egea1r.web.data.mapper.MapStructObjectMapperImpl;
 import com.car_service.egea1r.web.exception.ResourceNotFoundException;
 import com.car_service.egea1r.persistance.entity.Car;
 import com.car_service.egea1r.persistance.entity.CarMileage;
@@ -19,13 +20,13 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final UserRepository userRepository;
-    private final MapStructMap carMapper;
+    private final MapStructObjectMapper mapStructObjectMapper;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, UserRepository userRepository, MapStructMap carMapper) {
+    public CarServiceImpl(CarRepository carRepository, UserRepository userRepository, MapStructObjectMapper mapStructObjectMapper) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
-        this.carMapper = carMapper;
+        this.mapStructObjectMapper = mapStructObjectMapper;
     }
 
     @Override
@@ -59,8 +60,8 @@ public class CarServiceImpl implements CarService {
     }
 
     private Car mapCarDTOtoCar(CarDTO carDTO){
-        Car car = carMapper.carDTOToCar(carDTO);
-        List<CarMileage> carMileages = Collections.singletonList(carMapper.carDTOToCarMileage(carDTO));
+        Car car = mapStructObjectMapper.carDTOtoCar(carDTO);
+        List<CarMileage> carMileages = Collections.singletonList(mapStructObjectMapper.carDTOtoCarMileage(carDTO));
         car.setCarMileages(carMileages);
         return car;
     }

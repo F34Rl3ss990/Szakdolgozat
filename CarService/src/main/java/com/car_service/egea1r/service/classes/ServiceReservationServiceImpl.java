@@ -12,8 +12,7 @@ import com.car_service.egea1r.web.data.DTO.ServiceReservationDTO;
 import com.car_service.egea1r.web.data.DTO.UnauthorizedUserReservationDTO;
 import com.car_service.egea1r.web.data.DTO.UserCarsDTO;
 import com.car_service.egea1r.web.data.DTO.UserDataDTO;
-import com.car_service.egea1r.web.data.mapper.MapStructMap;
-import org.modelmapper.ModelMapper;
+import com.car_service.egea1r.web.data.mapper.MapStructObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
@@ -35,15 +34,15 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
     private final CarService carService;
     private final UserService userService;
     private final EmailService emailService;
-    private final MapStructMap mapStructMap;
+    private final MapStructObjectMapper mapStructObjectMapper;
 
     @Autowired
-    public ServiceReservationServiceImpl(ServiceReservationRepository serviceReservationRepository, CarService carService, UserService userService, EmailService emailService, MapStructMap mapStructMap) {
+    public ServiceReservationServiceImpl(ServiceReservationRepository serviceReservationRepository, CarService carService, UserService userService, EmailService emailService, MapStructObjectMapper mapStructObjectMapper) {
         this.serviceReservationRepository = serviceReservationRepository;
         this.carService = carService;
         this.userService = userService;
         this.emailService = emailService;
-        this.mapStructMap = mapStructMap;
+        this.mapStructObjectMapper = mapStructObjectMapper;
     }
 
     @Transactional
@@ -92,14 +91,14 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
     }
 
     private UserCarsDTO mapDTOtoUserCarsDTO(Car car, Date date, String maxMileage){
-        UserCarsDTO userCarsDTO = mapStructMap.carToUserCarsDTO(car);
+        UserCarsDTO userCarsDTO = mapStructObjectMapper.carToUserCarsDTO(car);
         userCarsDTO.setMileage(maxMileage);
         userCarsDTO.setDateOfSet(date);
         return userCarsDTO;
     }
 
     private ServiceReservation mapDTOtoServiceReservation(ServiceReservationDTO serviceReservationDTO){
-        return mapStructMap.serviceReservationDTOtoServiceReservation(serviceReservationDTO);
+        return mapStructObjectMapper.serviceReservationDTOtoServiceReservation(serviceReservationDTO);
     }
 
     private void sendEmailAfterServiceReservation(ServiceReservationDTO serviceReservationDTO) throws MessagingException, UnsupportedEncodingException {
@@ -131,5 +130,4 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
                 .build();
         emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }
-
 }

@@ -6,14 +6,19 @@ import com.car_service.egea1r.validation.annotation.ValidPhoneNumber;
 import com.car_service.egea1r.web.data.DTO.UserDataDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -99,19 +104,18 @@ public class User {
             fetch = FetchType.LAZY,
             orphanRemoval = true
     )
+    @ToString.Exclude
     private List<Car> car = new ArrayList<>();
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "billingName", column = @Column(name = "billing_name")),
-            @AttributeOverride(name = "billingPhoneNumber", column = @Column(name = "billing_phone_number")),
-            @AttributeOverride(name = "billingZipCode", column = @Column(name = "billing_zip_code")),
-            @AttributeOverride(name = "billingTown", column = @Column(name = "billing_town")),
-            @AttributeOverride(name = "billingStreet", column = @Column(name = "billing_street")),
-            @AttributeOverride(name = "billingOtherAddressType", column = @Column(name = "billing_other_address_type")),
-            @AttributeOverride(name = "billingTaxNumber", column = @Column(name = "billing_tax_number")),
-            @AttributeOverride(name = "billingEmail", column = @Column(name = "billing_email"))
-    })
+    @AttributeOverride(name = "billingName", column = @Column(name = "billing_name"))
+    @AttributeOverride(name = "billingPhoneNumber", column = @Column(name = "billing_phone_number"))
+    @AttributeOverride(name = "billingZipCode", column = @Column(name = "billing_zip_code"))
+    @AttributeOverride(name = "billingTown", column = @Column(name = "billing_town"))
+    @AttributeOverride(name = "billingStreet", column = @Column(name = "billing_street"))
+    @AttributeOverride(name = "billingOtherAddressType", column = @Column(name = "billing_other_address_type"))
+    @AttributeOverride(name = "billingTaxNumber", column = @Column(name = "billing_tax_number"))
+    @AttributeOverride(name = "billingEmail", column = @Column(name = "billing_email"))
     private BillingInformation billingInformation;
 
     public User(Long userId, String name, String email, String phoneNumber) {
@@ -127,6 +131,19 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 562048007;
+    }
 }
 
 

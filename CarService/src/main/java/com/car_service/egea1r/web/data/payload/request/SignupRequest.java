@@ -3,8 +3,7 @@ package com.car_service.egea1r.web.data.payload.request;
 import com.car_service.egea1r.validation.annotation.FieldsValueMatch;
 import com.car_service.egea1r.validation.annotation.ValidEmail;
 import com.car_service.egea1r.validation.annotation.ValidPassword;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,6 +13,7 @@ import javax.validation.constraints.NotBlank;
         field = "password",
         fieldMatch = "matchingPassword"
 )
+@AllArgsConstructor
 public class SignupRequest {
 
     @NotBlank(message = "Email is required")
@@ -26,4 +26,5 @@ public class SignupRequest {
 
     @NotBlank
     private String matchingPassword;
+
 }

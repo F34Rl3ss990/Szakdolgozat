@@ -7,7 +7,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValueMatch, T> {
+public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValueMatch, Object> {
 
     private String field;
     private String fieldMatch;
@@ -19,7 +19,7 @@ public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValu
     }
 
     @Override
-    public boolean isValid(final T object, final ConstraintValidatorContext context) {
+    public boolean isValid(final Object object, final ConstraintValidatorContext context) {
         Object fieldValue = new BeanWrapperImpl(object).getPropertyValue(field);
         Object fieldMatchValue = new BeanWrapperImpl(object).getPropertyValue(fieldMatch);
 

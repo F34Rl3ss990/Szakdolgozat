@@ -23,7 +23,7 @@ public class JwtUtilsImpl implements JwtUtils, JwtUtilId{
     private JwtTokenCheckService jwtTokenCheckService;
 
     @Autowired
-    public void setJwtTokenCheckService(JwtTokenCheckService jwtTokenCheckService){
+    public void setJwtUtilsImpl(JwtTokenCheckService jwtTokenCheckService) {
         this.jwtTokenCheckService = jwtTokenCheckService;
     }
 

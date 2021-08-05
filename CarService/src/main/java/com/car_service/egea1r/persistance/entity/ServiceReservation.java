@@ -2,17 +2,20 @@ package com.car_service.egea1r.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -77,6 +80,7 @@ public class ServiceReservation {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_service_reservation_car")
+    @ToString.Exclude
     private Car car;
 
     public ServiceReservation(Date reservedDate, String brand, String type){
@@ -85,5 +89,19 @@ public class ServiceReservation {
                 .brand(brand)
                 .type(type)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ServiceReservation that = (ServiceReservation) o;
+
+        return Objects.equals(serviceId, that.serviceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 53815791;
     }
 }

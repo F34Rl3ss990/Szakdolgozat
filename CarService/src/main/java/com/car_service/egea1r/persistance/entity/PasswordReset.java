@@ -1,18 +1,18 @@
 package com.car_service.egea1r.persistance.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Date;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -52,4 +52,17 @@ public class PasswordReset {
         this.expiryDate = expiryDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        PasswordReset that = (PasswordReset) o;
+
+        return Objects.equals(passwordResetId, that.passwordResetId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 627565262;
+    }
 }

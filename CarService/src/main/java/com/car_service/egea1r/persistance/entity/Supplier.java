@@ -3,12 +3,17 @@ package com.car_service.egea1r.persistance.entity;
 import com.car_service.egea1r.validation.annotation.ValidEmail;
 import com.car_service.egea1r.validation.annotation.ValidPhoneNumber;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -45,4 +50,18 @@ public class Supplier {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_supplier_order")
     private Order order;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Supplier supplier = (Supplier) o;
+
+        return Objects.equals(supplierId, supplier.supplierId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 554628605;
+    }
 }

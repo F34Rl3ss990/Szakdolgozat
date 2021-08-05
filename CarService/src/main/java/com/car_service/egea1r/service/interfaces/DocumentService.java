@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public interface DocumentService {
 
@@ -16,11 +17,11 @@ public interface DocumentService {
 
     FileSystemResource findDocument(long documentId);
 
-    List<FileAndCarResponse> getAllFilesByUser(long credentialId);
+    Set<FileAndCarResponse> getAllFilesByUser(long credentialId);
 
-    List<FileAndCarResponse> getAllFilesByCar(long carId, long credentialId);
+    Set<FileAndCarResponse> getAllFilesByCar(long carId, long credentialId);
 
-    byte[] zippingFiles(List<Long> id, HttpServletResponse response) throws IOException;
+    void zippingFiles(List<Long> id, HttpServletResponse response) throws IOException;
 
     String storeServiceBigFiles(HttpServletRequest request);
 

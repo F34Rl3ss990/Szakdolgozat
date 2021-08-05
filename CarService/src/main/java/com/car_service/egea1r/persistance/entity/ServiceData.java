@@ -3,16 +3,17 @@ package com.car_service.egea1r.persistance.entity;
 
 import com.car_service.egea1r.web.data.DTO.ServiceDataDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -84,4 +85,18 @@ public class ServiceData {
     @JsonIgnore
     @JoinColumn(name = "fk_service_data_finance")
     private Finance finance;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ServiceData that = (ServiceData) o;
+
+        return Objects.equals(serviceDataId, that.serviceDataId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 176467681;
+    }
 }

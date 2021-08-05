@@ -3,6 +3,7 @@ package com.car_service.egea1r.web.data.payload.request;
 import com.car_service.egea1r.validation.annotation.FieldsValueMatch;
 import com.car_service.egea1r.validation.annotation.ValidEmail;
 import com.car_service.egea1r.validation.annotation.ValidPassword;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
         field = "password",
         fieldMatch = "matchingPassword"
 )
+@AllArgsConstructor
 public class AddAdminRequest {
 
     @NotBlank

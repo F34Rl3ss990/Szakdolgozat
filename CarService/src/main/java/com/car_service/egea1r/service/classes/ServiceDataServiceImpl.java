@@ -3,6 +3,7 @@ package com.car_service.egea1r.service.classes;
 import com.car_service.egea1r.service.interfaces.DocumentService;
 import com.car_service.egea1r.service.interfaces.ServiceDataService;
 import com.car_service.egea1r.web.data.DTO.ServiceDataDTO;
+import com.car_service.egea1r.web.data.mapper.MapStructObjectMapper;
 import com.car_service.egea1r.web.data.payload.response.ServiceByUserResponse;
 import com.car_service.egea1r.persistance.repository.interfaces.ServiceDataRepository;
 import org.apache.commons.fileupload.FileUploadException;
@@ -23,11 +24,13 @@ public class ServiceDataServiceImpl implements ServiceDataService {
 
     private final ServiceDataRepository serviceDataRepository;
     private final DocumentService documentService;
+    private final MapStructObjectMapper mapStructObjectMapper;
 
     @Autowired
-    public ServiceDataServiceImpl(ServiceDataRepository serviceDataRepository, DocumentService documentService) {
+    public ServiceDataServiceImpl(ServiceDataRepository serviceDataRepository, DocumentService documentService, MapStructObjectMapper mapStructObjectMapper) {
         this.serviceDataRepository = serviceDataRepository;
         this.documentService = documentService;
+        this.mapStructObjectMapper = mapStructObjectMapper;
     }
 
     @Async
@@ -38,29 +41,25 @@ public class ServiceDataServiceImpl implements ServiceDataService {
     }
 
     @Override
-    public List<ServiceByUserResponse> getServiceDataListByUser(long credentialId) {
+    public Set<ServiceByUserResponse> getServiceDataListByUser(long credentialId) {
         List<ServiceDataDTO> dbServiceList = serviceDataRepository.getAllServiceByUser(credentialId);
-        Set<ServiceByUserResponse> placeholderSet = new HashSet<>();
+        Set<ServiceByUserResponse> response = new HashSet<>();
         for (ServiceDataDTO serviceDataDTO : dbServiceList) {
-            ServiceByUserResponse serviceByUserResponse = new ServiceByUserResponse();
-            serviceByUserResponse.setBrand(serviceDataDTO.getBrand());
-            serviceByUserResponse.setType(serviceDataDTO.getType());
-            serviceByUserResponse.setLicensePlateNumber(serviceDataDTO.getLicensePlateNumber());
-            serviceByUserResponse.setCarId(serviceDataDTO.getFkCarId());
-            placeholderSet.add(serviceByUserResponse);
+            ServiceByUserResponse serviceByUserResponse = mapStructObjectMapper.serviceDataDTOtoServiceByUserResponse(serviceDataDTO);
+            response.add(serviceByUserResponse);
         }
-        List<ServiceByUserResponse> response = new ArrayList<>(placeholderSet);
         for (ServiceByUserResponse service : response) {
             List<ServiceDataDTO> dataHolderForResponse = new ArrayList<>();
             for (ServiceDataDTO listOfServiceData : dbServiceList) {
                 if (service.getCarId() == listOfServiceData.getFkCarId()) {
-                    ServiceDataDTO serviceData = new ServiceDataDTO();
-                    serviceData.setDate(listOfServiceData.getDate());
-                    serviceData.setAmount(listOfServiceData.getAmount());
-                    serviceData.setBillNum(listOfServiceData.getBillNum());
-                    serviceData.setServicesDone(listOfServiceData.getServicesDone());
-                    serviceData.setComment(listOfServiceData.getComment());
-                    serviceData.setMileage(listOfServiceData.getMileage());
+                    ServiceDataDTO serviceData = ServiceDataDTO.builder()
+                            .date(listOfServiceData.getDate())
+                            .amount(listOfServiceData.getAmount())
+                            .billNum(listOfServiceData.getBillNum())
+                            .servicesDone(listOfServiceData.getServicesDone())
+                            .comment(listOfServiceData.getComment())
+                            .mileage(listOfServiceData.getMileage())
+                            .build();
                     dataHolderForResponse.add(serviceData);
                 }
             }

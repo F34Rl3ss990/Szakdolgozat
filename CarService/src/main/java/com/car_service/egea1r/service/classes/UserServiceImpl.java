@@ -3,14 +3,13 @@ package com.car_service.egea1r.service.classes;
 import com.car_service.egea1r.persistance.entity.*;
 import com.car_service.egea1r.web.data.DTO.CarAndUserDTO;
 import com.car_service.egea1r.web.data.DTO.UserDataDTO;
-import com.car_service.egea1r.web.data.mapper.MapStructMap;
+import com.car_service.egea1r.web.data.mapper.MapStructObjectMapper;
+import com.car_service.egea1r.web.data.payload.request.ModifyUserDataRequest;
 import com.car_service.egea1r.web.exception.ResourceNotFoundException;
 import com.car_service.egea1r.persistance.repository.interfaces.UserRepository;
 import com.car_service.egea1r.service.interfaces.EmailService;
 import com.car_service.egea1r.service.interfaces.UserService;
-import com.car_service.egea1r.web.data.payload.request.ModifyUserDateRequest;
 import com.car_service.egea1r.web.data.DTO.UnauthorizedUserReservationDTO;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.scheduling.annotation.Async;
@@ -28,17 +27,14 @@ import java.util.List;
 @Validated
 public class UserServiceImpl implements UserService {
 
-    private final String taxNumError = "Tax number is incorrect";
-    private final String regexp = "^[0-9]{8}[-][0-9][-][0-9]{2}$";
     private final UserRepository userRepository;
-    private final MapStructMap mapStructMap;
+    private final MapStructObjectMapper mapStructObjectMapper;
     private final EmailService emailService;
 
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, MapStructMap mapStructMap, EmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository, MapStructObjectMapper mapStructObjectMapper, EmailService emailService) {
         this.userRepository = userRepository;
-        this.mapStructMap = mapStructMap;
+        this.mapStructObjectMapper = mapStructObjectMapper;
         this.emailService = emailService;
     }
 
@@ -55,8 +51,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyUser(ModifyUserDateRequest modifyUserDateRequest, long credentialId){
-            userRepository.modifyUserData(mapDTOtoUser(modifyUserDateRequest), userRepository.findUserIdByCredentialId(credentialId));
+    public void modifyUser(ModifyUserDataRequest modifyUserDataRequest, long credentialId){
+            userRepository.modifyUserData(mapDTOtoUser(modifyUserDataRequest), userRepository.findUserIdByCredentialId(credentialId));
     }
 
     @Override
@@ -101,22 +97,22 @@ public class UserServiceImpl implements UserService {
 
 
     private User mapDTOtoUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-        BillingInformation billingInformation = mapStructMap.unauthorizedUserReservationDTOtoBillingInformation(unauthorizedUserReservationDTO);
-        User user = mapStructMap.unauthorizedUserReservationDTOtoUser(unauthorizedUserReservationDTO);
+        BillingInformation billingInformation = mapStructObjectMapper.unauthorizedUserReservationDTOtoBillingInformation(unauthorizedUserReservationDTO);
+        User user = mapStructObjectMapper.unauthorizedUserReservationDTOtoUser(unauthorizedUserReservationDTO);
         user.setBillingInformation(billingInformation);
         return user;
     }
 
-    private User mapDTOtoUser(ModifyUserDateRequest modifyUserDateRequest){
-        BillingInformation billingInformation = mapStructMap.modifyUserDataRequestToBillingInformation(modifyUserDateRequest);
-        User user = mapStructMap.modifyUserDataRequestToUser(modifyUserDateRequest);
+    private User mapDTOtoUser(ModifyUserDataRequest modifyUserDataRequest){
+        BillingInformation billingInformation = mapStructObjectMapper.modifyUserDataRequestToBillingInformation(modifyUserDataRequest);
+        User user = mapStructObjectMapper.modifyUserDataRequestToUser(modifyUserDataRequest);
         user.setBillingInformation(billingInformation);
         return user;
     }
 
     private Car mapDTOtoCar(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){
-        Car car = mapStructMap.unauthorizedUserReservationDTOtoCar(unauthorizedUserReservationDTO);
-        CarMileage carMileage = mapStructMap.unauthorizedUserReservationDTOtoCarMileage(unauthorizedUserReservationDTO);
+        Car car = mapStructObjectMapper.unauthorizedUserReservationDTOtoCar(unauthorizedUserReservationDTO);
+        CarMileage carMileage = mapStructObjectMapper.unauthorizedUserReservationDTOtoCarMileage(unauthorizedUserReservationDTO);
         List<CarMileage> carMileages = new ArrayList<>();
         carMileages.add(carMileage);
         car.setCarMileages(carMileages);
@@ -124,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private ServiceReservation mapDTOtoServiceReservation(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO) {
-       return mapStructMap.unauthorizedUserReservationDTOtoServiceReservation(unauthorizedUserReservationDTO);
+       return mapStructObjectMapper.unauthorizedUserReservationDTOtoServiceReservation(unauthorizedUserReservationDTO);
     }
 
     private void mileageSetter(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO){

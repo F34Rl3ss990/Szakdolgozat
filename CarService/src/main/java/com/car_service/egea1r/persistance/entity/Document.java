@@ -4,15 +4,19 @@ import com.car_service.egea1r.web.data.DTO.DocumentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -97,12 +101,14 @@ public class Document {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_document_car")
+    @ToString.Exclude
     private Car car;
 
     @JsonIgnore
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_document_service_data")
+    @ToString.Exclude
     private ServiceData serviceData;
 
     public Document(String name, String fileType, String location, LocalDate uploadTime){
@@ -113,4 +119,17 @@ public class Document {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Document document = (Document) o;
+
+        return Objects.equals(fileId, document.fileId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 1422296640;
+    }
 }

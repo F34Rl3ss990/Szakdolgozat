@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/serviceReservation")
@@ -78,8 +80,8 @@ public class ServiceReservationController {
     }
 
     @GetMapping("/reserveDataGetter")
-    public List<ExcelCarDTO> test() {
-        return excelService.getExcelData();
+    public CompletableFuture<List<ExcelCarDTO>> test() throws IOException {
+        return excelService.excelToCarDTO();
     }
 
     @GetMapping("/getCarsByRegId")

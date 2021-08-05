@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthCredentialServiceImpl implements UserDetailsService {
 
-    private CredentialRepository credentialRepository;
+    private final CredentialRepository credentialRepository;
 
     @Autowired
     public AuthCredentialServiceImpl(CredentialRepository credentialRepository) {

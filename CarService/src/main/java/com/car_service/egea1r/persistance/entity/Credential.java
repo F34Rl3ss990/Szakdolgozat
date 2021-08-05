@@ -2,19 +2,23 @@ package com.car_service.egea1r.persistance.entity;
 
 
 import com.car_service.egea1r.validation.annotation.ValidEmail;
-
 import com.car_service.egea1r.validation.annotation.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -144,6 +148,7 @@ public class Credential{
     @OneToOne(cascade = CascadeType.REMOVE,
      fetch = FetchType.LAZY, mappedBy = "credential")
     @JsonIgnore
+    @ToString.Exclude
     private User user;
 
 
@@ -152,6 +157,7 @@ public class Credential{
             cascade = CascadeType.REMOVE,
             orphanRemoval = true,
             mappedBy = "credential")
+    @ToString.Exclude
     private Set<PasswordReset> passwordReset = new HashSet<>();
 
     @JsonIgnore
@@ -159,6 +165,7 @@ public class Credential{
             cascade = CascadeType.REMOVE,
             orphanRemoval = true,
             mappedBy = "credential")
+    @ToString.Exclude
     private Set<Verification> verification = new HashSet<>();
 
     public Credential(String email, Long credentialId){
@@ -193,5 +200,19 @@ public class Credential{
         this.password = password;
         this.mfa = mfa;
         this.secret = secret;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Credential that = (Credential) o;
+
+        return Objects.equals(credentialId, that.credentialId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 1583254190;
     }
 }

@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
-public class LicensePlateNumberValidator  implements ConstraintValidator<ValidLicensePlate, T> {
+public class LicensePlateNumberValidator  implements ConstraintValidator<ValidLicensePlate, Object> {
     private String licensePlate;
     private String foreignLicensePlate;
 
@@ -19,7 +19,7 @@ public class LicensePlateNumberValidator  implements ConstraintValidator<ValidLi
     }
 
     @Override
-    public boolean isValid(final T object, final ConstraintValidatorContext context) {
+    public boolean isValid(final Object object, final ConstraintValidatorContext context) {
         String licenseValue = (String) new BeanWrapperImpl(object).getPropertyValue(licensePlate);
         boolean booleanValue = Boolean.parseBoolean((new BeanWrapperImpl(object).getPropertyValue(String.valueOf(foreignLicensePlate))).toString());
         if(licenseValue!=null) {
@@ -36,6 +36,6 @@ public class LicensePlateNumberValidator  implements ConstraintValidator<ValidLi
         return (Pattern.matches("^[a-zA-Z]{3}[-][0-9]{3}$", licensePlateNumber) ||
                 Pattern.matches("^[a-zA-Z]{2}[-][0-9]{2}[-][0-9]{2}$", licensePlateNumber) ||
                 Pattern.matches("^[/p/P][-][0-9]{5}$", licensePlateNumber) ||
-                Pattern.matches("^[a-zA-z]{3}[0-9]{5}", licensePlateNumber));
+                Pattern.matches("^[a-zA-z]{3}[0-9]{5}$", licensePlateNumber));
     }
 }
