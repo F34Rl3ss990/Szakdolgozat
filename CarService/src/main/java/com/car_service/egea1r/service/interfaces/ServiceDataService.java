@@ -11,8 +11,6 @@ import java.util.Set;
 
 public interface ServiceDataService {
 
-    void saveDataAndFinance(HttpServletRequest request) throws IOException, FileUploadException;
-
     Set<ServiceByUserResponse> getServiceDataListByUser(long credentialId);
 
     List<ServiceDataDTO> getServiceDataListByCar(long carId, long credentialId);

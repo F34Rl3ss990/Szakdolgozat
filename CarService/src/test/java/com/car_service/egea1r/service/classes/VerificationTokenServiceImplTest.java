@@ -5,14 +5,18 @@ import com.car_service.egea1r.persistance.repository.interfaces.VerificationRepo
 import com.car_service.egea1r.service.interfaces.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class VerificationTokenServiceImplTest {
-
-    VerificationTokenServiceImpl verificationTokenService;
 
     @Mock
     VerificationRepository verificationRepository;
@@ -23,11 +27,8 @@ class VerificationTokenServiceImplTest {
     @Mock
     EmailService emailService;
 
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.initMocks(this);
-        verificationTokenService = new VerificationTokenServiceImpl(verificationRepository, credentialRepository, emailService);
-    }
+    @InjectMocks
+    VerificationTokenServiceImpl verificationTokenService;
 
     @Test
     void getFkAndExpDateByToken() {

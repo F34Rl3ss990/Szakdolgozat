@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -23,4 +24,17 @@ public class FileAndCarResponse {
     private List<Long> documentIds;
     private Long serviceDataId;
     private List<ResponseFile> documentList;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileAndCarResponse that = (FileAndCarResponse) o;
+        return getCarId().equals(that.getCarId()) && Objects.equals(getLicensePlateNumber(), that.getLicensePlateNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCarId(), getLicensePlateNumber());
+    }
 }

@@ -14,31 +14,20 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ServiceDataServiceImpl implements ServiceDataService {
 
     private final ServiceDataRepository serviceDataRepository;
-    private final DocumentService documentService;
     private final MapStructObjectMapper mapStructObjectMapper;
 
     @Autowired
-    public ServiceDataServiceImpl(ServiceDataRepository serviceDataRepository, DocumentService documentService, MapStructObjectMapper mapStructObjectMapper) {
+    public ServiceDataServiceImpl(ServiceDataRepository serviceDataRepository, MapStructObjectMapper mapStructObjectMapper) {
         this.serviceDataRepository = serviceDataRepository;
-        this.documentService = documentService;
         this.mapStructObjectMapper = mapStructObjectMapper;
     }
 
-    @Async
-    @Transactional
-    @Override
-    public void saveDataAndFinance(HttpServletRequest request) throws IOException, FileUploadException {
-        documentService.storeClientBigFiles(request);
-    }
 
     @Override
     public Set<ServiceByUserResponse> getServiceDataListByUser(long credentialId) {
@@ -51,16 +40,8 @@ public class ServiceDataServiceImpl implements ServiceDataService {
         for (ServiceByUserResponse service : response) {
             List<ServiceDataDTO> dataHolderForResponse = new ArrayList<>();
             for (ServiceDataDTO listOfServiceData : dbServiceList) {
-                if (service.getCarId() == listOfServiceData.getFkCarId()) {
-                    ServiceDataDTO serviceData = ServiceDataDTO.builder()
-                            .date(listOfServiceData.getDate())
-                            .amount(listOfServiceData.getAmount())
-                            .billNum(listOfServiceData.getBillNum())
-                            .servicesDone(listOfServiceData.getServicesDone())
-                            .comment(listOfServiceData.getComment())
-                            .mileage(listOfServiceData.getMileage())
-                            .build();
-                    dataHolderForResponse.add(serviceData);
+                if (Objects.equals(service.getCarId(), listOfServiceData.getFkCarId())) {
+                    dataHolderForResponse.add(listOfServiceData);
                 }
             }
             service.setServiceList(dataHolderForResponse);

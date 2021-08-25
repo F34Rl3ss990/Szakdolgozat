@@ -78,7 +78,8 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.");
         Date date;
         date = sdf.parse("2000.01.01.");
-        for (Car car : serviceReservationRepository.getAllCarByCredentialId(credentialId)) {
+        List<Car> carList = serviceReservationRepository.getAllCarByCredentialId(credentialId);
+        for (Car car : carList) {
             for (CarMileage mileage : car.getCarMileages()) {
                 if (mileage.getDateOfSet().compareTo(date) > 0) {
                     date = mileage.getDateOfSet();
@@ -108,6 +109,14 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
                 .name(user.getName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
+                .billingZipCode(user.getBillingZipCode())
+                .billingTown(user.getBillingTown())
+                .billingOtherAddressType(user.getBillingOtherAddressType())
+                .billingStreet(user.getBillingStreet())
+                .billingName(user.getBillingName())
+                .billingPhoneNumber(user.getBillingPhoneNumber())
+                .billingEmail(user.getBillingEmail())
+                .billingTaxNumber(user.getBillingTaxNumber())
                 .brand(car.getBrand())
                 .type(car.getType())
                 .engineType(car.getEngineType())
@@ -119,14 +128,6 @@ public class ServiceReservationServiceImpl implements ServiceReservationService 
                 .reservedDate(serviceReservationDTO.getReservedDate())
                 .reservedServices(serviceReservationDTO.getReservedServices())
                 .comment(serviceReservationDTO.getComment())
-                .billingZipCode(user.getBillingZipCode())
-                .billingTown(user.getBillingTown())
-                .billingOtherAddressType(user.getBillingOtherAddressType())
-                .billingStreet(user.getBillingStreet())
-                .billingName(user.getBillingName())
-                .billingPhoneNumber(user.getBillingPhoneNumber())
-                .billingEmail(user.getBillingEmail())
-                .billingTaxNumber(user.getBillingTaxNumber())
                 .build();
         emailService.sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }

@@ -37,9 +37,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         final PasswordReset passToken = passwordResetRepository.getExpDateByResetToken(passwordResetToken)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Password reset token not found by token: %s", passwordResetToken)));
 
-        if (!isTokenFound(passToken)) {
-            return "invalidToken";
-        } else if (isTokenExpired(passToken)) {
+       if (isTokenExpired(passToken)) {
             return "expired";
         } else {
             return null;

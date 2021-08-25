@@ -6,7 +6,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.car_service.egea1r.security.EncrypterHelper;
 import com.car_service.egea1r.persistance.entity.Credential;
 import com.car_service.egea1r.service.interfaces.CredentialService;
 import com.car_service.egea1r.service.interfaces.PasswordResetTokenService;
@@ -173,7 +172,6 @@ public class CredentialController {
 
     private ResponseEntity<JwtResponse> responseLoginInformation(AuthCredentialDetailsImpl credentialDetails) {
         String jwt = jwtUtils.generateJwtToken(SecurityContextHolder.getContext().getAuthentication());
-        jwt = EncrypterHelper.encrypt(jwt);
         return ResponseEntity.ok(new JwtResponse(jwt,
                 credentialDetails.getCredentialId(),
                 credentialDetails.getUsername(),

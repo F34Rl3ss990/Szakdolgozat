@@ -34,6 +34,7 @@ public interface MapStructObjectMapper {
 
     User unauthorizedUserReservationDTOtoUser(UnauthorizedUserReservationDTO unauthorizedUserReservationDTO);
 
+    @Mapping(target="carId", source="serviceDataDTO.fkCarId")
     ServiceByUserResponse serviceDataDTOtoServiceByUserResponse(ServiceDataDTO serviceDataDTO);
 
     @Mapping(target="type", source="documentDTO.carType")

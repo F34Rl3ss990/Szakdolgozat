@@ -11,10 +11,10 @@ import com.car_service.egea1r.web.exception.ResourceNotFoundException;
 import com.car_service.egea1r.persistance.repository.interfaces.CredentialRepository;
 import com.car_service.egea1r.persistance.repository.interfaces.PasswordResetRepository;
 import com.car_service.egea1r.persistance.repository.interfaces.TokenBlockRepository;
-import com.car_service.egea1r.security.EncrypterHelper;
 import com.car_service.egea1r.security.jwt.JwtUtilId;
 import com.car_service.egea1r.web.data.payload.request.AddAdminRequest;
 import com.car_service.egea1r.persistance.entity.User;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +163,6 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     @Override
     public void saveBlockedToken(HttpServletRequest request) {
         String jwt = parseJwt(request);
-        jwt = EncrypterHelper.decrypt(jwt);
         String email = jwtUtilId.getEmailFromJwtToken(jwt);
         long id = getByEmail(email).getCredentialId();
         TokenBlock tokenBlock = TokenBlock.builder()
@@ -186,7 +185,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         return tokenBlockRepository.findByUserId(getByEmail(email).getCredentialId());
     }
 
-    private String parseJwt(HttpServletRequest request) {
+    private String parseJwt(@NotNull HttpServletRequest request) {
         final String headerAuth = request.getHeader("Authorization");
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer")) {
             return headerAuth.substring(7);
@@ -206,13 +205,13 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     public Credential verify(String email, String code) {
         Credential credential = credentialRepository
                 .findByEmailForMFA(email)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("username %s", email)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User not found by this email: %s", email)));
         String mfaType = credential.getMfa();
         boolean verify = false;
         if (mfaType.equals("phone")) {
-            verify = phoneVerify(code, credential);
+            verify = phoneVerify(credential, code);
         } else if (mfaType.equals("email")) {
-            verify = emailVerify(code, email);
+            verify = emailVerify(email, code);
         }
         if (verify) {
             return credential;
@@ -222,8 +221,8 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     }
 
     @Override
-    public boolean verifyDataChange(String code, String email) {
-        return emailVerify(code, email);
+    public boolean verifyDataChange(String email, String code) {
+        return emailVerify(email, code);
     }
 
     @Override
@@ -249,7 +248,7 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
     public ResponseEntity<String> confirmRegistration(String verificationToken) throws MessagingException, UnsupportedEncodingException {
         Verification verification = verificationTokenService.getFkAndExpDateByToken(verificationToken);
         String permission = getPermissionById(verification.getFkVerificationId());
-        if (!permission.equals("ROLE_DISABLED")) {
+        if (permission.equals("ROLE_DISABLED")) {
             return ResponseEntity.badRequest().body("This account is already verified or banned");
         }
         Calendar cal = Calendar.getInstance();
@@ -261,14 +260,14 @@ public class CredentialServiceImpl implements CredentialService, JwtTokenCheckSe
         return ResponseEntity.ok("Successfully verified");
     }
 
-    private boolean phoneVerify(String code, Credential credential) {
+    private boolean phoneVerify(Credential credential, String code) {
         if (!totpManager.verifyCode(code, credential.getSecret())) {
             throw new BadRequestException("Code is incorrect");
         }
         return true;
     }
 
-    private boolean emailVerify(String code, String email) {
+    private boolean emailVerify(String email, String code) {
         int otpNum = Integer.parseInt(code);
         if (otpNum >= 0) {
             int serverOtp = otpService.getOtp(email);

@@ -2,11 +2,12 @@ package com.car_service.egea1r.service.classes;
 
 import com.car_service.egea1r.persistance.entity.Credential;
 import com.car_service.egea1r.persistance.entity.TokenBlock;
+import com.car_service.egea1r.persistance.entity.User;
+import com.car_service.egea1r.persistance.entity.Verification;
 import com.car_service.egea1r.persistance.repository.interfaces.CredentialRepository;
 import com.car_service.egea1r.persistance.repository.interfaces.PasswordResetRepository;
 import com.car_service.egea1r.persistance.repository.interfaces.TokenBlockRepository;
 import com.car_service.egea1r.persistance.repository.interfaces.UserRepository;
-import com.car_service.egea1r.security.EncrypterHelper;
 import com.car_service.egea1r.security.jwt.JwtUtilId;
 import com.car_service.egea1r.service.interfaces.EmailService;
 import com.car_service.egea1r.service.interfaces.OTPService;
@@ -16,40 +17,30 @@ import com.car_service.egea1r.web.data.payload.request.AddAdminRequest;
 import com.car_service.egea1r.web.data.payload.request.LoginRequest;
 import com.car_service.egea1r.web.exception.BadRequestException;
 import com.car_service.egea1r.web.exception.ResourceNotFoundException;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(EncrypterHelper.class)
 class CredentialServiceImplTest {
 
     @Mock
@@ -72,14 +63,13 @@ class CredentialServiceImplTest {
     VerificationTokenService verificationTokenService;
     @Mock
     UserRepository userRepository;
-    @Mock
-    EncrypterHelper encrypterHelper;
 
     @InjectMocks
     CredentialServiceImpl credentialService;
 
     Credential credential;
     final String email = "asd@asd.hu";
+    final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
     @BeforeEach
     void setUp() {
@@ -93,21 +83,21 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void credentialExistByEmail() {
+    void credentialExistByEmail_whenValid_thenCorrect() {
         given(credentialRepository.existsByEmail(email)).willReturn(true);
         boolean exist = credentialService.credentialExistByEmail(email);
         assertTrue(exist);
     }
 
     @Test
-    void credentialNotExistByEmail() {
+    void credentialNotExistByEmail_whenValid_thenCorrect() {
         given(credentialRepository.existsByEmail(email)).willReturn(false);
         boolean exist = credentialService.credentialExistByEmail(email);
         assertFalse(exist);
     }
 
     @Test
-    void getByEmail() {
+    void getByEmail_whenValid_thenCorrect() {
         given(credentialRepository.getByEmail(email)).willReturn(Optional.of(credential));
 
         Credential credential2 = credentialService.getByEmail(email);
@@ -117,7 +107,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void getByEmail2() {
+    void getByEmail_whenInValid_thenException() {
         given(credentialRepository.getByEmail(email)).willReturn(Optional.empty());
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.getByEmail(email));
 
@@ -130,7 +120,7 @@ class CredentialServiceImplTest {
 
 
     @Test
-    void getPasswordAndIdByEmail() {
+    void getPasswordAndIdByEmail_whenValid_thenCorrect() {
         given(credentialRepository.getPasswordAndIdByEmail(email)).willReturn(Optional.of(credential));
 
         Credential credential2 = credentialService.getPasswordAndIdByEmail(email);
@@ -140,7 +130,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void getPasswordAndIdByEmail2() {
+    void getPasswordAndIdByEmail_whenInValid_thenException() {
         given(credentialRepository.getPasswordAndIdByEmail(email)).willReturn(Optional.empty());
 
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.getPasswordAndIdByEmail(email));
@@ -153,7 +143,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void authenticationChooseEmail() {
+    void authenticationChooseEmail_whenValid_thenCorrect() {
         String authType = "email";
         LoginRequest loginRequest = LoginRequest.builder()
                 .email(email)
@@ -172,7 +162,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void authenticationChoosePhone() {
+    void authenticationChoosePhone_whenValid_thenCorrect() {
         String authType = "phone";
         LoginRequest loginRequest = LoginRequest.builder()
                 .email(email)
@@ -188,7 +178,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void authenticationChooseException() {
+    void authenticationChoose_whenInValid_thenException() {
         String authType = "";
         LoginRequest loginRequest = LoginRequest.builder()
                 .email(email)
@@ -205,7 +195,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void generateOtpNum() {
+    void generateOtpNum_whenValid_thenCorrect() {
         given(otpService.generateOTP(email)).willReturn(123456);
 
         credentialService.generateOtpNum(email);
@@ -215,7 +205,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void addNewAdminPhone() {
+    void addNewAdminPhone_whenValid_thenCorrect() {
         AddAdminRequest addAdminRequest = AddAdminRequest.builder()
                 .email(email)
                 .password("123456")
@@ -236,7 +226,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void addNewAdminEmail() {
+    void addNewAdminEmail_whenValid_thenCorrect() {
         AddAdminRequest addAdminRequest = AddAdminRequest.builder()
                 .email(email)
                 .password("123456")
@@ -254,7 +244,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void getCredentialIdByTokenCorrect() {
+    void getCredentialIdByToken_whenValid_thenCorrect() {
         String passwordResetToken = "123456asdfgh";
         long id = 2L;
         given(passwordResetRepository.getCredentialIdByPasswordResetToken(passwordResetToken)).willReturn(Optional.of(id));
@@ -266,7 +256,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void getCredentialIdByTokenException() {
+    void getCredentialIdByToken_whenInValid_thenException() {
         String passwordResetToken = "123456asdfgh";
 
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.getCredentialIdByToken(passwordResetToken));
@@ -279,29 +269,35 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void createNewCredential() throws MessagingException, UnsupportedEncodingException {
+    void createNewCredential_whenValid_thenCorrect() throws MessagingException, UnsupportedEncodingException {
         String password = "123456asdfgh";
         String path = "/api/auth/signup";
+        String expectedMessage = "User registered successfully!";
+        UUID defaultUuid = UUID.fromString("8d8b30e3-de52-4f1c-a71c-9905a8043dac");
         long id = 5L;
+
         Credential credential = Credential.builder()
                 .email(email)
-                .password(password)
+                .password("hashValue")
                 .build();
         given(passwordEncoder.encode(password)).willReturn("hashValue");
         given(credentialRepository.saveUser(credential)).willReturn(id);
 
-        String returnMessage = credentialService.createNewCredential(email, password, path);
-        credential.setCredentialId(id);
-        String expectedMessage = "User registered successfully!";
-        assertTrue(returnMessage.contains(expectedMessage));
-        verify(passwordEncoder, times(1)).encode(password);
-        verify(credentialRepository, times(1)).saveUser(credential);
-       // verify(verificationTokenService, times(1)).createVerificationToken(credential, "token");
-       // verify(emailService, times(1)).sendVerificationToken(credential.getEmail(), "token");
+
+        try (MockedStatic<UUID> mockedUuid = Mockito.mockStatic(UUID.class)) {
+            mockedUuid.when(UUID::randomUUID).thenReturn(defaultUuid);
+            String returnMessage = credentialService.createNewCredential(email, password, path);
+            assertTrue(returnMessage.contains(expectedMessage));
+            verify(passwordEncoder, times(1)).encode(password);
+            verify(emailService, times(1)).sendVerificationToken(credential.getEmail(), defaultUuid.toString());
+            credential.setCredentialId(id);
+            verify(credentialRepository, times(1)).saveUser(credential);
+            verify(verificationTokenService, times(1)).createVerificationToken(credential, defaultUuid.toString());
+        }
     }
 
     @Test
-    void changePassword() {
+    void changePassword_whenValid_thenCorrect() {
         long id = 5L;
         String password = "12345asdf";
         given(passwordEncoder.encode(password)).willReturn("hashValue");
@@ -313,7 +309,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void checkIfValidOldPassword() {
+    void checkIfValidOldPassword_whenValid_thenCorrect() {
         String oldPassword = "asd123";
         String password = "123asd";
         given(passwordEncoder.matches(oldPassword, password)).willReturn(false);
@@ -324,44 +320,439 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void changePasswordAndBlockToken() {
+    void changePasswordAndBlockToken_whenValid_thenCorrect() {
+        String password = "123asd";
+        String jwt = "Bearer asd1234321a";
+        long id = 5L;
+        long credentialId = 4L;
+        Credential credential = Credential.builder()
+                .credentialId(credentialId)
+                .password(password)
+                .build();
+        TokenBlock tokenBlock = TokenBlock.builder()
+                .userId(credentialId)
+                .jwtToken(jwt.substring(7))
+                .build();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", jwt);
+        given(passwordEncoder.encode(password)).willReturn("hashValue");
+        given(jwtUtilId.getEmailFromJwtToken(jwt.substring(7))).willReturn(email);
+        given(credentialRepository.getByEmail(email)).willReturn(Optional.of(credential));
 
+        credentialService.changePasswordAndBlockToken(request, id, password);
+
+        verify(credentialRepository, times(1)).changePassword(id, "hashValue");
+        verify(credentialRepository, times(1)).getByEmail(email);
+        verify(tokenBlockRepository, times(1)).save(tokenBlock);
+        verify(jwtUtilId, times(1)).getEmailFromJwtToken(jwt.substring(7));
     }
 
     @Test
-    void saveBlockedToken() {
+    void saveBlockedToken_whenValid_thenCorrect() {
+        String jwt = "Bearer asd1234321a";
+        long credentialId = 4L;
+        Credential credential = Credential.builder()
+                .credentialId(credentialId)
+                .build();
+        TokenBlock tokenBlock = TokenBlock.builder()
+                .userId(credentialId)
+                .jwtToken(jwt.substring(7))
+                .build();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", jwt);
+        given(jwtUtilId.getEmailFromJwtToken(jwt.substring(7))).willReturn(email);
+        given(credentialRepository.getByEmail(email)).willReturn(Optional.of(credential));
+
+        credentialService.saveBlockedToken(request);
+
+        verify(credentialRepository, times(1)).getByEmail(email);
+        verify(tokenBlockRepository, times(1)).save(tokenBlock);
+        verify(jwtUtilId, times(1)).getEmailFromJwtToken(jwt.substring(7));
     }
 
     @Test
-    void changeEmailAndBlockToken() {
+    void changeEmailAndBlockToken_whenValid_thenCorrect() {
+        String jwt = "Bearer asd1234321a";
+        long credentialId = 4L;
+        long userId = 5L;
+        Credential credential = Credential.builder()
+                .credentialId(credentialId)
+                .build();
+        User user = User.builder()
+                .userId(userId)
+                .build();
+        TokenBlock tokenBlock = TokenBlock.builder()
+                .userId(credentialId)
+                .jwtToken(jwt.substring(7))
+                .build();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", jwt);
+        given(jwtUtilId.getEmailFromJwtToken(jwt.substring(7))).willReturn(email);
+        given(credentialRepository.getByEmail(email)).willReturn(Optional.of(credential));
+        given(userRepository.findUserByCredentialId(credentialId)).willReturn(Optional.of(user));
+
+        credentialService.changeEmailAndBlockToken(request, credentialId, email);
+
+        verify(userRepository, times(1)).findUserByCredentialId(credentialId);
+        verify(credentialRepository, times(1)).changeEmail(email, credentialId, user.getUserId());
+        verify(credentialRepository, times(1)).getByEmail(email);
+        verify(tokenBlockRepository, times(1)).save(tokenBlock);
+        verify(jwtUtilId, times(1)).getEmailFromJwtToken(jwt.substring(7));
     }
 
     @Test
-    void findTokenBlock() {
+    void changeEmailAndBlockToken_whenInValid_thenUncorrect() {
+        String jwt = "Bearer asd1234321a";
+        long credentialId = 4L;
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", jwt);
+
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.changeEmailAndBlockToken(request, credentialId, email));
+        String expectedMessage = "User not found with this id: " + credentialId;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(userRepository, times(1)).findUserByCredentialId(credentialId);
     }
 
     @Test
-    void getPermissionById() {
+    void findTokenBlock_whenValid_thenCorrect() {
+        long credentialId = 4L;
+        Credential credential = Credential.builder()
+                .credentialId(credentialId)
+                .build();
+        TokenBlock tokenBlock = TokenBlock.builder()
+                .jwtToken("randomToken")
+                .userId(3L)
+                .tokenBlockId("randomUUid")
+                .build();
+        TokenBlock tokenBlock2 = TokenBlock.builder()
+                .jwtToken("randomToken2")
+                .userId(5L)
+                .tokenBlockId("randomUUid2.0")
+                .build();
+        List<TokenBlock> tokenBlocks = new ArrayList<>();
+        tokenBlocks.add(tokenBlock);
+        tokenBlocks.add(tokenBlock2);
+        given(credentialRepository.getByEmail(email)).willReturn(Optional.of(credential));
+        given(tokenBlockRepository.findByUserId(credentialId)).willReturn(tokenBlocks);
+
+        List<TokenBlock> tokenBlockList = credentialService.findTokenBlock(email);
+
+        assertEquals(tokenBlockList.size(), tokenBlocks.size());
+        assertTrue(tokenBlockList.contains(tokenBlock));
+        assertTrue(tokenBlockList.contains(tokenBlock2));
+        verify(tokenBlockRepository, times(1)).findByUserId(credentialId);
+        verify(credentialRepository, times(1)).getByEmail(email);
+    }
+
+    @Test
+    void findTokenBlock_whenInvalid_thenException() {
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.findTokenBlock(email));
+
+        String expectedMessage = "User not found by email: " + email;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).getByEmail(email);
+    }
+
+    @Test
+    void getPermissionById_whenValid_thenCorrect() {
+        long verificationId = 4L;
+        String role = "[ROLE_USER]";
+        given(credentialRepository.getPermissionById(verificationId)).willReturn(role);
+
+        String permission = credentialService.getPermissionById(verificationId);
+        assertEquals(permission, role);
+        verify(credentialRepository, times(1)).getPermissionById(verificationId);
+    }
+
+    @Test
+    void verify_whenInvalid_thenException() {
+        String code = "1234";
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "User not found by this email: " + email;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+    }
+
+    @Test
+    void verify_whenNullString_thenException() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "Authentication was not successful";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+    }
+
+    @Test
+    void verify_whenPhoneAndInvalid_thenException() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("phone")
+                .secret("secret")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        given(totpManager.verifyCode(code, credential.getSecret())).willReturn(false);
+
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "Code is incorrect";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+        verify(totpManager, times(1)).verifyCode(code, credential.getSecret());
+    }
+
+    @Test
+    void verify_whenPhoneAndValid_thenCorrect() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("phone")
+                .secret("secret")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        given(totpManager.verifyCode(code, credential.getSecret())).willReturn(true);
+
+        Credential retCredential = credentialService.verify(email, code);
+
+        assertEquals(retCredential, credential);
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+        verify(totpManager, times(1)).verifyCode(code, credential.getSecret());
+    }
+
+    @Test
+    void verify_whenEmailAndInvalidFirst_thenException() {
+        String code = "-2";
+        Credential credential = Credential.builder()
+                .mfa("email")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "Invalid OTP number!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+    }
+
+    @Test
+    void verify_whenEmailAndInvalidSecond_thenException() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("email")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        given(otpService.getOtp(email)).willReturn(-1);
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "OTP number expired!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+        verify(otpService, times(1)).getOtp(email);
+    }
+
+    @Test
+    void verify_whenEmailAndInvalidThird_thenException() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("email")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        given(otpService.getOtp(email)).willReturn(12345);
+
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verify(email, code));
+        String expectedMessage = "Invalid OTP number";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+        verify(otpService, times(1)).getOtp(email);
+    }
+
+    @Test
+    void verify_whenEmailAndValid_thenCorrect() {
+        String code = "1234";
+        Credential credential = Credential.builder()
+                .mfa("email")
+                .build();
+        given(credentialRepository.findByEmailForMFA(email)).willReturn(Optional.of(credential));
+        given(otpService.getOtp(email)).willReturn(1234);
+
+        Credential retCredential = credentialService.verify(email, code);
+
+        assertEquals(retCredential, credential);
+        verify(otpService, times(1)).clearOTP(email);
+        verify(credentialRepository, times(1)).findByEmailForMFA(email);
+        verify(otpService, times(1)).getOtp(email);
+    }
+
+    @Test
+    void verifyDataChange_whenInvalidFirst_thenException() {
+        String code = "-2";
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verifyDataChange(email, code));
+        String expectedMessage = "Invalid OTP number!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void verifyDataChange_whenInvalidSecond_thenException() {
+        String code = "1234";
+        given(otpService.getOtp(email)).willReturn(-1);
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verifyDataChange(email, code));
+        String expectedMessage = "OTP number expired!";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(otpService, times(1)).getOtp(email);
+    }
+
+    @Test
+    void verifyDataChange_whenInvalidThird_thenException() {
+        String code = "1234";
+        given(otpService.getOtp(email)).willReturn(12345);
+
+        Exception exception = assertThrows(BadRequestException.class, () -> credentialService.verifyDataChange(email, code));
+        String expectedMessage = "Invalid OTP number";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+        verify(otpService, times(1)).getOtp(email);
+    }
+
+    @Test
+    void verifyDataChange_whenValid_thenCorrect() {
+        String code = "1234";
+        given(otpService.getOtp(email)).willReturn(1234);
+
+        boolean retVal = credentialService.verifyDataChange(email, code);
+
+        assertTrue(retVal);
+        verify(otpService, times(1)).clearOTP(email);
+        verify(otpService, times(1)).getOtp(email);
     }
 
 
     @Test
-    void verifyDataChange() {
+    void disableAccountByUser_whenValid_thenCorrect() {
+        long credentialId = 4L;
+        credentialService.disableAccountByUser(credentialId);
+        verify(credentialRepository, times(1)).disableAccountByUser(credentialId);
     }
 
     @Test
-    void disableAccountByUser() {
+    void disableAccountByAdmin_whenValid_thenCorrect() {
+        long credentialId = 4L;
+        credentialService.disableAccountByAdmin(credentialId);
+        verify(credentialRepository, times(1)).disableUserAccountByAdmin(credentialId);
     }
 
     @Test
-    void disableAccountByAdmin() {
+    void getAdminCredentialPage_whenValid_thenCorrect() {
+        int page = 0;
+        int size = 10;
+        Credential credential = Credential.builder()
+                .credentialId(1L)
+                .email("asd@asd.hu")
+                .password("1234567")
+                .build();
+        Credential credential2 = Credential.builder()
+                .credentialId(2L)
+                .email("asdasd@asd.hu")
+                .password("1234567abcdefg")
+                .build();
+        List<Credential> credentials = new ArrayList<>();
+        credentials.add(credential);
+        credentials.add(credential2);
+        given(credentialRepository.getAllAdmin()).willReturn(credentials);
+
+        PagedListHolder<Credential> admins = credentialService.getAdminCredentialPage(page, size);
+
+        assertEquals(admins.getSource().size(), credentials.size());
+        assertEquals(admins.getSource(), credentials);
+        assertEquals(2, admins.getNrOfElements());
+        verify(credentialRepository, times(1)).getAllAdmin();
     }
 
     @Test
-    void getAdminCredentialPage() {
+    void confirmRegistration_whenDisabled_thenBadRequest() throws MessagingException, UnsupportedEncodingException {
+        String verificationToken = "asd123";
+        long verificationId = 4L;
+        String role = "ROLE_DISABLED";
+        Verification verification = Verification.builder()
+                .expiryDate(new Date())
+                .fkVerificationId(4L)
+                .build();
+
+        given(verificationTokenService.getFkAndExpDateByToken(verificationToken)).willReturn(verification);
+        given(credentialRepository.getPermissionById(verificationId)).willReturn(role);
+
+        ResponseEntity<String> actualMessage = credentialService.confirmRegistration(verificationToken);
+        String expectedMessage = "This account is already verified or banned";
+
+        assertTrue(actualMessage.getBody().contains(expectedMessage));
+        assertEquals(HttpStatus.BAD_REQUEST, actualMessage.getStatusCode());
+        verify(credentialRepository, times(1)).getPermissionById(verificationId);
+        verify(verificationTokenService, times(1)).getFkAndExpDateByToken(verificationToken);
+    }
+    @Test
+    void confirmRegistration_whenExpiredToken_thenResent() throws MessagingException, UnsupportedEncodingException {
+        String verificationToken = "asd123";
+        long verificationId = 4L;
+        Date date = new Date();
+        String role = "ROLE_USER";
+        Verification verification = Verification.builder()
+                .expiryDate(new Date(date.getTime() - MILLIS_IN_A_DAY))
+                .fkVerificationId(4L)
+                .build();
+
+        given(verificationTokenService.getFkAndExpDateByToken(verificationToken)).willReturn(verification);
+        given(credentialRepository.getPermissionById(verificationId)).willReturn(role);
+
+        ResponseEntity<String> actualMessage = credentialService.confirmRegistration(verificationToken);
+        String expectedMessage = "Verification token resent";
+        assertTrue(actualMessage.getBody().contains(expectedMessage));
+        assertEquals(HttpStatus.OK, actualMessage.getStatusCode());
+        verify(verificationTokenService, times(1)).generateNewTokenAndSendItViaEmail(verificationToken);
+        verify(credentialRepository, times(1)).getPermissionById(verificationId);
+        verify(verificationTokenService, times(1)).getFkAndExpDateByToken(verificationToken);
     }
 
     @Test
-    void confirmRegistration() {
+    void confirmRegistration_whenTokenNotExpired_thenSuccess() throws MessagingException, UnsupportedEncodingException {
+        String verificationToken = "asd123";
+        long verificationId = 4L;
+        Date date = new Date();
+        String role = "ROLE_USER";
+        Verification verification = Verification.builder()
+                .expiryDate(new Date(date.getTime() + MILLIS_IN_A_DAY))
+                .fkVerificationId(4L)
+                .build();
+
+        given(verificationTokenService.getFkAndExpDateByToken(verificationToken)).willReturn(verification);
+        given(credentialRepository.getPermissionById(verificationId)).willReturn(role);
+
+        ResponseEntity<String> actualMessage = credentialService.confirmRegistration(verificationToken);
+        String expectedMessage = "Successfully verified";
+        assertTrue(actualMessage.getBody().contains(expectedMessage));
+        assertEquals(HttpStatus.OK, actualMessage.getStatusCode());
+        verify(verificationTokenService, times(1)).modifyPermissionOnVerifiedUser(verification.getFkVerificationId());
+        verify(credentialRepository, times(1)).getPermissionById(verificationId);
+        verify(verificationTokenService, times(1)).getFkAndExpDateByToken(verificationToken);
     }
+
+
 }

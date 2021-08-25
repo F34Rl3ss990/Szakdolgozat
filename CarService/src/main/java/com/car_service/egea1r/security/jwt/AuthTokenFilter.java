@@ -1,6 +1,5 @@
 package com.car_service.egea1r.security.jwt;
 
-import com.car_service.egea1r.security.EncrypterHelper;
 import com.car_service.egea1r.service.authentication.AuthCredentialServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
             String jwt = parseJwt(request);
-            jwt = EncrypterHelper.decrypt(jwt);
                 if (jwt != null && jwtUtils.validateJwtToken(jwt) && jwtUtils.checkIfNotBlocked(jwt)) {
                     String email = jwtUtils.getEmailFromJwtToken(jwt);
                     jwtUtils.setJwtExpirationMs(jwt);
