@@ -1,6 +1,6 @@
 package com.car_service.egea1r.service.classes;
 
-import com.car_service.egea1r.persistance.entity.User;
+import com.car_service.egea1r.persistance.entity.*;
 import com.car_service.egea1r.persistance.repository.interfaces.UserRepository;
 import com.car_service.egea1r.service.interfaces.EmailService;
 import com.car_service.egea1r.web.data.DTO.UnauthorizedUserReservationDTO;
@@ -16,6 +16,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.support.PagedListHolder;
+
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -37,25 +43,61 @@ class UserServiceImplTest {
     UserServiceImpl userService;
 
     @Test
-    void saveUnauthorizedUser() {
+    void saveUnauthorizedUser() throws MessagingException, UnsupportedEncodingException {
+        String email = "billing@email.hu";
+        String name = "Name Name";
         UnauthorizedUserReservationDTO unauthorizedUserReservationDTO = UnauthorizedUserReservationDTO.builder()
+                .billingEmail(email)
+                .billingName(name)
+                .email(email)
+                .name(name)
+                .brand("Audi")
+                .type("A4")
+                .mileage("20000")
+                .reservedDate(new Date())
+                .reservedServices("Kerékcsere")
+                .build();
+        BillingInformation billingInformation = BillingInformation.builder()
+                .billingEmail(email)
+                .billingName(name)
+                .build();
+        User user = User.builder()
+                .name(name)
+                .email(email)
+                .build();
+        List<CarMileage> carMileageList = new ArrayList<>();
+        CarMileage carMileage = CarMileage.builder()
+                .mileage("20000")
+                .build();
+        carMileageList.add(carMileage);
+        Car car = Car.builder()
+                .brand("Audi")
+                .type("A4")
+                .carMileages(carMileageList)
+                .build();
+        ServiceReservation serviceReservation = ServiceReservation.builder()
+                .reservedDate(new Date())
+                .reservedServices("Kerékcsere")
                 .build();
 
-        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoBillingInformation()).willReturn();
-        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoUser()).willReturn();
-        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoCar()).willReturn();
-        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoCarMileage()).willReturn();
-        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoServiceReservation()).willReturn();
 
-        userService.saveUnauthorizedUser();
 
-        verify(userRepository, times(1)).saveUnAuthorizedUser();
-        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoBillingInformation();
-        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoUser();
-        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoCar();
-        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoCarMileage();
-        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoServiceReservation();
-        verify(emailService, times(1)).sendReservedServiceInformation();
+        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoBillingInformation(unauthorizedUserReservationDTO)).willReturn(billingInformation);
+        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoUser(unauthorizedUserReservationDTO)).willReturn(user);
+        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoCar(unauthorizedUserReservationDTO)).willReturn(car);
+        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoCarMileage(unauthorizedUserReservationDTO)).willReturn(carMileage);
+        given(mapStructObjectMapper.unauthorizedUserReservationDTOtoServiceReservation(unauthorizedUserReservationDTO)).willReturn(serviceReservation);
+
+        userService.saveUnauthorizedUser(unauthorizedUserReservationDTO);
+
+        user.setBillingInformation(billingInformation);
+        verify(userRepository, times(1)).saveUnAuthorizedUser(user, car, serviceReservation);
+        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoBillingInformation(unauthorizedUserReservationDTO);
+        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoUser(unauthorizedUserReservationDTO);
+        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoCar(unauthorizedUserReservationDTO);
+        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoCarMileage(unauthorizedUserReservationDTO);
+        verify(mapStructObjectMapper, times(1)).unauthorizedUserReservationDTOtoServiceReservation(unauthorizedUserReservationDTO);
+        verify(emailService, times(1)).sendReservedServiceInformation(unauthorizedUserReservationDTO);
     }
 
     @Test
